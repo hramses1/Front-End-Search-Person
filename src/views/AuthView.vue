@@ -142,7 +142,8 @@
                 type="email" 
                 id="email"
                 required
-                class="w-full bg-transparent border-b-[0.5px] border-white/10 text-silver font-light focus:border-pale-blue/50 outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input"
+                class="w-full bg-transparent border-b-[0.5px] border-white/10 text-silver font-light focus:border-pale-blue/50 outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input placeholder-transparent"
+                placeholder="CORREO ELECTRÓNICO"
               />
               <label 
                 for="email" 
@@ -158,7 +159,8 @@
                 type="password" 
                 id="password"
                 required
-                class="w-full bg-transparent border-b-[0.5px] border-white/10 text-silver font-light focus:border-pale-blue/50 outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input"
+                class="w-full bg-transparent border-b-[0.5px] border-white/10 text-silver font-light focus:border-pale-blue/50 outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input placeholder-transparent"
+                placeholder="CONTRASEÑA"
               />
               <label 
                 for="password" 
@@ -175,7 +177,8 @@
                 type="password" 
                 id="passwordConfirm"
                 required
-                class="w-full bg-transparent border-b-[0.5px] border-white/10 text-silver font-light focus:border-pale-blue/50 outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input"
+                class="w-full bg-transparent border-b-[0.5px] border-white/10 text-silver font-light focus:border-pale-blue/50 outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input placeholder-transparent"
+                placeholder="CONFIRMAR CONTRASEÑA"
               />
               <label 
                 for="passwordConfirm" 
@@ -278,6 +281,27 @@ const registerForm = reactive({
   token: ''
 });
 
+const validateEmail = (email: string) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+
+const validatePassword = (password: string) => {
+  // Al menos 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial
+  const hasMinLength = password.length >= 8;
+  const hasUpper = /[A-Z]/.test(password);
+  const hasLower = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecial = /[!@#$%^&*(),.?":{}|<>_]/.test(password);
+  
+  if (!hasMinLength) return 'La contraseña debe tener al menos 8 caracteres.';
+  if (!hasUpper) return 'Debe incluir al menos una letra mayúscula.';
+  if (!hasLower) return 'Debe incluir al menos una letra minúscula.';
+  if (!hasNumber) return 'Debe incluir al menos un número.';
+  if (!hasSpecial) return 'Debe incluir al menos un carácter especial.';
+  
+  return null;
+};
+
 const handleSubmit = async () => {
   isLoading.value = true;
   errorMsg.value = '';
@@ -322,10 +346,21 @@ const handleSubmit = async () => {
         throw new Error('Credenciales inválidas o datos de usuario no encontrados.');
       }
     } else {
-      // Registro PocketBase
-      if (registerForm.password !== registerForm.passwordConfirm) {
-        throw new Error('Las contraseñas no concuerdan');
+      // Validaciones locales de Registro
+      if (!validateEmail(registerForm.email)) {
+        throw new Error('Formato de correo electrónico inválido.');
       }
+
+      const passwordError = validatePassword(registerForm.password);
+      if (passwordError) {
+        throw new Error(passwordError);
+      }
+
+      if (registerForm.password !== registerForm.passwordConfirm) {
+        throw new Error('Las contraseñas no concuerdan.');
+      }
+      
+      // Registro PocketBase
       await authService.register(registerForm);
       
       // Tras registro exitoso, volver a login y mostrar mensaje
