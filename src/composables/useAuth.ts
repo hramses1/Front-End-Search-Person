@@ -5,6 +5,7 @@ const token = ref<string | null>(sessionStorage.getItem('auth_token'));
 const user = ref<any>(null);
 const userPlan = ref<string>(sessionStorage.getItem('user_plan') || 'FREE');
 const userRequests = ref<number>(parseInt(sessionStorage.getItem('user_requests') || '0', 10));
+const userId = ref<string>(sessionStorage.getItem('user_id') || '');
 let inactivityTimer: ReturnType<typeof setTimeout> | null = null;
 const INACTIVITY_LIMIT_MS = 10 * 60 * 1000; // 10 minutos
 
@@ -21,15 +22,21 @@ export function useAuth() {
     user.value = null;
     userPlan.value = 'FREE';
     userRequests.value = 0;
+    userId.value = '';
     sessionStorage.removeItem('auth_token');
     sessionStorage.removeItem('user_plan');
     sessionStorage.removeItem('user_requests');
+    sessionStorage.removeItem('user_id');
     localStorage.removeItem('auth_token'); // Cleanup legacy if exists
     delete axios.defaults.headers.common['Authorization'];
     if (inactivityTimer) clearTimeout(inactivityTimer);
   };
 
-  const setUserRecord = (record: { plan?: string; number_requests?: number }) => {
+  const setUserRecord = (record: { id?: string; plan?: string; number_requests?: number }) => {
+    if (record.id) {
+      userId.value = record.id;
+      sessionStorage.setItem('user_id', record.id);
+    }
     if (record.plan) {
       userPlan.value = record.plan;
       sessionStorage.setItem('user_plan', record.plan);
@@ -38,6 +45,11 @@ export function useAuth() {
       userRequests.value = record.number_requests;
       sessionStorage.setItem('user_requests', String(record.number_requests));
     }
+  };
+
+  const updateUserRequests = (count: number) => {
+    userRequests.value = count;
+    sessionStorage.setItem('user_requests', String(count));
   };
 
   const resetInactivityTimer = () => {
@@ -70,9 +82,11 @@ export function useAuth() {
     user: computed(() => user.value),
     userPlan: computed(() => userPlan.value),
     userRequests: computed(() => userRequests.value),
+    userId: computed(() => userId.value),
     isAuthenticated: computed(() => !!token.value),
     setToken,
     setUserRecord,
+    updateUserRequests,
     logout,
     initializeAuth,
     setupActivityListeners

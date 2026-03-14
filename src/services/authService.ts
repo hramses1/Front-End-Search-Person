@@ -54,5 +54,13 @@ export const authService = {
   async getApiToken(userId: string) {
     const response = await apiClient.get('/api/main/login/?codigo=' + userId);
     return response.data;
+  },
+
+  /**
+   * Obtiene los datos actuales del usuario (incluyendo number_requests actualizado).
+   */
+  async getUserData(userId: string) {
+    const response = await apiClient.get('/api/users/get/', { params: { codigo: userId } });
+    return response.data;
   }
 };

@@ -242,9 +242,10 @@ import { useRouter } from 'vue-router';
 import DOMPurify from 'dompurify';
 import { useAuth } from '../composables/useAuth';
 import { apiService } from '../services/apiService';
+import { authService } from '../services/authService';
 
 const router = useRouter();
-const { logout, userPlan, userRequests } = useAuth();
+const { logout, userPlan, userRequests, userId, updateUserRequests } = useAuth();
 
 const handleLogout = () => {
   logout();
@@ -367,6 +368,16 @@ const executeSearch = async () => {
         throw new Error('La consulta no arrojó resultados válidos encontrados.');
     }
     resultsData.value = data;
+
+    // Actualizar el número de peticiones en tiempo real usando el endpoint real
+    if (userId.value) {
+      try {
+        const userData = await authService.getUserData(userId.value);
+        if (typeof userData.number_requests === 'number') {
+          updateUserRequests(userData.number_requests);
+        }
+      } catch { /* Si falla el refresco, lo ignoramos silenciosamente */ }
+    }
   } catch (error: any) {
     if (error.response?.status === 404) {
       errorMsg.value = 'El registro solicitado no fue encontrado en la base de datos.';
