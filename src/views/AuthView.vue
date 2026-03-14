@@ -108,7 +108,9 @@
                 type="text" 
                 id="name"
                 required
-                class="w-full bg-transparent border-b-[0.5px] border-white/10 text-silver font-light focus:border-pale-blue/50 outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input"
+                @input="validateField('name')"
+                :class="registerErrors.name ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-pale-blue/50'"
+                class="w-full bg-transparent border-b-[0.5px] text-silver font-light outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input"
               />
               <label 
                 for="name" 
@@ -116,7 +118,8 @@
               >
                 NOMBRE COMPLETO
               </label>
-              <div class="absolute bottom-0 left-0 w-full h-[0.5px] bg-gradient-to-r from-pale-blue/0 via-pale-blue/40 to-pale-blue/0 scale-x-0 peer-focus:scale-x-100 transition-transform duration-500 origin-center"></div>
+              <div v-if="registerErrors.name" class="text-red-400 text-[9px] mt-1 tracking-wider uppercase">{{ registerErrors.name }}</div>
+              <div v-else class="absolute bottom-0 left-0 w-full h-[0.5px] bg-gradient-to-r from-pale-blue/0 via-pale-blue/40 to-pale-blue/0 scale-x-0 peer-focus:scale-x-100 transition-transform duration-500 origin-center"></div>
             </div>
 
             <div class="relative group input-container mask-reveal delay-350">
@@ -125,7 +128,9 @@
                 type="text" 
                 id="username"
                 required
-                class="w-full bg-transparent border-b-[0.5px] border-white/10 text-silver font-light focus:border-pale-blue/50 outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input"
+                @input="validateField('username')"
+                :class="registerErrors.username ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-pale-blue/50'"
+                class="w-full bg-transparent border-b-[0.5px] text-silver font-light outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input"
               />
               <label 
                 for="username" 
@@ -133,7 +138,8 @@
               >
                 USUARIO
               </label>
-              <div class="absolute bottom-0 left-0 w-full h-[0.5px] bg-gradient-to-r from-pale-blue/0 via-pale-blue/40 to-pale-blue/0 scale-x-0 peer-focus:scale-x-100 transition-transform duration-500 origin-center"></div>
+              <div v-if="registerErrors.username" class="text-red-400 text-[9px] mt-1 tracking-wider uppercase">{{ registerErrors.username }}</div>
+              <div v-else class="absolute bottom-0 left-0 w-full h-[0.5px] bg-gradient-to-r from-pale-blue/0 via-pale-blue/40 to-pale-blue/0 scale-x-0 peer-focus:scale-x-100 transition-transform duration-500 origin-center"></div>
             </div>
 
             <div class="relative group input-container mask-reveal delay-400">
@@ -142,7 +148,9 @@
                 type="email" 
                 id="email"
                 required
-                class="w-full bg-transparent border-b-[0.5px] border-white/10 text-silver font-light focus:border-pale-blue/50 outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input placeholder-transparent"
+                @input="validateField('email')"
+                :class="registerErrors.email ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-pale-blue/50'"
+                class="w-full bg-transparent border-b-[0.5px] text-silver font-light outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input placeholder-transparent"
                 placeholder="CORREO ELECTRÓNICO"
               />
               <label 
@@ -151,6 +159,7 @@
               >
                 CORREO ELECTRÓNICO
               </label>
+              <div v-if="registerErrors.email" class="text-red-400 text-[9px] mt-1 tracking-wider uppercase">{{ registerErrors.email }}</div>
             </div>
 
             <div class="relative group input-container mask-reveal delay-500">
@@ -160,7 +169,9 @@
                 id="password"
                 required
                 minlength="8"
-                class="w-full bg-transparent border-b-[0.5px] border-white/10 text-silver font-light focus:border-pale-blue/50 outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input placeholder-transparent"
+                @input="validateField('password')"
+                :class="registerErrors.password ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-pale-blue/50'"
+                class="w-full bg-transparent border-b-[0.5px] text-silver font-light outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input placeholder-transparent"
                 placeholder="CONTRASEÑA"
               />
               <label 
@@ -169,7 +180,8 @@
               >
                 CONTRASEÑA
               </label>
-              <div class="absolute bottom-0 left-0 w-full h-[0.5px] bg-gradient-to-r from-pale-blue/0 via-pale-blue/40 to-pale-blue/0 scale-x-0 peer-focus:scale-x-100 transition-transform duration-500 origin-center"></div>
+              <div v-if="registerErrors.password" class="text-red-400 text-[9px] mt-1 tracking-wider uppercase">{{ registerErrors.password }}</div>
+              <div v-else class="absolute bottom-0 left-0 w-full h-[0.5px] bg-gradient-to-r from-pale-blue/0 via-pale-blue/40 to-pale-blue/0 scale-x-0 peer-focus:scale-x-100 transition-transform duration-500 origin-center"></div>
             </div>
 
             <div class="relative group input-container mask-reveal delay-600">
@@ -179,7 +191,9 @@
                 id="passwordConfirm"
                 required
                 minlength="8"
-                class="w-full bg-transparent border-b-[0.5px] border-white/10 text-silver font-light focus:border-pale-blue/50 outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input placeholder-transparent"
+                @input="validateField('passwordConfirm')"
+                :class="registerErrors.passwordConfirm ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-pale-blue/50'"
+                class="w-full bg-transparent border-b-[0.5px] text-silver font-light outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input placeholder-transparent"
                 placeholder="CONFIRMAR CONTRASEÑA"
               />
               <label 
@@ -188,6 +202,7 @@
               >
                 CONFIRMAR CONTRASEÑA
               </label>
+              <div v-if="registerErrors.passwordConfirm" class="text-red-400 text-[9px] mt-1 tracking-wider uppercase">{{ registerErrors.passwordConfirm }}</div>
             </div>
           </div>
         </transition>
@@ -231,6 +246,15 @@ const isLoading = ref(false);
 const errorMsg = ref('');
 const successMsg = ref('');
 const successToken = ref('');
+
+// Errores en tiempo real para Registro
+const registerErrors = reactive({
+  name: '',
+  username: '',
+  email: '',
+  password: '',
+  passwordConfirm: ''
+});
 
 const router = useRouter();
 const { setToken, setupActivityListeners, setUserRecord, setPlanData } = useAuth();
@@ -299,12 +323,36 @@ const validatePassword = (password: string) => {
   const hasLower = /[a-z]/.test(password);
   const hasNumber = /[0-9]/.test(password);
   
-  if (!hasMinLength) return 'La contraseña debe tener al menos 8 caracteres.';
-  if (!hasUpper) return 'Debe incluir al menos una letra mayúscula.';
-  if (!hasLower) return 'Debe incluir al menos una letra minúscula.';
-  if (!hasNumber) return 'Debe incluir al menos un número.';
+  if (!hasMinLength) return 'Mínimo 8 caracteres.';
+  if (!hasUpper) return 'Falta mayúscula.';
+  if (!hasLower) return 'Falta minúscula.';
+  if (!hasNumber) return 'Falta número.';
   
-  return null;
+  return '';
+};
+
+const validateField = (field: 'name' | 'username' | 'email' | 'password' | 'passwordConfirm') => {
+  if (isLogin.value) return;
+
+  switch (field) {
+    case 'name':
+      registerErrors.name = validateUsername(registerForm.name) ? '' : 'El nombre debe contener letras.';
+      break;
+    case 'username':
+      registerErrors.username = validateUsername(registerForm.username) ? '' : 'El usuario debe contener letras.';
+      break;
+    case 'email':
+      registerErrors.email = validateEmail(registerForm.email) ? '' : 'Correo inválido.';
+      break;
+    case 'password':
+      registerErrors.password = validatePassword(registerForm.password);
+      // Validar confirmación si ya tiene algo
+      if (registerForm.passwordConfirm) validateField('passwordConfirm');
+      break;
+    case 'passwordConfirm':
+      registerErrors.passwordConfirm = registerForm.password === registerForm.passwordConfirm ? '' : 'Las contraseñas no coinciden.';
+      break;
+  }
 };
 
 const handleSubmit = async () => {
@@ -351,26 +399,18 @@ const handleSubmit = async () => {
         throw new Error('Credenciales inválidas o datos de usuario no encontrados.');
       }
     } else {
-      // Validaciones locales de Registro
-      if (!validateUsername(registerForm.name)) {
-        throw new Error('El nombre completo debe contener letras.');
-      }
+      // Validaciones finales antes de enviar
+      validateField('name');
+      validateField('username');
+      validateField('email');
+      validateField('password');
+      validateField('passwordConfirm');
 
-      if (!validateUsername(registerForm.username)) {
-        throw new Error('El nombre de usuario debe contener al menos una letra.');
-      }
-
-      if (!validateEmail(registerForm.email)) {
-        throw new Error('Formato de correo electrónico inválido.');
-      }
-
-      const passwordError = validatePassword(registerForm.password);
-      if (passwordError) {
-        throw new Error(passwordError);
-      }
-
-      if (registerForm.password !== registerForm.passwordConfirm) {
-        throw new Error('Las contraseñas no concuerdan.');
+      const hasErrors = Object.values(registerErrors).some(err => err !== '');
+      if (hasErrors) {
+        errorMsg.value = 'Por favor, corrige los errores en el formulario.';
+        isLoading.value = false;
+        return;
       }
       
       // Registro PocketBase
