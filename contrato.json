@@ -1,0 +1,2555 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "SRI API",
+        "description": "API PARA CONSULTAR DATOS DE PERSONAS DE ECUADOR",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/main/fullname/": {
+            "get": {
+                "tags": [
+                    "API SRI"
+                ],
+                "summary": "Search Fullname User",
+                "description": "Buscar usuarios por nombre y apellido",
+                "operationId": "search_fullname_user_api_main_fullname__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "Nombre o parte del nombre del usuario",
+                            "title": "Name"
+                        },
+                        "description": "Nombre o parte del nombre del usuario"
+                    },
+                    {
+                        "name": "lastname",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "Apellido o parte del apellido del usuario",
+                            "title": "Lastname"
+                        },
+                        "description": "Apellido o parte del apellido del usuario"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserModel"
+                                    },
+                                    "title": "Response Search Fullname User Api Main Fullname  Get"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Parámetros inválidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error400Response"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error401Response"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Acceso prohibido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403Response"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error404Response"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflicto de datos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error409Response"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validación",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error422Response"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Límite de peticiones",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error429Response"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error500Response"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/main/ruc/": {
+            "get": {
+                "tags": [
+                    "API SRI"
+                ],
+                "summary": "Search Ruc User",
+                "description": "Buscar RUC",
+                "operationId": "search_RUC_user_api_main_ruc__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "ruc",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "description": "RUC",
+                            "title": "Ruc"
+                        },
+                        "description": "RUC"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserRucInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "message": "No encontrado",
+                        "description": "Not Found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/main/login/": {
+            "get": {
+                "tags": [
+                    "CREDENCIALES"
+                ],
+                "summary": "Login",
+                "description": "Obtener token",
+                "operationId": "login_api_main_login__get",
+                "parameters": [
+                    {
+                        "name": "codigo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "description": "CODIGO",
+                            "title": "Codigo"
+                        },
+                        "description": "CODIGO"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "message": "No encontrado",
+                        "description": "Not Found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/main/complaint/": {
+            "get": {
+                "tags": [
+                    "API SRI"
+                ],
+                "summary": "Search Complaints User",
+                "description": "Buscar denuncias por cedula",
+                "operationId": "search_complaints_user_api_main_complaint__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "ci",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "description": "Cedula de Identidad",
+                            "title": "Ci"
+                        },
+                        "description": "Cedula de Identidad"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserDenunciasModel"
+                                    },
+                                    "title": "Response Search Complaints User Api Main Complaint  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/main/complaints_information/": {
+            "get": {
+                "tags": [
+                    "API SRI"
+                ],
+                "summary": "Search Complaints Information",
+                "description": "Buscar denuncias por cedula",
+                "operationId": "search_complaints_information_api_main_complaints_information__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "ci",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "description": "Cedula de Identidad",
+                            "title": "Ci"
+                        },
+                        "description": "Cedula de Identidad"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/main/id_card/": {
+            "get": {
+                "tags": [
+                    "API SRI"
+                ],
+                "summary": "Search User",
+                "description": "Buscar por Cédula",
+                "operationId": "search_user_api_main_id_card__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "ci",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string",
+                                    "minLength": 10,
+                                    "maxLength": 10,
+                                    "pattern": "^\\d{10}$"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "Cédula de Identidad (10 dígitos)",
+                            "title": "Ci"
+                        },
+                        "description": "Cédula de Identidad (10 dígitos)",
+                        "example": "0912345678"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserModel"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Parámetros inválidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error400Response"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error401Response"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Acceso prohibido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error403Response"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error404Response"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflicto de datos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error409Response"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validación",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error422Response"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Límite de peticiones",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error429Response"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error500Response"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/create": {
+            "post": {
+                "tags": [
+                    "API DATABASE"
+                ],
+                "summary": "Create",
+                "description": "Crear Usuario",
+                "operationId": "create_api_users_create_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/get/": {
+            "get": {
+                "tags": [
+                    "API DATABASE"
+                ],
+                "summary": "Get",
+                "description": "Obtener Usuario",
+                "operationId": "get_api_users_get__get",
+                "parameters": [
+                    {
+                        "name": "codigo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "description": "CODIGO POCKETBASE",
+                            "title": "Codigo"
+                        },
+                        "description": "CODIGO POCKETBASE"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/patch/": {
+            "patch": {
+                "tags": [
+                    "API DATABASE"
+                ],
+                "summary": "Update",
+                "description": "Actualizar Usuario",
+                "operationId": "update_api_users_patch__patch",
+                "parameters": [
+                    {
+                        "name": "codigo",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "CODIGO POCKETBASE",
+                            "title": "Codigo"
+                        },
+                        "description": "CODIGO POCKETBASE"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserUpdateModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/main/medical_appointment/": {
+            "get": {
+                "tags": [
+                    "API SRI"
+                ],
+                "summary": "Search Medical Appointment",
+                "description": "Buscar citas medicas",
+                "operationId": "search_medical_appointment_api_main_medical_appointment__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "ci",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "description": "Cédula de Identidad",
+                            "title": "Ci"
+                        },
+                        "description": "Cédula de Identidad"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CitaMedicaModel"
+                                    },
+                                    "title": "Response Search Medical Appointment Api Main Medical Appointment  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/main/license/": {
+            "get": {
+                "tags": [
+                    "API SRI"
+                ],
+                "summary": "Search License",
+                "description": "Buscar licencia",
+                "operationId": "search_license_api_main_license__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "ci",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "description": "Cedula de identidad",
+                            "title": "Ci"
+                        },
+                        "description": "Cedula de identidad"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PersonaModel"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/main/citation/": {
+            "get": {
+                "tags": [
+                    "API SRI"
+                ],
+                "summary": "Search Citation",
+                "description": "Buscar citaciones de licencia",
+                "operationId": "search_citation_api_main_citation__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "ci",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "description": "Cedula de identidad",
+                            "title": "Ci"
+                        },
+                        "description": "Cedula de identidad"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CitationModel"
+                                    },
+                                    "title": "Response Search Citation Api Main Citation  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/": {
+            "get": {
+                "summary": "Root",
+                "description": "raiz",
+                "operationId": "root__get",
+                "responses": {
+                    "404": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/plan/get/": {
+            "get": {
+                "tags": [
+                    "API DATABASE"
+                ],
+                "summary": "Get",
+                "description": "Obtener Planes",
+                "operationId": "get_api_plan_get__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PlanUsersPaginatedResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Solicitud inválida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse400"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/plan/get_for_userid/": {
+            "get": {
+                "tags": [
+                    "API DATABASE"
+                ],
+                "summary": "Get",
+                "description": "Obtener Planes por ID de Usuario",
+                "operationId": "get_api_plan_get_for_userid__get",
+                "parameters": [
+                    {
+                        "name": "userid",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "description": "ID de Usuario",
+                            "title": "Userid"
+                        },
+                        "description": "ID de Usuario"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PlanUsersPaginatedResponseForUser"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Solicitud inválida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse400"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/main/vehicles/by-plate/": {
+            "get": {
+                "tags": [
+                    "API SRI"
+                ],
+                "summary": "Get Vehicle By Plate",
+                "description": "Consulta por placa y devuelve los datos del vehículo y su propietario.",
+                "operationId": "get_vehicle_by_plate_api_main_vehicles_by_plate__get",
+                "parameters": [
+                    {
+                        "name": "plate",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Número de placa del vehículo",
+                            "title": "Plate"
+                        },
+                        "description": "Número de placa del vehículo"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PlateModelPerson"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Solicitud inválida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse400"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CitaMedicaModel": {
+                "properties": {
+                    "Cedula": {
+                        "type": "string",
+                        "title": "Cedula"
+                    },
+                    "Nombre": {
+                        "type": "string",
+                        "title": "Nombre"
+                    },
+                    "Unidad_medica": {
+                        "type": "string",
+                        "title": "Unidad Medica"
+                    },
+                    "Especialidad": {
+                        "type": "string",
+                        "title": "Especialidad"
+                    },
+                    "Medico": {
+                        "type": "string",
+                        "title": "Medico"
+                    },
+                    "Fecha_de_cita": {
+                        "type": "string",
+                        "title": "Fecha De Cita"
+                    },
+                    "Hora_de_cita": {
+                        "type": "string",
+                        "title": "Hora De Cita"
+                    },
+                    "Direccion": {
+                        "type": "string",
+                        "title": "Direccion"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "Cedula",
+                    "Nombre",
+                    "Unidad_medica",
+                    "Especialidad",
+                    "Medico",
+                    "Fecha_de_cita",
+                    "Hora_de_cita",
+                    "Direccion"
+                ],
+                "title": "CitaMedicaModel"
+            },
+            "CitacionModel": {
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "title": "Status"
+                    },
+                    "count": {
+                        "type": "integer",
+                        "title": "Count"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "status",
+                    "count"
+                ],
+                "title": "CitacionModel"
+            },
+            "CitationModel": {
+                "properties": {
+                    "tipo": {
+                        "type": "string",
+                        "title": "Tipo"
+                    },
+                    "citaciones": {
+                        "items": {
+                            "$ref": "#/components/schemas/CitationRowModel"
+                        },
+                        "type": "array",
+                        "title": "Citaciones"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "tipo",
+                    "citaciones"
+                ],
+                "title": "CitationModel"
+            },
+            "CitationRowModel": {
+                "properties": {
+                    "Posicion": {
+                        "type": "string",
+                        "title": "Posicion"
+                    },
+                    "infraccion": {
+                        "type": "string",
+                        "title": "Infraccion"
+                    },
+                    "Entidad": {
+                        "type": "string",
+                        "title": "Entidad"
+                    },
+                    "citacion": {
+                        "type": "string",
+                        "title": "Citacion"
+                    },
+                    "Placa": {
+                        "type": "string",
+                        "title": "Placa"
+                    },
+                    "tipo": {
+                        "type": "string",
+                        "title": "Tipo"
+                    },
+                    "Fecha_Emision": {
+                        "type": "string",
+                        "title": "Fecha Emision"
+                    },
+                    "Fecha_Notificacion": {
+                        "type": "string",
+                        "title": "Fecha Notificacion"
+                    },
+                    "Puntos": {
+                        "type": "string",
+                        "title": "Puntos"
+                    },
+                    "Sancion": {
+                        "type": "string",
+                        "title": "Sancion"
+                    },
+                    "Multa": {
+                        "type": "string",
+                        "title": "Multa"
+                    },
+                    "Remision": {
+                        "type": "string",
+                        "title": "Remision"
+                    },
+                    "Total_a_Pagar": {
+                        "type": "string",
+                        "title": "Total A Pagar"
+                    },
+                    "Articulo": {
+                        "type": "string",
+                        "title": "Articulo"
+                    },
+                    "Bloque": {
+                        "type": "string",
+                        "title": "Bloque"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "Posicion",
+                    "infraccion",
+                    "Entidad",
+                    "citacion",
+                    "Placa",
+                    "tipo",
+                    "Fecha_Emision",
+                    "Fecha_Notificacion",
+                    "Puntos",
+                    "Sancion",
+                    "Multa",
+                    "Remision",
+                    "Total_a_Pagar",
+                    "Articulo",
+                    "Bloque"
+                ],
+                "title": "CitationRowModel"
+            },
+            "Error400Response": {
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "title": "Code",
+                        "description": "Código HTTP 400",
+                        "default": 400,
+                        "example": 400
+                    },
+                    "message": {
+                        "type": "string",
+                        "title": "Message",
+                        "default": "Solicitud inválida",
+                        "example": "Faltan parámetros o son inválidos"
+                    },
+                    "data": {
+                        "type": "object",
+                        "title": "Data",
+                        "description": "Detalles adicionales opcionales"
+                    }
+                },
+                "type": "object",
+                "title": "Error400Response"
+            },
+            "Error401Response": {
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "title": "Code",
+                        "description": "Código HTTP 401",
+                        "default": 401,
+                        "example": 401
+                    },
+                    "message": {
+                        "type": "string",
+                        "title": "Message",
+                        "default": "No autorizado",
+                        "example": "No tienes credenciales válidas"
+                    },
+                    "data": {
+                        "type": "object",
+                        "title": "Data",
+                        "description": "Detalles adicionales opcionales"
+                    }
+                },
+                "type": "object",
+                "title": "Error401Response"
+            },
+            "Error403Response": {
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "title": "Code",
+                        "description": "Código HTTP 403",
+                        "default": 403,
+                        "example": 403
+                    },
+                    "message": {
+                        "type": "string",
+                        "title": "Message",
+                        "default": "Prohibido",
+                        "example": "No tienes permisos para acceder a este recurso"
+                    },
+                    "data": {
+                        "type": "object",
+                        "title": "Data",
+                        "description": "Detalles adicionales opcionales"
+                    }
+                },
+                "type": "object",
+                "title": "Error403Response"
+            },
+            "Error404Response": {
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "title": "Code",
+                        "description": "Código HTTP 404",
+                        "default": 404,
+                        "example": 404
+                    },
+                    "message": {
+                        "type": "string",
+                        "title": "Message",
+                        "default": "No encontrado",
+                        "example": "El recurso solicitado no existe"
+                    },
+                    "data": {
+                        "type": "object",
+                        "title": "Data",
+                        "description": "Detalles adicionales opcionales"
+                    }
+                },
+                "type": "object",
+                "title": "Error404Response"
+            },
+            "Error409Response": {
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "title": "Code",
+                        "description": "Código HTTP 409",
+                        "default": 409,
+                        "example": 409
+                    },
+                    "message": {
+                        "type": "string",
+                        "title": "Message",
+                        "default": "Conflicto",
+                        "example": "El recurso ya existe o hay un conflicto de estado"
+                    },
+                    "data": {
+                        "type": "object",
+                        "title": "Data",
+                        "description": "Detalles adicionales opcionales"
+                    }
+                },
+                "type": "object",
+                "title": "Error409Response"
+            },
+            "Error422Response": {
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "title": "Code",
+                        "description": "Código HTTP 422",
+                        "default": 422,
+                        "example": 422
+                    },
+                    "message": {
+                        "type": "string",
+                        "title": "Message",
+                        "default": "Entidad no procesable",
+                        "example": "Los datos enviados no cumplen las reglas de validación"
+                    },
+                    "data": {
+                        "type": "object",
+                        "title": "Data",
+                        "description": "Detalles adicionales opcionales"
+                    }
+                },
+                "type": "object",
+                "title": "Error422Response"
+            },
+            "Error429Response": {
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "title": "Code",
+                        "description": "Código HTTP 429",
+                        "default": 429,
+                        "example": 429
+                    },
+                    "message": {
+                        "type": "string",
+                        "title": "Message",
+                        "default": "Demasiadas solicitudes",
+                        "example": "Has superado el límite de peticiones permitido"
+                    },
+                    "data": {
+                        "type": "object",
+                        "title": "Data",
+                        "description": "Detalles adicionales opcionales"
+                    }
+                },
+                "type": "object",
+                "title": "Error429Response"
+            },
+            "Error500Response": {
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "title": "Code",
+                        "description": "Código HTTP 500",
+                        "default": 500,
+                        "example": 500
+                    },
+                    "message": {
+                        "type": "string",
+                        "title": "Message",
+                        "default": "Error interno",
+                        "example": "Ha ocurrido un error inesperado en el servidor"
+                    },
+                    "data": {
+                        "type": "object",
+                        "title": "Data",
+                        "description": "Detalles adicionales opcionales"
+                    }
+                },
+                "type": "object",
+                "title": "Error500Response"
+            },
+            "ErrorResponse400": {
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "title": "Code",
+                        "description": "HTTP status code",
+                        "example": 400
+                    },
+                    "message": {
+                        "type": "string",
+                        "title": "Message",
+                        "example": "Something went wrong while processing your request. Invalid filter."
+                    },
+                    "data": {
+                        "type": "object",
+                        "title": "Data",
+                        "description": "Optional extra error details"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "code",
+                    "message"
+                ],
+                "title": "ErrorResponse400"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "IncidenteJudicaturaModel": {
+                "properties": {
+                    "idIncidenteJudicatura": {
+                        "type": "integer",
+                        "title": "Idincidentejudicatura"
+                    },
+                    "idMovimientoJuicioIncidente": {
+                        "type": "integer",
+                        "title": "Idmovimientojuicioincidente"
+                    },
+                    "idJudicaturaDestino": {
+                        "type": "string",
+                        "title": "Idjudicaturadestino"
+                    },
+                    "fechaCrea": {
+                        "type": "string",
+                        "title": "Fechacrea"
+                    },
+                    "incidente": {
+                        "type": "integer",
+                        "title": "Incidente"
+                    },
+                    "lstLitiganteActor": {
+                        "items": {
+                            "$ref": "#/components/schemas/LitiganteModel"
+                        },
+                        "type": "array",
+                        "title": "Lstlitiganteactor"
+                    },
+                    "lstLitiganteDemandado": {
+                        "items": {
+                            "$ref": "#/components/schemas/LitiganteModel"
+                        },
+                        "type": "array",
+                        "title": "Lstlitigantedemandado"
+                    },
+                    "litiganteActor": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/LitiganteModel"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "litiganteDemandado": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/LitiganteModel"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "idIncidenteJudicatura",
+                    "idMovimientoJuicioIncidente",
+                    "idJudicaturaDestino",
+                    "fechaCrea",
+                    "incidente",
+                    "lstLitiganteActor",
+                    "lstLitiganteDemandado"
+                ],
+                "title": "IncidenteJudicaturaModel"
+            },
+            "JudicaturaModel": {
+                "properties": {
+                    "idJudicatura": {
+                        "type": "string",
+                        "title": "Idjudicatura"
+                    },
+                    "nombreJudicatura": {
+                        "type": "string",
+                        "title": "Nombrejudicatura"
+                    },
+                    "ciudad": {
+                        "type": "string",
+                        "title": "Ciudad"
+                    },
+                    "lstIncidenteJudicatura": {
+                        "items": {
+                            "$ref": "#/components/schemas/IncidenteJudicaturaModel"
+                        },
+                        "type": "array",
+                        "title": "Lstincidentejudicatura"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "idJudicatura",
+                    "nombreJudicatura",
+                    "ciudad",
+                    "lstIncidenteJudicatura"
+                ],
+                "title": "JudicaturaModel"
+            },
+            "LicenciaModel": {
+                "properties": {
+                    "tipo_licencia": {
+                        "type": "string",
+                        "title": "Tipo Licencia"
+                    },
+                    "validez": {
+                        "type": "string",
+                        "title": "Validez"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "tipo_licencia",
+                    "validez"
+                ],
+                "title": "LicenciaModel"
+            },
+            "LitiganteModel": {
+                "properties": {
+                    "tipoLitigante": {
+                        "type": "string",
+                        "title": "Tipolitigante"
+                    },
+                    "nombresLitigante": {
+                        "type": "string",
+                        "title": "Nombreslitigante"
+                    },
+                    "representadoPor": {
+                        "type": "string",
+                        "title": "Representadopor"
+                    },
+                    "idLitigante": {
+                        "type": "integer",
+                        "title": "Idlitigante"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "tipoLitigante",
+                    "nombresLitigante",
+                    "representadoPor",
+                    "idLitigante"
+                ],
+                "title": "LitiganteModel"
+            },
+            "PersonaModel": {
+                "properties": {
+                    "nombre": {
+                        "type": "string",
+                        "title": "Nombre"
+                    },
+                    "puntos": {
+                        "type": "string",
+                        "title": "Puntos"
+                    },
+                    "cedula": {
+                        "type": "string",
+                        "title": "Cedula"
+                    },
+                    "ps_persona": {
+                        "type": "string",
+                        "title": "Ps Persona"
+                    },
+                    "licencias": {
+                        "items": {
+                            "$ref": "#/components/schemas/LicenciaModel"
+                        },
+                        "type": "array",
+                        "title": "Licencias"
+                    },
+                    "citaciones": {
+                        "items": {
+                            "$ref": "#/components/schemas/CitacionModel"
+                        },
+                        "type": "array",
+                        "title": "Citaciones"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "nombre",
+                    "puntos",
+                    "cedula",
+                    "ps_persona",
+                    "licencias",
+                    "citaciones"
+                ],
+                "title": "PersonaModel"
+            },
+            "PlanUsersPaginatedResponse": {
+                "properties": {
+                    "page": {
+                        "type": "integer",
+                        "exclusiveMinimum": 0,
+                        "title": "Page"
+                    },
+                    "perPage": {
+                        "type": "integer",
+                        "exclusiveMinimum": 0,
+                        "title": "Perpage"
+                    },
+                    "totalPages": {
+                        "type": "integer",
+                        "exclusiveMinimum": 0,
+                        "title": "Totalpages"
+                    },
+                    "totalItems": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "title": "Totalitems"
+                    },
+                    "items": {
+                        "items": {
+                            "$ref": "#/components/schemas/ResponsePlanUsersModel"
+                        },
+                        "type": "array",
+                        "title": "Items"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "page",
+                    "perPage",
+                    "totalPages",
+                    "totalItems",
+                    "items"
+                ],
+                "title": "PlanUsersPaginatedResponse"
+            },
+            "PlanUsersPaginatedResponseForUser": {
+                "properties": {
+                    "page": {
+                        "type": "integer",
+                        "exclusiveMinimum": 0,
+                        "title": "Page"
+                    },
+                    "perPage": {
+                        "type": "integer",
+                        "exclusiveMinimum": 0,
+                        "title": "Perpage"
+                    },
+                    "totalPages": {
+                        "type": "integer",
+                        "exclusiveMinimum": 0,
+                        "title": "Totalpages"
+                    },
+                    "totalItems": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "title": "Totalitems"
+                    },
+                    "items": {
+                        "items": {
+                            "$ref": "#/components/schemas/ResponsePlanUsersGetForUserModel"
+                        },
+                        "type": "array",
+                        "title": "Items"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "page",
+                    "perPage",
+                    "totalPages",
+                    "totalItems",
+                    "items"
+                ],
+                "title": "PlanUsersPaginatedResponseForUser"
+            },
+            "PlateModelPerson": {
+                "properties": {
+                    "placa": {
+                        "type": "string",
+                        "title": "Placa"
+                    },
+                    "marca": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Marca"
+                    },
+                    "modelo": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Modelo"
+                    },
+                    "clase": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Clase"
+                    },
+                    "anioModelo": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Aniomodelo"
+                    },
+                    "servicio": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Servicio"
+                    },
+                    "paisFabricacion": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Paisfabricacion"
+                    },
+                    "dueno": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Dueno"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "placa",
+                    "marca",
+                    "modelo",
+                    "clase",
+                    "anioModelo",
+                    "servicio",
+                    "paisFabricacion",
+                    "dueno"
+                ],
+                "title": "PlateModelPerson"
+            },
+            "ResponsePlanUsersGetForUserModel": {
+                "properties": {
+                    "collectionId": {
+                        "type": "string",
+                        "title": "Collectionid"
+                    },
+                    "collectionName": {
+                        "type": "string",
+                        "title": "Collectionname"
+                    },
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    },
+                    "planDescription": {
+                        "type": "string",
+                        "title": "Plandescription"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "title": "Userid"
+                    },
+                    "userName": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "token_duration": {
+                        "type": "integer",
+                        "title": "Token Duration"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "collectionId",
+                    "collectionName",
+                    "id",
+                    "planDescription",
+                    "userId",
+                    "userName",
+                    "token_duration"
+                ],
+                "title": "ResponsePlanUsersGetForUserModel"
+            },
+            "ResponsePlanUsersModel": {
+                "properties": {
+                    "id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Id"
+                    },
+                    "collectionId": {
+                        "type": "string",
+                        "title": "Collectionid"
+                    },
+                    "collectionName": {
+                        "type": "string",
+                        "title": "Collectionname"
+                    },
+                    "created": {
+                        "type": "string",
+                        "title": "Created"
+                    },
+                    "updated": {
+                        "type": "string",
+                        "title": "Updated"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "access_token_duration": {
+                        "type": "integer",
+                        "title": "Access Token Duration"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "collectionId",
+                    "collectionName",
+                    "created",
+                    "updated",
+                    "description",
+                    "access_token_duration"
+                ],
+                "title": "ResponsePlanUsersModel"
+            },
+            "RucModel": {
+                "properties": {
+                    "RazonSocial": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Razonsocial"
+                    },
+                    "Ruc": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Ruc"
+                    },
+                    "EstadoDelContribuyente": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Estadodelcontribuyente"
+                    },
+                    "TipoDeContribuyente": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Tipodecontribuyente"
+                    },
+                    "ObligadoContabilidad": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Obligadocontabilidad"
+                    },
+                    "ActividadEconomicaPrincipal": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Actividadeconomicaprincipal"
+                    },
+                    "FechaInicioActividades": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Fechainicioactividades"
+                    },
+                    "FechaCeseActividades": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Fechaceseactividades"
+                    },
+                    "FechaActualizacion": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Fechaactualizacion"
+                    },
+                    "CategoriaMiPYMES": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Categoriamipymes"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "RazonSocial",
+                    "Ruc",
+                    "EstadoDelContribuyente",
+                    "TipoDeContribuyente",
+                    "ObligadoContabilidad",
+                    "ActividadEconomicaPrincipal",
+                    "FechaInicioActividades",
+                    "FechaCeseActividades",
+                    "FechaActualizacion",
+                    "CategoriaMiPYMES"
+                ],
+                "title": "RucModel"
+            },
+            "UserCreate": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    },
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "email": {
+                        "type": "string",
+                        "title": "Email"
+                    },
+                    "emailVisibility": {
+                        "type": "boolean",
+                        "title": "Emailvisibility"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    },
+                    "passwordConfirm": {
+                        "type": "string",
+                        "title": "Passwordconfirm"
+                    },
+                    "disable": {
+                        "type": "boolean",
+                        "title": "Disable"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "plan": {
+                        "type": "string",
+                        "title": "Plan"
+                    },
+                    "number_requests": {
+                        "type": "integer",
+                        "title": "Number Requests"
+                    },
+                    "token": {
+                        "type": "string",
+                        "title": "Token"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "username",
+                    "email",
+                    "emailVisibility",
+                    "password",
+                    "passwordConfirm",
+                    "disable",
+                    "name",
+                    "plan",
+                    "number_requests",
+                    "token"
+                ],
+                "title": "UserCreate"
+            },
+            "UserDenunciasModel": {
+                "properties": {
+                    "Juicio": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Juicio"
+                    },
+                    "Delito": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Delito"
+                    },
+                    "Fecha": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Fecha"
+                    },
+                    "NombreMateria": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Nombremateria"
+                    },
+                    "NombreTipoAccion": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Nombretipoaccion"
+                    },
+                    "IEDocumentoAdjunto": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Iedocumentoadjunto"
+                    },
+                    "Informacion": {
+                        "items": {
+                            "$ref": "#/components/schemas/JudicaturaModel"
+                        },
+                        "type": "array",
+                        "title": "Informacion"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "Juicio",
+                    "Delito",
+                    "Fecha",
+                    "NombreMateria",
+                    "NombreTipoAccion",
+                    "IEDocumentoAdjunto",
+                    "Informacion"
+                ],
+                "title": "UserDenunciasModel"
+            },
+            "UserModel": {
+                "properties": {
+                    "Nombre": {
+                        "type": "string",
+                        "title": "Nombre",
+                        "index": true
+                    },
+                    "Apellido": {
+                        "type": "string",
+                        "title": "Apellido",
+                        "index": true
+                    },
+                    "Ci": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Ci"
+                    },
+                    "Clase": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Clase"
+                    },
+                    "Ciudad": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Ciudad"
+                    },
+                    "TipoIdentificacion": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Tipoidentificacion"
+                    },
+                    "Direccion": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Direccion"
+                    },
+                    "FechaNacimiento": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Fechanacimiento"
+                    },
+                    "Edad": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Edad"
+                    },
+                    "Genero": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Genero"
+                    },
+                    "Nacionalidad": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Nacionalidad"
+                    },
+                    "EstadoCivil": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Estadocivil"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "Nombre",
+                    "Apellido",
+                    "Ci",
+                    "Clase",
+                    "Ciudad",
+                    "TipoIdentificacion",
+                    "Direccion",
+                    "FechaNacimiento",
+                    "Genero",
+                    "Nacionalidad",
+                    "EstadoCivil"
+                ],
+                "title": "UserModel"
+            },
+            "UserRepresentanteLegalModel": {
+                "properties": {
+                    "Nombre": {
+                        "type": "string",
+                        "title": "Nombre"
+                    },
+                    "Cedula": {
+                        "type": "string",
+                        "title": "Cedula"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "Nombre",
+                    "Cedula"
+                ],
+                "title": "UserRepresentanteLegalModel"
+            },
+            "UserRucEstablecimientosModel": {
+                "properties": {
+                    "NumeroDeEstablecimiento": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Numerodeestablecimiento"
+                    },
+                    "NombreComercial": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Nombrecomercial"
+                    },
+                    "UbicacionDelEstablecimiento": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Ubicaciondelestablecimiento"
+                    },
+                    "EstadoDelEstablecimiento": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Estadodelestablecimiento"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "NumeroDeEstablecimiento",
+                    "NombreComercial",
+                    "UbicacionDelEstablecimiento",
+                    "EstadoDelEstablecimiento"
+                ],
+                "title": "UserRucEstablecimientosModel"
+            },
+            "UserRucEstadoTributarioModel": {
+                "properties": {
+                    "Descripcion": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Descripcion"
+                    },
+                    "PlazoVigente": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Plazovigente"
+                    },
+                    "ClaseContribuyente": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Clasecontribuyente"
+                    },
+                    "ObligacionesPendientes": {
+                        "anyOf": [
+                            {
+                                "items": {},
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Obligacionespendientes"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "Descripcion",
+                    "PlazoVigente",
+                    "ClaseContribuyente",
+                    "ObligacionesPendientes"
+                ],
+                "title": "UserRucEstadoTributarioModel"
+            },
+            "UserRucInfo": {
+                "properties": {
+                    "SRI": {
+                        "items": {
+                            "$ref": "#/components/schemas/RucModel"
+                        },
+                        "type": "array",
+                        "title": "Sri"
+                    },
+                    "EstadoTributario": {
+                        "items": {
+                            "$ref": "#/components/schemas/UserRucEstadoTributarioModel"
+                        },
+                        "type": "array",
+                        "title": "Estadotributario"
+                    },
+                    "RepresentanteLegal": {
+                        "items": {
+                            "$ref": "#/components/schemas/UserRepresentanteLegalModel"
+                        },
+                        "type": "array",
+                        "title": "Representantelegal"
+                    },
+                    "Establecimientos": {
+                        "items": {
+                            "$ref": "#/components/schemas/UserRucEstablecimientosModel"
+                        },
+                        "type": "array",
+                        "title": "Establecimientos"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "SRI",
+                    "EstadoTributario",
+                    "RepresentanteLegal",
+                    "Establecimientos"
+                ],
+                "title": "UserRucInfo"
+            },
+            "UserUpdateModel": {
+                "properties": {
+                    "username": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Username"
+                    },
+                    "emailVisibility": {
+                        "anyOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Emailvisibility"
+                    },
+                    "password": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Password"
+                    },
+                    "passwordConfirm": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Passwordconfirm"
+                    },
+                    "oldPassword": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Oldpassword"
+                    },
+                    "name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Name"
+                    },
+                    "plan": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Plan"
+                    },
+                    "number_requests": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Number Requests"
+                    },
+                    "token": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Token"
+                    },
+                    "disable": {
+                        "anyOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Disable"
+                    }
+                },
+                "type": "object",
+                "title": "UserUpdateModel"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        },
+        "securitySchemes": {
+            "HTTPBearer": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}

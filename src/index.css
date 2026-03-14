@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-obsidian text-silver font-primary m-0 p-0 antialiased;
+  }
+}
+
+@layer utilities {
+  .custom-input {
+    /* Autofill fix handled in specific views as well, but can be global */
+    transition: background-color 5000s ease-in-out 0s;
+  }
+}
