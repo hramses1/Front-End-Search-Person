@@ -168,7 +168,7 @@
                 type="password" 
                 id="password"
                 required
-                minlength="8"
+                minlength="9"
                 @input="validateField('password')"
                 :class="registerErrors.password ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-pale-blue/50'"
                 class="w-full bg-transparent border-b-[0.5px] text-silver font-light outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input placeholder-transparent"
@@ -190,7 +190,7 @@
                 type="password" 
                 id="passwordConfirm"
                 required
-                minlength="8"
+                minlength="9"
                 @input="validateField('passwordConfirm')"
                 :class="registerErrors.passwordConfirm ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-pale-blue/50'"
                 class="w-full bg-transparent border-b-[0.5px] text-silver font-light outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input placeholder-transparent"
@@ -308,7 +308,7 @@ const registerForm = reactive({
 });
 
 const validateEmail = (email: string) => {
-  return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
 
 const validateUsername = (username: string) => {
@@ -317,16 +317,12 @@ const validateUsername = (username: string) => {
 };
 
 const validatePassword = (password: string) => {
-  // Al menos 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial
-  const hasMinLength = password.length >= 8;
-  const hasUpper = /[A-Z]/.test(password);
-  const hasLower = /[a-z]/.test(password);
-  const hasNumber = /[0-9]/.test(password);
+  const hasMinLength = password.length > 8;
+  const hasLetters = /[a-zA-Z]/.test(password);
+  const hasNumbers = /[0-9]/.test(password);
   
-  if (!hasMinLength) return 'Mínimo 8 caracteres.';
-  if (!hasUpper) return 'Falta mayúscula.';
-  if (!hasLower) return 'Falta minúscula.';
-  if (!hasNumber) return 'Falta número.';
+  if (!hasMinLength) return 'Debe ser mayor a 8 caracteres.';
+  if (!hasLetters || !hasNumbers) return 'Debe contener letras y números.';
   
   return '';
 };
