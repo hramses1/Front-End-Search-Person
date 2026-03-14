@@ -3,7 +3,8 @@ import { useAuth } from '../composables/useAuth';
 import { CLIENT_RENEG_LIMIT } from 'tls';
 
 const apiClient = axios.create({
-  baseURL: 'http://127.0.0.1:8000/',
+  // SECURITY: URL definida en .env, nunca en el código fuente.
+  baseURL: import.meta.env.VITE_API_BASE_URL as string,
   headers: {
     'Content-Type': 'application/json'
   }
