@@ -7,8 +7,25 @@
       <div class="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] bg-pale-blue/5 blur-[100px] rounded-full"></div>
     </div>
 
+    <!-- Botón Hamburguesa para Móvil -->
+    <button 
+      @click="isSidebarOpen = !isSidebarOpen"
+      class="lg:hidden fixed top-4 right-4 z-50 p-3 bg-obsidian-soft border border-white/10 rounded-xl text-pale-blue shadow-lg pointer-events-auto"
+    >
+      <svg v-if="!isSidebarOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+      <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+
     <!-- Navegación lateral (Sidebar) -->
-    <aside class="w-72 bg-obsidian-soft border-r border-white/5 relative z-10 flex flex-col h-screen">
+    <aside 
+      :class="[
+        'fixed inset-y-0 left-0 z-40 w-72 bg-obsidian-soft border-r border-white/5 transition-transform duration-300 lg:relative lg:translate-x-0 flex flex-col h-screen',
+        isSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
+      ]"
+    >
+      <!-- Overlay para cerrar sidebar en móvil -->
+      <div v-if="isSidebarOpen" @click="isSidebarOpen = false" class="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm -z-10"></div>
+
       <!-- Header del Nav -->
       <div class="p-8 border-b border-white/5">
         <h2 class="text-xl tracking-[0.25em] font-light text-silver mb-1 mask-reveal">PORTAL<span class="text-pale-blue font-bold">SRI</span></h2>
@@ -84,7 +101,7 @@
     </aside>
 
     <!-- Panel Central (Área de Trabajo) -->
-    <main class="flex-1 flex flex-col h-screen relative z-10 p-10 overflow-y-auto custom-scrollbar">
+    <main class="flex-1 flex flex-col h-screen relative z-10 p-6 sm:p-10 overflow-y-auto custom-scrollbar">
       
       <!-- Título de Sección Actual -->
       <header class="mb-10 mask-reveal delay-200">
@@ -244,6 +261,7 @@ import { useAuth } from '../composables/useAuth';
 import { apiService } from '../services/apiService';
 import { authService } from '../services/authService';
 
+const isSidebarOpen = ref(false);
 const router = useRouter();
 const { logout, userPlan, userRequests, tokenLimit, userId, updateUserRequests } = useAuth();
 
@@ -355,6 +373,8 @@ const selectService = (key: ServiceKey) => {
   Object.keys(queryParams).forEach(k => delete queryParams[k]);
   resultsData.value = null;
   errorMsg.value = '';
+  // Cerrar sidebar en móvil al seleccionar
+  isSidebarOpen.value = false;
 };
 
 const executeSearch = async () => {

@@ -12,7 +12,7 @@
 
     <!-- Contenedor Principal (Soft Neumorphism & Glassmorphism) -->
     <div 
-      class="w-full max-w-[440px] p-12 rounded-[2rem] bg-obsidian-soft border-[0.5px] border-white/5 shadow-negative relative z-10"
+      class="w-full max-w-[440px] p-8 sm:p-12 rounded-[2rem] bg-obsidian-soft border-[0.5px] border-white/5 shadow-negative relative z-10"
     >
       <div class="text-center mb-12 mask-reveal delay-100 relative">
         <h1 class="text-[28px] tracking-[0.25em] font-light text-silver mb-2 drop-shadow-md">PORTAL</h1>
@@ -187,10 +187,10 @@
           </div>
         </transition>
 
-        <div class="h-5 flex items-center justify-center overflow-hidden">
+        <div class="min-h-[20px] flex items-center justify-center py-1">
           <transition name="slide-up">
-            <p v-if="errorMsg" class="text-red-400/70 text-[10px] tracking-[0.1em] text-center font-medium">{{ errorMsg }}</p>
-            <p v-else-if="successMsg" class="text-pale-blue/90 text-[10px] tracking-[0.1em] text-center font-medium">{{ successMsg }}</p>
+            <p v-if="errorMsg" class="text-red-400/90 text-[11px] tracking-[0.1em] text-center font-medium leading-relaxed">{{ errorMsg }}</p>
+            <p v-else-if="successMsg" class="text-pale-blue/90 text-[11px] tracking-[0.1em] text-center font-medium leading-relaxed">{{ successMsg }}</p>
           </transition>
         </div>
 

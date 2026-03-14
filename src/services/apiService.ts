@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useAuth } from '../composables/useAuth';
-import { CLIENT_RENEG_LIMIT } from 'tls';
 
 const apiClient = axios.create({
   // SECURITY: URL definida en .env, nunca en el código fuente.
