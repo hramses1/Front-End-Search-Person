@@ -159,6 +159,7 @@
                 type="password" 
                 id="password"
                 required
+                minlength="8"
                 class="w-full bg-transparent border-b-[0.5px] border-white/10 text-silver font-light focus:border-pale-blue/50 outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input placeholder-transparent"
                 placeholder="CONTRASEÑA"
               />
@@ -177,6 +178,7 @@
                 type="password" 
                 id="passwordConfirm"
                 required
+                minlength="8"
                 class="w-full bg-transparent border-b-[0.5px] border-white/10 text-silver font-light focus:border-pale-blue/50 outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input placeholder-transparent"
                 placeholder="CONFIRMAR CONTRASEÑA"
               />
@@ -282,7 +284,12 @@ const registerForm = reactive({
 });
 
 const validateEmail = (email: string) => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+};
+
+const validateUsername = (username: string) => {
+  // Al menos un caracter que no sea número
+  return /[a-zA-Z]/.test(username);
 };
 
 const validatePassword = (password: string) => {
@@ -291,13 +298,11 @@ const validatePassword = (password: string) => {
   const hasUpper = /[A-Z]/.test(password);
   const hasLower = /[a-z]/.test(password);
   const hasNumber = /[0-9]/.test(password);
-  const hasSpecial = /[!@#$%^&*(),.?":{}|<>_]/.test(password);
   
   if (!hasMinLength) return 'La contraseña debe tener al menos 8 caracteres.';
   if (!hasUpper) return 'Debe incluir al menos una letra mayúscula.';
   if (!hasLower) return 'Debe incluir al menos una letra minúscula.';
   if (!hasNumber) return 'Debe incluir al menos un número.';
-  if (!hasSpecial) return 'Debe incluir al menos un carácter especial.';
   
   return null;
 };
@@ -347,6 +352,14 @@ const handleSubmit = async () => {
       }
     } else {
       // Validaciones locales de Registro
+      if (!validateUsername(registerForm.name)) {
+        throw new Error('El nombre completo debe contener letras.');
+      }
+
+      if (!validateUsername(registerForm.username)) {
+        throw new Error('El nombre de usuario debe contener al menos una letra.');
+      }
+
       if (!validateEmail(registerForm.email)) {
         throw new Error('Formato de correo electrónico inválido.');
       }
