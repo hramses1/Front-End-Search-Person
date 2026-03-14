@@ -228,7 +228,7 @@ const successMsg = ref('');
 const successToken = ref('');
 
 const router = useRouter();
-const { setToken, setupActivityListeners, setUserRecord } = useAuth();
+const { setToken, setupActivityListeners, setUserRecord, setPlanData } = useAuth();
 
 // Cinemática del fondo
 const mouseX = ref(0);
@@ -292,8 +292,16 @@ const handleSubmit = async () => {
 
       // Validamos que exista el record y el ID
       if (response && response.record && response.record.id) {
-        // Guardamos el plan y peticiones del usuario
+        // Guardamos el plan y peticiones básicas del usuario
         setUserRecord(response.record);
+
+        // Obtenemos los datos del plan real (planDescription y token_duration)
+        try {
+          const planData = await authService.getUserPlan(response.record.id);
+          if (planData) {
+            setPlanData(planData.planDescription || 'FREE', planData.token_duration || 20);
+          }
+        } catch { /* Si falla, usamos el plan del record */ }
         
         // Obtenemos el token real usando este ID del usuario
         const tokenResponse = await authService.getApiToken(response.record.id);

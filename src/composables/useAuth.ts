@@ -6,6 +6,7 @@ const user = ref<any>(null);
 const userPlan = ref<string>(sessionStorage.getItem('user_plan') || 'FREE');
 const userRequests = ref<number>(parseInt(sessionStorage.getItem('user_requests') || '0', 10));
 const userId = ref<string>(sessionStorage.getItem('user_id') || '');
+const tokenLimit = ref<number>(parseInt(sessionStorage.getItem('token_limit') || '20', 10));
 let inactivityTimer: ReturnType<typeof setTimeout> | null = null;
 const INACTIVITY_LIMIT_MS = 10 * 60 * 1000; // 10 minutos
 
@@ -23,10 +24,12 @@ export function useAuth() {
     userPlan.value = 'FREE';
     userRequests.value = 0;
     userId.value = '';
+    tokenLimit.value = 20;
     sessionStorage.removeItem('auth_token');
     sessionStorage.removeItem('user_plan');
     sessionStorage.removeItem('user_requests');
     sessionStorage.removeItem('user_id');
+    sessionStorage.removeItem('token_limit');
     localStorage.removeItem('auth_token'); // Cleanup legacy if exists
     delete axios.defaults.headers.common['Authorization'];
     if (inactivityTimer) clearTimeout(inactivityTimer);
@@ -50,6 +53,13 @@ export function useAuth() {
   const updateUserRequests = (count: number) => {
     userRequests.value = count;
     sessionStorage.setItem('user_requests', String(count));
+  };
+
+  const setPlanData = (planDescription: string, limit: number) => {
+    userPlan.value = planDescription;
+    tokenLimit.value = limit;
+    sessionStorage.setItem('user_plan', planDescription);
+    sessionStorage.setItem('token_limit', String(limit));
   };
 
   const resetInactivityTimer = () => {
@@ -82,11 +92,13 @@ export function useAuth() {
     user: computed(() => user.value),
     userPlan: computed(() => userPlan.value),
     userRequests: computed(() => userRequests.value),
+    tokenLimit: computed(() => tokenLimit.value),
     userId: computed(() => userId.value),
     isAuthenticated: computed(() => !!token.value),
     setToken,
     setUserRecord,
     updateUserRequests,
+    setPlanData,
     logout,
     initializeAuth,
     setupActivityListeners

@@ -62,5 +62,14 @@ export const authService = {
   async getUserData(userId: string) {
     const response = await apiClient.get('/api/users/get/', { params: { codigo: userId } });
     return response.data;
+  },
+
+  /**
+   * Obtiene el plan del usuario: planDescription y token_duration (límite de peticiones).
+   */
+  async getUserPlan(userId: string) {
+    const response = await apiClient.get('/api/plan/get_for_userid/', { params: { id: userId } });
+    // Retorna el primer item de la colección
+    return response.data?.items?.[0] ?? null;
   }
 };
