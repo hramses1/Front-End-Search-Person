@@ -486,7 +486,8 @@ const handleSubmit = async () => {
 
 .mask-reveal {
   opacity: 0;
-  animation: maskReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity, clip-path;
+  animation: maskReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .delay-100 { animation-delay: 100ms; }
