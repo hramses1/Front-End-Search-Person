@@ -3,10 +3,10 @@
   "installCommand": "npm install && chmod +x node_modules/.bin/*",
   "buildCommand": "npx vite build",
   "outputDirectory": "dist",
-  "routes": [
+  "rewrites": [
     {
-      "src": "^/(.*)$",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
