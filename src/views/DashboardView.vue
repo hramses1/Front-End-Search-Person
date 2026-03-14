@@ -38,6 +38,39 @@
         </nav>
       </div>
 
+      <!-- Plan y Límite de Peticiones -->
+      <div class="px-4 pb-4">
+        <!-- Badge del Plan -->
+        <div class="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 mb-3">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[9px] tracking-[0.25em] text-amber-400/80 font-medium uppercase">Plan Actual</span>
+            <span class="text-[9px] font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 tracking-widest">{{ userPlan === 'cbbhqmwd0n978pi' ? 'FREE' : userPlan }}</span>
+          </div>
+          <!-- Barra de progreso de peticiones -->
+          <div class="mb-2">
+            <div class="flex justify-between text-[9px] text-smoke/70 mb-1">
+              <span>Peticiones usadas</span>
+              <span class="text-amber-400">{{ userRequests }} / 20</span>
+            </div>
+            <div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+              <div 
+                class="h-full rounded-full transition-all duration-700"
+                :class="userRequests >= 18 ? 'bg-red-400' : userRequests >= 12 ? 'bg-amber-400' : 'bg-pale-blue/60'"
+                :style="{ width: Math.min((userRequests / 20) * 100, 100) + '%' }"
+              ></div>
+            </div>
+          </div>
+          <!-- Alerta de pocas peticiones -->
+          <p v-if="userRequests >= 18" class="text-[9px] text-red-400/90 tracking-wide flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse inline-block"></span>
+            Límite casi alcanzado
+          </p>
+          <p v-else class="text-[9px] text-amber-400/60 tracking-wide">
+            {{ 20 - userRequests }} peticiones restantes
+          </p>
+        </div>
+      </div>
+
       <!-- Footer / Logout -->
       <div class="p-6 border-t border-white/5">
         <button 
@@ -211,7 +244,7 @@ import { useAuth } from '../composables/useAuth';
 import { apiService } from '../services/apiService';
 
 const router = useRouter();
-const { logout } = useAuth();
+const { logout, userPlan, userRequests } = useAuth();
 
 const handleLogout = () => {
   logout();

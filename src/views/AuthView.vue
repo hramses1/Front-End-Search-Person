@@ -228,7 +228,7 @@ const successMsg = ref('');
 const successToken = ref('');
 
 const router = useRouter();
-const { setToken, setupActivityListeners } = useAuth();
+const { setToken, setupActivityListeners, setUserRecord } = useAuth();
 
 // Cinemática del fondo
 const mouseX = ref(0);
@@ -292,6 +292,9 @@ const handleSubmit = async () => {
 
       // Validamos que exista el record y el ID
       if (response && response.record && response.record.id) {
+        // Guardamos el plan y peticiones del usuario
+        setUserRecord(response.record);
+        
         // Obtenemos el token real usando este ID del usuario
         const tokenResponse = await authService.getApiToken(response.record.id);
 
