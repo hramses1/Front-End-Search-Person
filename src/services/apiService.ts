@@ -26,7 +26,11 @@ const decodeData = (data: any): any => {
 apiClient.interceptors.request.use((config) => {
   const { token } = useAuth();
   if (token.value) {
-    config.headers.Authorization = `Bearer ${token.value}`;
+    if (config.headers && typeof config.headers.set === 'function') {
+      config.headers.set('Authorization', `Bearer ${token.value}`);
+    } else {
+      config.headers.Authorization = `Bearer ${token.value}`;
+    }
   }
   return config;
 });
@@ -49,10 +53,8 @@ apiClient.interceptors.response.use(
   },
   err => {
     if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-      // Usamos import().then() para evitar ciclos de importación circular con router/authService si los hubiera
       console.warn("Seguridad: Sesión expirada o token inválido.");
-      const { logout } = useAuth();
-      logout();
+      sessionStorage.clear();
       window.location.href = '/auth'; // Hard redirect prevents infinite loops on vue-router sometimes 
     }
     return Promise.reject(err);

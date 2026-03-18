@@ -355,7 +355,9 @@ const handleOAuthCallback = async () => {
           // Generar el token oficial del sistema (requerido para todo el flujo)
           try {
              const systemLoginResponse = await authService.getSystemToken(response.record.id);
-             if (systemLoginResponse && systemLoginResponse.token) {
+             if (systemLoginResponse && systemLoginResponse.access_token) {
+                 finalToken = systemLoginResponse.access_token;
+             } else if (systemLoginResponse && systemLoginResponse.token) {
                  finalToken = systemLoginResponse.token;
              }
           } catch(e) {
