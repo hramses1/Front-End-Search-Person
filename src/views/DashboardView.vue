@@ -1,10 +1,10 @@
 <template>
-  <div class="dashboard-wrapper font-primary min-h-screen bg-obsidian flex overflow-hidden relative">
+  <div class="dashboard-wrapper font-primary min-h-screen flex overflow-hidden relative">
     <!-- Fondo Atmosférico de Dashboard -->
     <div class="absolute inset-0 pointer-events-none noise-overlay z-0"></div>
-    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
-      <div class="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-pale-blue/5 blur-[120px] rounded-full"></div>
-      <div class="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] bg-pale-blue/5 blur-[100px] rounded-full"></div>
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0" style="will-change: transform; transform: translateZ(0);">
+      <div class="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-pale-blue/5 blur-[120px] rounded-full transform translate-z-0"></div>
+      <div class="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] bg-pale-blue/5 blur-[100px] rounded-full transform translate-z-0"></div>
     </div>
 
     <!-- Botón Hamburguesa para Móvil -->
@@ -19,37 +19,50 @@
     <!-- Navegación lateral (Sidebar) -->
     <aside 
       :class="[
-        'fixed inset-y-0 left-0 z-40 w-72 bg-obsidian-soft border-r border-white/5 transition-transform duration-300 lg:relative lg:translate-x-0 flex flex-col h-screen',
+        'fixed inset-y-0 left-0 z-40 w-72 transition-transform duration-300 lg:relative lg:translate-x-0 flex flex-col h-screen bg-obsidian-soft border-r',
         isSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
       ]"
+      style="border-color: var(--border-color);"
     >
       <!-- Overlay para cerrar sidebar en móvil -->
       <div v-if="isSidebarOpen" @click="isSidebarOpen = false" class="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm -z-10"></div>
 
       <!-- Header del Nav -->
-      <div class="p-8 border-b border-white/5">
-        <h2 class="text-xl tracking-[0.25em] font-light text-silver mb-1 mask-reveal">PORTAL<span class="text-pale-blue font-bold">SRI</span></h2>
-        <p class="text-[9px] uppercase tracking-[0.3em] text-smoke opacity-70 mask-reveal delay-100">Panel de Consultas</p>
+      <div class="p-8 border-b" style="border-color: var(--border-color);">
+        <h2 class="text-xl tracking-[0.25em] font-light mb-1 mask-reveal" style="color: var(--text-primary);">PORTAL<span style="color: var(--accent-color);" class="font-bold">SRI</span></h2>
+        <p class="text-[9px] uppercase tracking-[0.3em] opacity-70 mask-reveal delay-100" style="color: var(--text-secondary);">Panel de Consultas</p>
       </div>
 
       <!-- Menús de Selección -->
       <div class="flex-1 overflow-y-auto p-4 custom-scrollbar">
-        <p class="text-[9px] text-pale-blue/50 tracking-[0.3em] mb-4 pl-4 mt-2">SERVICIOS DISPONIBLES</p>
+        <div v-if="isAdmin" class="mb-6">
+          <p class="text-[9px] tracking-[0.3em] mb-4 pl-4 mt-2" style="color: var(--accent-color);">ADMINISTRACIÓN</p>
+          <button 
+            @click="router.push('/admin')"
+            class="w-full text-left px-5 py-3 rounded-xl text-[11px] tracking-[0.1em] transition-all duration-300 relative group overflow-hidden border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 text-amber-500"
+          >
+            <div class="flex items-center gap-3">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+              PANEL DE CONTROL
+            </div>
+          </button>
+        </div>
+
+        <p class="text-[9px] tracking-[0.3em] mb-4 pl-4 mt-2" style="color: var(--accent-color);">SERVICIOS DISPONIBLES</p>
         <nav class="space-y-1">
           <button 
             v-for="(service, key) in servicesList" :key="key"
-            @click="selectService(key)"
-            :class="['w-full text-left px-5 py-3 rounded-xl text-[11px] tracking-[0.1em] transition-all duration-300 relative group overflow-hidden', 
+            @click="selectService(key as ServiceKey)"
+            :class="['w-full text-left px-5 py-3 rounded-xl text-[11px] tracking-[0.1em] transition-all duration-300 relative group overflow-hidden border', 
               currentService === key 
-                ? 'bg-pale-blue/10 text-white border border-pale-blue/20 shadow-[0_0_15px_rgba(177,193,211,0.05)]' 
-                : 'text-smoke hover:bg-white/5 hover:text-silver border border-transparent'
+                ? 'text-white border-pale-blue/20 shadow-[0_0_15px_rgba(177,193,211,0.05)]' 
+                : 'hover:bg-white/5 border-transparent'
             ]"
+            :style="{ 
+              backgroundColor: currentService === key ? 'var(--accent-color)' : 'transparent',
+              color: currentService === key ? '#ffffff' : 'var(--text-secondary)'
+            }"
           >
-            <!-- Highlight Izquierdo Activo -->
-            <div 
-              class="absolute left-0 top-0 h-full w-[2px] bg-pale-blue transition-all duration-300"
-              :class="currentService === key ? 'opacity-100' : 'opacity-0'"
-            ></div>
             {{ service.title }}
           </button>
         </nav>
@@ -58,43 +71,34 @@
       <!-- Plan y Límite de Peticiones -->
       <div class="px-4 pb-4">
         <!-- Badge del Plan -->
-        <div class="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 mb-3">
+        <div class="rounded-xl border p-4 mb-3" style="border-color: var(--border-color); background-color: var(--card-bg);">
           <div class="flex items-center justify-between mb-2">
-            <span class="text-[9px] tracking-[0.25em] text-amber-400/80 font-medium uppercase">Plan Actual</span>
-            <span class="text-[9px] font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 tracking-widest">{{ userPlan }}</span>
+            <span class="text-[9px] tracking-[0.25em] font-medium uppercase" style="color: var(--text-secondary);">Plan Actual</span>
+            <span class="text-[9px] font-mono px-2 py-0.5 rounded-full border tracking-widest" style="color: var(--accent-color); border-color: var(--accent-color); background-color: var(--card-bg);">{{ userPlan }}</span>
           </div>
           <!-- Barra de progreso de peticiones -->
           <div class="mb-2">
-            <div class="flex justify-between text-[9px] text-smoke/70 mb-1">
+            <div class="flex justify-between text-[9px] mb-1" style="color: var(--text-secondary);">
               <span>Peticiones usadas</span>
-              <span class="text-amber-400">{{ userRequests }} / {{ tokenLimit }}</span>
+              <span style="color: var(--accent-color);">{{ userRequests }} / {{ tokenLimit }}</span>
             </div>
-            <div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+            <div class="w-full h-1 bg-black/10 rounded-full overflow-hidden">
               <div 
                 class="h-full rounded-full transition-all duration-700"
-                :class="userRequests >= tokenLimit - 2 ? 'bg-red-400' : userRequests >= tokenLimit * 0.6 ? 'bg-amber-400' : 'bg-pale-blue/60'"
-                :style="{ width: Math.min((userRequests / tokenLimit) * 100, 100) + '%' }"
+                :class="userRequests >= tokenLimit - 2 ? 'bg-red-500' : 'bg-blue-500'"
+                :style="{ width: Math.min((userRequests / tokenLimit) * 100, 100) + '%', backgroundColor: 'var(--accent-color)' }"
               ></div>
             </div>
           </div>
-          <!-- Alerta de pocas peticiones -->
-          <p v-if="userRequests >= tokenLimit - 2" class="text-[9px] text-red-400/90 tracking-wide flex items-center gap-1.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse inline-block"></span>
-            Límite casi alcanzado
-          </p>
-          <p v-else class="text-[9px] text-amber-400/60 tracking-wide">
-            {{ tokenLimit - userRequests }} peticiones restantes
-          </p>
         </div>
       </div>
 
       <!-- Footer / Logout -->
-      <div class="p-6 border-t border-white/5">
+      <div class="p-6 border-t" style="border-color: var(--border-color);">
         <button 
           @click="handleLogout"
-          class="w-full py-3 bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 hover:border-red-500/20 rounded-xl text-red-400 text-[10px] tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-2"
+          class="w-full py-3 bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 hover:border-red-500/20 rounded-xl text-red-500 text-[10px] tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-2"
         >
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
           DESCONECTAR
         </button>
       </div>
@@ -102,168 +106,207 @@
 
     <!-- Panel Central (Área de Trabajo) -->
     <main class="flex-1 flex flex-col h-screen relative z-10 p-6 sm:p-10 overflow-y-auto custom-scrollbar">
-      
-      <!-- Título de Sección Actual -->
-      <header class="mb-10 mask-reveal delay-200">
-        <h1 class="text-3xl font-light text-white tracking-[0.1em]">{{ currentServiceConfig.title }}</h1>
-        <p class="text-smoke text-sm mt-2 font-light tracking-wide max-w-xl leading-relaxed">{{ currentServiceConfig.description }}</p>
+
+      <!-- Título de Sección Actual y Perfil de Usuario -->
+      <header class="mb-10 mask-reveal delay-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div>
+          <h1 class="text-3xl font-light tracking-[0.1em]" style="color: var(--text-primary);">{{ currentServiceConfig.title }}</h1>
+          <p class="text-sm mt-2 font-light tracking-wide max-w-xl leading-relaxed" style="color: var(--text-secondary);">{{ currentServiceConfig.description }}</p>
+        </div>
+
+        <!-- Perfil de Usuario Simplificado y Tema -->
+        <div class="flex items-center gap-4 self-end md:self-auto">
+          <!-- Botón de Tema (Light/Dark) -->
+          <button 
+            @click="toggleTheme" 
+            class="p-3 backdrop-blur-md border rounded-2xl shadow-lg transition-all duration-300 group"
+            style="background-color: var(--glass-bg); border-color: var(--border-color); color: var(--accent-color);"
+            title="Cambiar Tema"
+          >
+            <transition name="fade-slide" mode="out-in">
+              <svg v-if="isDark" key="sun" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+              <svg v-else key="moon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </transition>
+          </button>
+
+          <div class="relative">
+            <div 
+              @click="isProfileMenuOpen = !isProfileMenuOpen"
+              class="flex items-center gap-4 backdrop-blur-md border py-2 px-4 rounded-2xl shadow-lg cursor-pointer hover:bg-white/5 transition-all duration-300" 
+              style="background-color: var(--glass-bg); border-color: var(--border-color);"
+            >
+              <div class="flex flex-col text-right">
+                <span class="text-[11px] font-medium tracking-widest uppercase" style="color: var(--text-primary);">{{ userName }}</span>
+                <span class="text-[8px] tracking-[0.2em] uppercase" style="color: var(--text-secondary);">SISTEMA ACTIVO</span>
+              </div>
+              <div class="w-10 h-10 rounded-full border flex items-center justify-center text-[11px] font-bold shadow-inner" style="background-color: var(--accent-color); border-color: var(--border-color); color: #ffffff;">
+                {{ userName.substring(0, 2).toUpperCase() }}
+              </div>
+            </div>
+
+            <!-- Dropdown del Perfil -->
+            <transition name="slide-up">
+              <div 
+                v-if="isProfileMenuOpen" 
+                class="absolute right-0 mt-3 w-48 backdrop-blur-xl border rounded-2xl shadow-2xl overflow-hidden z-50 flex flex-col"
+                style="background-color: var(--surface-color); border-color: var(--border-color);"
+              >
+                <div class="py-2 px-4 border-b border-white/5 mb-1" style="background-color: rgba(0,0,0,0.1);">
+                  <span class="text-[9px] uppercase tracking-[0.2em] opacity-60" style="color: var(--text-secondary);">Opciones</span>
+                </div>
+                <button 
+                  @click="() => { selectService('profile'); isProfileMenuOpen = false; }"
+                  class="w-full text-left px-5 py-3 text-[11px] tracking-[0.1em] transition-all duration-300 hover:bg-white/5 flex items-center gap-3"
+                  style="color: var(--text-primary);"
+                >
+                  <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                  EDITAR PERFIL
+                </button>
+              </div>
+            </transition>
+          </div>
+        </div>
       </header>
 
       <!-- Layout Búsqueda y Resultados -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
+
         <!-- Formulario (Izquierda/Arriba) -->
-        <div class="lg:col-span-4 bg-obsidian-soft border-[0.5px] border-white/5 rounded-2xl p-8 shadow-negative mask-reveal delay-300">
-          <h3 class="text-[10px] tracking-[0.3em] text-pale-blue/80 mb-6 flex items-center gap-2">
-            <div class="w-1.5 h-1.5 rounded-full bg-pale-blue/50 animate-pulse"></div>
+        <div class="lg:col-span-4 border rounded-2xl p-8 shadow-negative mask-reveal delay-300" style="background-color: var(--surface-color); border-color: var(--border-color);">
+          <h3 class="text-[10px] tracking-[0.3em] mb-6 flex items-center gap-2" style="color: var(--accent-color);">
+            <div class="w-1.5 h-1.5 rounded-full bg-current animate-pulse"></div>
             PARÁMETROS DE CONSULTA
           </h3>
 
           <form @submit.prevent="executeSearch" class="space-y-6">
-            <!-- Inputs Dinámicos basados en la configuración del servicio seleccionado -->
+            <!-- Inputs Dinámicos -->
             <div v-for="field in currentServiceConfig.fields" :key="field.key" class="relative group input-container">
               <input 
                 v-model="queryParams[field.key]" 
                 :type="field.type || 'text'" 
                 :id="field.key"
-                :required="field.required"
-                :pattern="field.pattern"
-                :minlength="field.minlength"
-                :maxlength="field.maxlength"
-                class="w-full bg-transparent border-b-[0.5px] border-white/10 text-silver font-light focus:border-pale-blue/50 outline-none pb-2 transition-all duration-300 peer group-hover:border-white/20 custom-input placeholder-transparent"
+                class="w-full bg-transparent border-b font-light outline-none pb-2 transition-all duration-300 peer custom-input placeholder-transparent"
+                style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
                 :placeholder="field.label"
               />
               <label 
                 :for="field.key" 
-                class="absolute left-0 top-0 text-smoke text-xs tracking-[0.2em] transition-all duration-300 peer-focus:-translate-y-5 peer-focus:text-[10px] peer-focus:text-pale-blue peer-focus:opacity-100 opacity-50 peer-valid:-translate-y-5 peer-valid:text-[10px] uppercase"
+                class="absolute left-0 top-0 text-xs tracking-[0.2em] transition-all duration-300 peer-focus:-translate-y-5 peer-focus:text-[10px] peer-focus:opacity-100 opacity-50 peer-valid:-translate-y-5 peer-valid:text-[10px] uppercase"
+                style="color: var(--text-secondary);"
               >
                 {{ field.label }}
               </label>
-              <div class="absolute bottom-0 left-0 w-full h-[0.5px] bg-gradient-to-r from-pale-blue/0 via-pale-blue/40 to-pale-blue/0 scale-x-0 peer-focus:scale-x-100 transition-transform duration-500 origin-center"></div>
+              <div class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-500 origin-center" style="background-color: var(--accent-color);"></div>
             </div>
 
+            <!-- Botón Especial para Perfil (Update) vs Consulta Normal -->
             <div class="pt-4">
               <button 
                 type="submit" 
-                class="w-full py-4 bg-pale-blue/5 hover:bg-pale-blue/10 backdrop-blur-md border border-pale-blue/10 rounded-xl text-silver text-[11px] tracking-[0.3em] uppercase transition-all duration-500 relative group overflow-hidden hover-smoke-glass flex justify-center items-center gap-2"
+                class="w-full py-4 border rounded-xl text-[11px] tracking-[0.3em] uppercase transition-all duration-500 relative group overflow-hidden hover-smoke-glass flex justify-center items-center gap-2"
+                style="background-color: var(--glass-bg); border-color: var(--accent-color); color: var(--text-primary);"
                 :disabled="isLoading"
               >
-                <span v-if="isLoading" class="w-3 h-3 border border-t-transparent border-silver rounded-full animate-spin"></span>
-                {{ isLoading ? 'ANALIZANDO RED...' : 'EJECUTAR CONSULTA' }}
+                {{ isLoading ? 'PROCESANDO...' : (currentService === 'profile' ? 'GUARDAR CAMBIOS' : 'EJECUTAR CONSULTA') }}
               </button>
             </div>
           </form>
-          
-          <!-- Errores locales -->
+
+          <!-- Errores -->
           <transition name="slide-up">
-            <p v-if="errorMsg" class="mt-4 text-red-400/80 text-[10px] tracking-[0.1em] text-center font-medium">{{ errorMsg }}</p>
+            <div v-if="errorMsg" class="mt-6 p-4 rounded-xl border flex items-start gap-3 text-left bg-red-500/10 border-red-500/20">
+              <p class="text-red-500 text-[10px] tracking-[0.1em] font-medium leading-relaxed uppercase">
+                {{ errorMsg }}
+              </p>
+            </div>
           </transition>
         </div>
 
-        <!-- Visor de Resultados (Derecha/Abajo) -->
+        <!-- Visor de Resultados -->
         <div class="lg:col-span-8">
           <transition name="fade-slide" mode="out-in">
-            <!-- Estado Inicial / Vacío -->
-            <div v-if="!hasResults && !isLoading" key="empty" class="h-full min-h-[400px] flex flex-col items-center justify-center border-[0.5px] border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
-              <svg class="w-12 h-12 text-white/5 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-              <p class="text-smoke/50 text-[11px] tracking-[0.2em] font-light">LISTO PARA RECIBIR RESPUESTA DEL NÚCLEO</p>
-            </div>
+            <!-- Cargando (Skeleton) -->
+            <SkeletonResult v-if="isLoading" key="loading" />
 
-            <!-- Cargando -->
-            <div v-else-if="isLoading" key="loading" class="h-full min-h-[400px] flex flex-col items-center justify-center bg-obsidian-soft border-[0.5px] border-white/5 rounded-2xl mask-reveal">
-               <div class="relative w-20 h-20 mb-6">
-                 <div class="absolute inset-0 border-t border-pale-blue/30 rounded-full animate-spin"></div>
-                 <div class="absolute inset-2 border-r border-white/20 rounded-full animate-[spin_2s_linear_reverse]"></div>
-                 <div class="absolute inset-4 border-b border-pale-blue/10 rounded-full animate-[spin_1s_linear_infinite]"></div>
-               </div>
-               <p class="text-pale-blue animate-pulse text-[10px] tracking-[0.4em]">DESCIFRANDO DATOS...</p>
-            </div>
-
-            <!-- Tabla de Resultados o JSON Tree -->
-            <div v-else key="results" class="bg-obsidian-soft border-[0.5px] border-white/5 rounded-2xl shadow-negative mask-reveal">
-              <div class="px-6 py-4 border-b border-white/5 flex justify-between items-center">
-                <h3 class="text-[9px] tracking-[0.3em] text-pale-blue opacity-80 flex items-center gap-2">
+            <!-- Tabla de Resultados -->
+            <div v-else-if="hasResults" key="results" class="border rounded-2xl shadow-negative mask-reveal" style="background-color: var(--surface-color); border-color: var(--border-color);">
+              <div class="px-6 py-4 border-b flex justify-between items-center" style="border-color: var(--border-color);">
+                <h3 class="text-[9px] tracking-[0.3em] opacity-80 flex items-center gap-2" style="color: var(--accent-color);">
                   <span class="w-1 h-1 bg-green-500 rounded-full"></span> 
                   RESULTADOS ENCONTRADOS
                 </h3>
-                <span class="text-[9px] font-mono text-smoke">STATUS 200 OK</span>
               </div>
-              
+
               <div class="p-6 overflow-y-auto max-h-[600px] custom-scrollbar">
-                
-                <!-- Si es un Array de Resultados (Ej: Nombre Completo, Citaciones simples) -->
                 <div v-if="Array.isArray(resultsData)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div v-for="(item, idx) in resultsData" :key="idx" class="bg-white/[0.02] border border-white/5 rounded-xl p-5 hover:bg-white/[0.04] transition-all duration-300 relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-gradient-to-br from-pale-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div class="relative z-10 space-y-4">
-                      <div v-for="(value, key) in item" :key="key" class="flex flex-col border-b border-white/[0.02] pb-3 last:border-0 last:pb-0">
-                        <span class="text-[9px] uppercase tracking-[0.2em] text-smoke opacity-60 mb-1 flex items-center gap-1.5">
-                          <span class="w-1 h-1 rounded-full bg-pale-blue/30 inline-block"></span>
-                          {{ formatKey(String(key)) }}
-                        </span>
-                        <span class="text-silver text-[12px] font-medium break-words leading-relaxed" :class="{'text-pale-blue/40 italic': !value && value !== 0}">{{ (value !== null && value !== '') ? value : 'NO REGISTRA' }}</span>
-                      </div>
+                  <div v-for="(item, idx) in resultsData" :key="idx" class="border rounded-xl p-5 transition-all duration-300 relative overflow-hidden group" style="background-color: var(--card-bg); border-color: var(--border-color);">
+                    <div v-for="(value, key) in item" :key="key" class="flex flex-col border-b last:border-0 pb-3 last:pb-0" style="border-color: var(--border-color);">
+                      <span class="text-[9px] uppercase tracking-[0.2em] opacity-60 mb-1" style="color: var(--text-secondary);">{{ formatKey(String(key)) }}</span>
+                      <span class="text-[12px] font-medium break-words leading-relaxed" style="color: var(--text-primary);">{{ value || 'NO REGISTRA' }}</span>
                     </div>
                   </div>
                 </div>
 
-                <!-- Si es un Objeto Único Complejo (Ej: RUC, Cédula) -->
-                <div v-else-if="typeof resultsData === 'object' && resultsData !== null" class="bg-white/[0.02] border border-white/5 rounded-xl p-7 relative overflow-hidden">
-                  <div class="absolute top-0 right-0 w-64 h-64 bg-pale-blue/5 blur-[80px] rounded-full pointer-events-none"></div>
-                  <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
-                    <div v-for="(value, key) in resultsData" :key="key" :class="{'col-span-1 sm:col-span-2 mt-4': Array.isArray(value)}">
-                      
-                      <!-- Elemento anidado tipo Array (ej: 'SRI' list, 'Licencias' list) -->
-                      <template v-if="Array.isArray(value) && value.length > 0">
-                        <h4 class="text-[10px] uppercase tracking-[0.3em] text-pale-blue opacity-90 mb-4 border-b border-white/10 pb-2 w-full flex items-center gap-2">
-                           <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                           {{ formatKey(String(key)) }}
-                        </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                          <div v-for="(subItem, sIdx) in value" :key="sIdx" class="bg-obsidian/40 rounded-xl p-5 border border-white/5 space-y-3 hover:border-white/10 transition-colors">
-                            <div v-for="(subVal, subKey) in subItem" :key="subKey" class="flex justify-between items-start gap-4 text-[11px] border-b border-white/[0.02] pb-2 last:border-0 last:pb-0">
-                              <span class="text-smoke opacity-70 tracking-widest uppercase text-[9px] mt-0.5 min-w-[30%]">{{ formatKey(String(subKey)) }}</span>
-                              <span class="text-silver text-right font-medium break-words max-w-[65%]" :class="{'text-pale-blue/40 italic': !subVal && subVal !== 0}">{{ (subVal !== null && subVal !== '') ? subVal : 'N/D' }}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </template>
-                      
-                      <!-- Elemento nativo (string, number) -->
-                      <template v-else-if="typeof value !== 'object'">
-                        <div class="flex flex-col group">
-                          <span class="text-[9px] uppercase tracking-[0.2em] text-smoke opacity-60 mb-1 group-hover:text-pale-blue/80 transition-colors">{{ formatKey(String(key)) }}</span>
-                          <span class="text-silver text-[13px] font-medium tracking-wide mt-0.5 break-words" :class="{'text-pale-blue/40 italic': !value && value !== 0}">{{ (value !== null && value !== '') ? value : 'NO REGISTRA' }}</span>
-                        </div>
-                      </template>
-                      
-                    </div>
+                <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div v-for="(value, key) in resultsData" :key="key" class="flex flex-col">
+                    <span class="text-[9px] uppercase tracking-[0.2em] opacity-60 mb-1" style="color: var(--text-secondary);">{{ formatKey(String(key)) }}</span>
+                    <span class="text-[13px] font-medium tracking-wide" style="color: var(--text-primary);">{{ typeof value === 'object' ? '...' : (value || 'NO REGISTRA') }}</span>
                   </div>
                 </div>
-
-                <!-- Fallback a JSON en caso de primitiva u objeto no mapeable -->
-                <pre v-else class="text-silver/90 font-mono text-[11.5px] leading-6 drop-shadow-sm whitespace-pre-wrap"><code v-html="syntaxHighlight(resultsData)"></code></pre>
               </div>
+            </div>
+
+            <!-- Estado Perfil Exitoso -->
+            <div v-else-if="currentService === 'profile' && successMsg" key="profile-success" class="h-full min-h-[400px] flex flex-col items-center justify-center border rounded-2xl transition-all duration-500" style="background-color: var(--card-bg); border-color: var(--accent-color);">
+               <svg class="w-16 h-16 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--accent-color);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+               <h3 class="text-[14px] tracking-[0.2em] font-light mb-2" style="color: var(--text-primary);">{{ successMsg }}</h3>
+               <p class="text-[10px] tracking-[0.1em] opacity-60" style="color: var(--text-secondary);">El identificador público interno ha sido modificado exitosamente.</p>
+            </div>
+
+            <!-- Estado Inicial / Vacío -->
+            <div v-else key="empty" class="h-full min-h-[400px] flex flex-col items-center justify-center border border-dashed rounded-2xl" style="background-color: var(--glass-bg); border-color: var(--border-color);">
+              <svg class="w-12 h-12 mb-4 opacity-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--text-primary);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+              <p class="text-[11px] tracking-[0.2em] font-light opacity-40" style="color: var(--text-primary);">{{ currentService === 'profile' ? 'MODIFICADOR DE PARÁMETROS INTERNOS' : 'LISTO PARA RECIBIR RESPUESTA DEL NÚCLEO' }}</p>
             </div>
           </transition>
         </div>
-
       </div>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import DOMPurify from 'dompurify';
 import { useAuth } from '../composables/useAuth';
 import { apiService } from '../services/apiService';
 import { authService } from '../services/authService';
+import SkeletonResult from '../components/SkeletonResult.vue';
 
 const isSidebarOpen = ref(false);
+const isProfileMenuOpen = ref(false);
 const router = useRouter();
-const { logout, userPlan, userRequests, tokenLimit, userId, updateUserRequests } = useAuth();
+const { logout, userPlan, userRequests, tokenLimit, userId, userName, updateUserName, isDark, isAdmin, updateUserRequests, setPlanData, toggleTheme } = useAuth();
+
+onMounted(async () => {
+  if (userId.value) {
+    try {
+      // Refrescar datos del plan (Descripción y Límite)
+      const planData = await authService.getUserPlan(userId.value);
+      if (planData) {
+        setPlanData(planData.planDescription || 'FREE', planData.token_duration || 20, planData.id);
+      }
+      
+      // Refrescar contador de peticiones
+      const userData = await authService.getUserData(userId.value);
+      if (typeof userData.number_requests === 'number') {
+        updateUserRequests(userData.number_requests);
+      }
+    } catch (e) {
+      console.error('Error refreshing dashboard data:', e);
+    }
+  }
+});
 
 const handleLogout = () => {
   logout();
@@ -271,7 +314,7 @@ const handleLogout = () => {
 };
 
 // Configuración Base de Servicios
-type ServiceKey = 'fullname' | 'ruc' | 'complaint' | 'complaints_info' | 'id_card' | 'license' | 'citation' | 'vehicles_plate';
+type ServiceKey = 'fullname' | 'ruc' | 'complaint' | 'complaints_info' | 'id_card' | 'license' | 'citation' | 'vehicles_plate' | 'profile';
 
 interface ServiceConfig {
   title: string;
@@ -353,6 +396,17 @@ const servicesList: Record<ServiceKey, ServiceConfig> = {
       { key: 'plate', label: 'NÚMERO DE PLACA', required: true, pattern: '^[a-zA-Z]{3}-\\d{4}$|^[a-zA-Z]{3}\\d{4}$', maxlength: 8 }
     ],
     action: (p) => apiService.getVehiclesByPlate(p.plate)
+  },
+  profile: {
+    title: 'ACTUALIZAR PERFIL',
+    description: 'Modifica tu identificador público en el sistema. Asegúrate de elegir un nombre que te identifique correctamente.',
+    fields: [
+      { key: 'newUserName', label: 'NUEVO NOMBRE DE USUARIO', required: true, maxlength: 50 }
+    ],
+    action: async (_p) => {
+      // Devolvemos el control manual a executeSearch para que handlee el update
+      return '__UPDATE_PROFILE__';
+    }
   }
 };
 
@@ -362,6 +416,7 @@ const currentService = ref<ServiceKey>('id_card');
 const queryParams = reactive<Record<string, string>>({});
 const isLoading = ref(false);
 const errorMsg = ref('');
+const successMsg = ref('');
 const resultsData = ref<any>(null);
 
 const currentServiceConfig = computed(() => servicesList[currentService.value]);
@@ -373,17 +428,42 @@ const selectService = (key: ServiceKey) => {
   Object.keys(queryParams).forEach(k => delete queryParams[k]);
   resultsData.value = null;
   errorMsg.value = '';
-  // Cerrar sidebar en móvil al seleccionar
+  successMsg.value = '';
+
+  // Prellenar nombre actual si abre perfil
+  if (key === 'profile') {
+    queryParams.newUserName = userName.value;
+  }
+  // Cerrar menus
   isSidebarOpen.value = false;
+  isProfileMenuOpen.value = false;
 };
 
 const executeSearch = async () => {
   isLoading.value = true;
   errorMsg.value = '';
+  successMsg.value = '';
   resultsData.value = null;
 
   try {
     const data = await currentServiceConfig.value.action(queryParams);
+    
+    // Verificamos si es un request de update perfil manual
+    if (data === '__UPDATE_PROFILE__') {
+      const newName = queryParams.newUserName?.trim();
+      if (!newName || newName.length < 3) {
+        throw new Error("El nombre de usuario debe tener al menos 3 caracteres.");
+      }
+      
+      const payload = { username: newName };
+      await authService.updateUser(userId.value, payload);
+      
+      // Actualizar DOM reactivo
+      updateUserName(newName);
+      successMsg.value = "Nombre de usuario actualizado";
+      return;
+    }
+
     if (Object.keys(data).length === 0 && data.constructor === Object) {
         throw new Error('La consulta no arrojó resultados válidos encontrados.');
     }
@@ -399,12 +479,16 @@ const executeSearch = async () => {
       } catch { /* Si falla el refresco, lo ignoramos silenciosamente */ }
     }
   } catch (error: any) {
-    if (error.response?.status === 404) {
+    const detail = error.response?.data?.detail;
+
+    if (detail === 'Has superado el límite de peticiones') {
+      errorMsg.value = 'HAS AGOTADO TU LÍMITE DE CONSULTAS DISPONIBLES. POR FAVOR, RENUEVA TU PLAN.';
+    } else if (error.response?.status === 404) {
       errorMsg.value = 'El registro solicitado no fue encontrado en la base de datos.';
     } else if (error.response?.status === 422) {
       errorMsg.value = 'Parámetros de consulta estructurados de forma incorrecta (Validación).';
     } else {
-      errorMsg.value = error.message || error.response?.data?.message || 'Fallo de conexión crítico al intentar consultar la red.';
+      errorMsg.value = error.message || error.response?.data?.message || detail || 'Fallo de conexión crítico al intentar consultar la red.';
     }
   } finally {
     isLoading.value = false;
@@ -420,56 +504,64 @@ const formatKey = (key: string) => {
     .trim();
 };
 
-// Helper: Ilumina la salida JSON inyectando spans HTML (Como Fallback)
-const syntaxHighlight = (json: any) => {
-  if (!json) return '';
-  let str = JSON.stringify(json, null, 4);
-  
-  // Reemplazar keys y primitivos de forma segura
-  str = str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const htmlOut = str.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-      let cls = 'text-pale-blue font-bold'; // strings / keys
-      if (/^"/.test(match)) {
-          if (/:$/.test(match)) {
-              cls = 'text-smoke/80'; // keys
-          } else {
-              cls = 'text-[#b8d3b1]'; // string values (soft green)
-          }
-      } else if (/true|false/.test(match)) {
-          cls = 'text-[#d3b1b1]'; // boolean (soft red/orange)
-      } else if (/null/.test(match)) {
-          cls = 'text-white/30 italic'; // null
-      } else {
-          cls = 'text-[#b1b8d3]'; // number (pale blue variant)
-      }
-      return '<span class="' + cls + '">' + match + '</span>';
-  });
-
-  // SECURITY: DOMPurify para limpiar el HTML inyectado por terceros (evita XSS injection por APIs hackeadas)
-  return DOMPurify.sanitize(htmlOut);
-};
 </script>
 
 <style scoped>
 /* Scoped solo para el dashboard. Base styling (fonts, obsidian bg, overlay) are reused from globals */
 
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+.dashboard-wrapper { 
+  min-height: 100vh;
+  background-color: var(--bg-color); 
 }
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
+
+.bg-obsidian-soft { 
+  background-color: var(--surface-color); 
+  backdrop-filter: blur(16px); 
 }
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(177, 193, 211, 0.2);
-  border-radius: 4px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(177, 193, 211, 0.4);
-}
+
+.text-silver { color: var(--text-primary); }
+.text-smoke { color: var(--text-secondary); }
+.text-pale-blue { color: var(--accent-color); }
 
 pre {
   margin: 0;
   tab-size: 2;
+}
+
+/* Transiciones de Modo - Optimizadas para Velocidad */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translate3d(-10px, 0, 0);
+}
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translate3d(10px, 0, 0);
+}
+
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+.slide-up-enter-from,
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+}
+
+/* Animación Cinemática Reveal - Optimizada */
+@keyframes maskReveal {
+  0% { opacity: 0; transform: translate3d(0, 10px, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+.mask-reveal {
+  will-change: transform, opacity;
+  animation: maskReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 </style>

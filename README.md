@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🛡️ Portal SRI - FrontEnd Inteligente</h1>
+  <h1>🛡️ Portal SRI </h1>
   <p>Interfaz Premium, Minimalista y Segura construida en <b>Vue 3 + TypeScript</b> y estilizada con <b>TailwindCSS</b> y Glassmorphism para las consultas demográficas y de vehículos.</p>
 
   [![Vue.js](https://img.shields.io/badge/Vue.js-3.0-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)](https://vuejs.org/)

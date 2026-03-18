@@ -2,15 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-color: #121214;
+  --surface-color: rgba(22, 22, 26, 0.4);
+  --text-primary: #e4e4e9;
+  --text-secondary: #8a8a95;
+  --accent-color: #b1c1d3;
+  --border-color: rgba(255, 255, 255, 0.05);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --shadow-color: rgba(0, 0, 0, 0.6);
+  --card-bg: rgba(255, 255, 255, 0.02);
+  --scrollbar-track: rgba(255, 255, 255, 0.02);
+  --scrollbar-thumb: rgba(177, 193, 211, 0.2);
+  --scrollbar-thumb-hover: rgba(177, 193, 211, 0.4);
+  --autofill-bg: #16161a;
+  --autofill-text: #e4e4e9;
+}
+
+.light-mode {
+  --bg-color: #f8fafc; /* Slate 50 for softer background, pure white feels harsh */
+  --surface-color: #ffffff;
+  --text-primary: #0f172a; /* Slate 900 */
+  --text-secondary: #64748b; /* Slate 500 */
+  --accent-color: #2563eb;
+  --border-color: #e2e8f0; /* Slate 200 */
+  --input-border: #cbd5e1; /* Slate 300 */
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --shadow-color: rgba(148, 163, 184, 0.15); /* Softened slate shadow for light mode negative effect */
+  --card-bg: #ffffff;
+  --scrollbar-track: #f1f5f9;
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-thumb-hover: #94a3b8;
+  --autofill-bg: #f8fafc;
+  --autofill-text: #0f172a;
+}
+
 @layer base {
   body {
-    @apply bg-obsidian text-silver font-primary m-0 p-0 antialiased;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    @apply font-primary m-0 p-0 antialiased transition-colors duration-500;
   }
 }
 
 @layer utilities {
   .custom-input {
-    /* Autofill fix handled in specific views as well, but can be global */
-    transition: background-color 5000s ease-in-out 0s;
+    transition: background-color 5000s ease-in-out 0s, border-color 0.3s ease, color 0.3s ease;
   }
+
+  /* Dynamic Scrollbars */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+}
+
+/* Fix Autocomplete para Chrome respetando diseño light/dark */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px var(--autofill-bg) inset !important;
+  -webkit-text-fill-color: var(--autofill-text) !important;
+  transition: background-color 5000s ease-in-out 0s;
+  caret-color: var(--text-primary);
 }

@@ -1,7 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuth } from '../composables/useAuth'
+
+// Importaciones directas para evitar fallos de carga en desarrollo
 import AuthView from '../views/AuthView.vue'
 import DashboardView from '../views/DashboardView.vue'
-import { useAuth } from '../composables/useAuth'
+import AdminView from '../views/AdminView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,6 +22,12 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/admin',
+      name: 'admin',
+      component: AdminView,
+      meta: { requiresAuth: true, requiresAdmin: true }
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/dashboard'
     }
@@ -26,16 +35,15 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
   
   if (to.meta.requiresAuth && !isAuthenticated.value) {
-    // Redirigir a login si intenta ir al dashboard sin autenticación
     next({ name: 'auth' })
+  } else if (to.meta.requiresAdmin && !isAdmin.value) {
+    next({ name: 'dashboard' })
   } else if (to.meta.guestOnly && isAuthenticated.value) {
-    // Redirigir al dashboard si intenta ir al login estando autenticado
     next({ name: 'dashboard' })
   } else {
-    // Permitir navegación
     next()
   }
 })
