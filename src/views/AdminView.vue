@@ -231,13 +231,28 @@ onMounted(() => {
 const fetchUsers = async () => {
   isLoading.value = true;
   try {
-    // _t param para evitar que el navegador sirva respuesta cacheada
     const data = await authService.getAllUsersPlans();
     users.value = data.items || [];
   } catch (error) {
     console.error('Error fetching users:', error);
   } finally {
     isLoading.value = false;
+  }
+
+  // En segundo plano: enriquecer cada usuario con su number_requests real
+  // Usamos Promise.allSettled para que un fallo individual no detenga los demás
+  if (users.value.length > 0) {
+    const results = await Promise.allSettled(
+      users.value.map((u: any) => authService.getUserData(u.userId))
+    );
+    results.forEach((result, idx) => {
+      if (result.status === 'fulfilled' && result.value) {
+        users.value[idx] = {
+          ...users.value[idx],
+          number_requests: result.value.number_requests ?? 0
+        };
+      }
+    });
   }
 };
 
