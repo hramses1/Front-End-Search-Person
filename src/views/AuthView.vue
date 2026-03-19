@@ -306,8 +306,57 @@
           </div>
         </div>
 
+        <!-- Términos y condiciones Link -->
+        <div v-if="!successToken" class="text-center mt-6 mask-reveal delay-700">
+          <p class="text-[9px] tracking-widest uppercase opacity-50" style="color: var(--text-secondary);">
+            AL CONTINUAR, ACEPTAS NUESTROS
+            <button type="button" @click="showTerms = true" class="underline hover:text-current transition-colors ml-1" style="color: var(--text-primary);">TÉRMINOS Y CONDICIONES</button>
+          </p>
+        </div>
+
       </form>
     </div>
+
+    <!-- Modal de Términos -->
+    <transition name="fade-slide">
+      <div v-if="showTerms" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="showTerms = false"></div>
+        <div class="relative w-full max-w-lg p-8 rounded-2xl shadow-2xl overflow-hidden border max-h-[80vh] flex flex-col" style="background-color: var(--card-bg); border-color: var(--border-color);">
+          <div class="mb-6 flex justify-between items-center">
+            <h2 class="text-sm tracking-[0.2em] font-medium" style="color: var(--text-primary);">⚠️ AVISO IMPORTANTE</h2>
+            <button @click="showTerms = false" class="p-2 opacity-50 hover:opacity-100 transition-opacity">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+          </div>
+          
+          <div class="overflow-y-auto custom-scrollbar pr-2 flex-1 text-xs leading-relaxed space-y-4 font-light opacity-90" style="color: var(--text-secondary);">
+            <p>Esta plataforma se conecta a servicios externos para obtener información pública. Los datos mostrados provienen de fuentes oficiales o abiertas y se entregan únicamente con fines informativos.</p>
+            
+            <h3 class="font-medium tracking-widest mt-6 mb-2" style="color: var(--text-primary);">📌 LIMITACIONES Y RESPONSABILIDAD</h3>
+            <ul class="list-disc pl-4 space-y-2">
+              <li>No garantizamos que la información presentada sea exacta, completa o esté actualizada al 100%.</li>
+              <li>El uso que se haga de los datos obtenidos a través de esta plataforma es responsabilidad exclusiva del usuario.</li>
+              <li><strong>Devzio Solutions</strong> (desarrolladores) y esta plataforma no se hacen responsables por daños, perjuicios o consecuencias derivadas de un uso indebido, fraudulento o ilegal de la información.</li>
+            </ul>
+
+            <h3 class="font-medium tracking-widest mt-6 mb-2" style="color: var(--text-primary);">🔒 PRIVACIDAD</h3>
+            <ul class="list-disc pl-4 space-y-2">
+              <li>No almacenamos información personal sensible más allá de lo necesario para el funcionamiento del portal.</li>
+              <li>Los registros temporales de búsqueda se utilizan únicamente para mejorar la experiencia de uso y se eliminan periódicamente.</li>
+            </ul>
+            
+            <p class="pt-4 border-t mt-6 opacity-60 text-[10px] tracking-widest" style="border-color: var(--border-color);">
+              AL CONTINUAR UTILIZANDO ESTA PLATAFORMA, CONFIRMAS QUE COMPRENDES Y ACEPTAS ESTAS CONDICIONES.
+            </p>
+          </div>
+          
+          <div class="mt-6 pt-4 flex justify-end tracking-widest">
+            <button @click="showTerms = false" class="px-6 py-2 rounded-xl text-[10px] font-medium transition-all" style="background-color: var(--accent-color); color: #FFF;">ENTENDIDO</button>
+          </div>
+        </div>
+      </div>
+    </transition>
+
   </div>
 </template>
 
@@ -320,6 +369,7 @@ import { useAuth } from '../composables/useAuth';
 const isLogin = ref(true);
 const isLoading = ref(false);
 const isGoogleLoading = ref(false);
+const showTerms = ref(false);
 const errorMsg = ref('');
 const successMsg = ref('');
 const successToken = ref('');
