@@ -16,6 +16,9 @@
       <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
     </button>
 
+    <!-- Overlay para cerrar sidebar en móvil -->
+    <div v-if="isSidebarOpen" @click="isSidebarOpen = false" class="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-30"></div>
+
     <!-- Navegación lateral (Sidebar) -->
     <aside 
       :class="[
@@ -24,8 +27,6 @@
       ]"
       style="border-color: var(--border-color);"
     >
-      <!-- Overlay para cerrar sidebar en móvil -->
-      <div v-if="isSidebarOpen" @click="isSidebarOpen = false" class="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm -z-10"></div>
 
       <!-- Header del Nav -->
       <div class="p-8 border-b" style="border-color: var(--border-color);">
