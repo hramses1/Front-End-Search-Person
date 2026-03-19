@@ -21,21 +21,21 @@
 }
 
 .light-mode {
-  --bg-color: #f8fafc; /* Slate 50 for softer background, pure white feels harsh */
-  --surface-color: #ffffff;
-  --text-primary: #0f172a; /* Slate 900 */
-  --text-secondary: #64748b; /* Slate 500 */
-  --accent-color: #2563eb;
-  --border-color: #e2e8f0; /* Slate 200 */
-  --input-border: #cbd5e1; /* Slate 300 */
-  --glass-bg: rgba(255, 255, 255, 0.9);
-  --shadow-color: rgba(148, 163, 184, 0.15); /* Softened slate shadow for light mode negative effect */
-  --card-bg: #ffffff;
-  --scrollbar-track: #f1f5f9;
-  --scrollbar-thumb: #cbd5e1;
-  --scrollbar-thumb-hover: #94a3b8;
-  --autofill-bg: #f8fafc;
-  --autofill-text: #0f172a;
+  --bg-color: #F7F8FA; /* Soft pearl gray */
+  --surface-color: #FFFFFF;
+  --text-primary: #1C1E21; /* Very dark slate, almost black */
+  --text-secondary: #6B7280; /* Elegant gray */
+  --accent-color: #2C5282; /* Premium deep blue */
+  --border-color: rgba(0, 0, 0, 0.06); /* Very subtle borders */
+  --input-border: rgba(0, 0, 0, 0.12);
+  --glass-bg: rgba(255, 255, 255, 0.85); /* Frost effect */
+  --shadow-color: rgba(0, 0, 0, 0.04);
+  --card-bg: rgba(255, 255, 255, 0.6);
+  --scrollbar-track: rgba(0, 0, 0, 0.03);
+  --scrollbar-thumb: rgba(0, 0, 0, 0.15);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.25);
+  --autofill-bg: #F0F4F8;
+  --autofill-text: #1C1E21;
 }
 
 @layer base {
