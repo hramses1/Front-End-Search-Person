@@ -141,7 +141,7 @@
             </transition>
           </button>
 
-          <div class="relative">
+          <div class="relative" ref="profileBtnRef">
             <div 
               @click="isProfileMenuOpen = !isProfileMenuOpen"
               class="flex items-center gap-4 backdrop-blur-md border py-2 px-4 rounded-2xl shadow-lg cursor-pointer hover:bg-white/5 transition-all duration-300" 
@@ -156,26 +156,29 @@
               </div>
             </div>
 
-            <!-- Dropdown del Perfil -->
-            <transition name="slide-up">
-              <div 
-                v-if="isProfileMenuOpen" 
-                class="absolute right-0 mt-3 w-48 backdrop-blur-xl border rounded-2xl shadow-2xl overflow-hidden z-50 flex flex-col"
-                style="background-color: var(--surface-color); border-color: var(--border-color);"
-              >
-                <div class="py-2 px-4 border-b border-white/5 mb-1" style="background-color: rgba(0,0,0,0.1);">
-                  <span class="text-[9px] uppercase tracking-[0.2em] opacity-60" style="color: var(--text-secondary);">Opciones</span>
-                </div>
-                <button 
-                  @click="() => { selectService('profile'); isProfileMenuOpen = false; }"
-                  class="w-full text-left px-5 py-3 text-[11px] tracking-[0.1em] transition-all duration-300 hover:bg-white/5 flex items-center gap-3"
-                  style="color: var(--text-primary);"
+            <!-- Dropdown: Teleport al body para evitar el clip del overflow del main -->
+            <Teleport to="body">
+              <transition name="slide-up">
+                <div 
+                  v-if="isProfileMenuOpen" 
+                  class="fixed w-48 backdrop-blur-xl border rounded-2xl shadow-2xl overflow-hidden z-[999] flex flex-col"
+                  :style="dropdownStyle"
+                  style="background-color: var(--surface-color); border-color: var(--border-color);"
                 >
-                  <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                  EDITAR PERFIL
-                </button>
-              </div>
-            </transition>
+                  <div class="py-2 px-4 border-b border-white/5 mb-1" style="background-color: rgba(0,0,0,0.1);">
+                    <span class="text-[9px] uppercase tracking-[0.2em] opacity-60" style="color: var(--text-secondary);">Opciones</span>
+                  </div>
+                  <button 
+                    @click="() => { selectService('profile'); isProfileMenuOpen = false; }"
+                    class="w-full text-left px-5 py-3 text-[11px] tracking-[0.1em] transition-all duration-300 hover:bg-white/5 flex items-center gap-3"
+                    style="color: var(--text-primary);"
+                  >
+                    <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    EDITAR PERFIL
+                  </button>
+                </div>
+              </transition>
+            </Teleport>
           </div>
         </div>
       </header>
@@ -306,7 +309,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuth } from '../composables/useAuth';
 import { apiService } from '../services/apiService';
@@ -316,10 +319,30 @@ import ResultCard from '../components/ResultCard.vue';
 
 const isSidebarOpen = ref(false);
 const isProfileMenuOpen = ref(false);
+const profileBtnRef = ref<HTMLElement | null>(null);
+
+// Posición del dropdown calculada dinámicamente para Teleport
+const dropdownStyle = computed(() => {
+  if (!profileBtnRef.value) return {};
+  const rect = profileBtnRef.value.getBoundingClientRect();
+  return {
+    top: `${rect.bottom + 8}px`,
+    right: `${window.innerWidth - rect.right}px`,
+  };
+});
+
+// Cerrar el dropdown al hacer click fuera
+const handleOutsideClick = (e: MouseEvent) => {
+  if (profileBtnRef.value && !profileBtnRef.value.contains(e.target as Node)) {
+    isProfileMenuOpen.value = false;
+  }
+};
+
 const router = useRouter();
 const { logout, userPlan, userRequests, tokenLimit, userId, userName, updateUserName, isDark, isAdmin, updateUserRequests, setPlanData, toggleTheme } = useAuth();
 
 onMounted(async () => {
+  document.addEventListener('click', handleOutsideClick, true);
   if (userId.value) {
     try {
       // Refrescar datos del plan (Descripción y Límite)
@@ -337,6 +360,10 @@ onMounted(async () => {
       console.error('Error refreshing dashboard data:', e);
     }
   }
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleOutsideClick, true);
 });
 
 const handleLogout = () => {
