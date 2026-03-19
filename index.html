@@ -3,12 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Optimización Responsiva -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    
+    <!-- Meta SEO & Confianza -->
+    <title>Portal de Consulta Ciudadana | Verificación y Trámites Oficiales</title>
+    <meta name="description" content="Accede de forma rápida y segura a datos oficiales, verificación de identidad, estado de RUC, licencias de conducir e historial de vehículos. Plataforma de consulta garantizada." />
+    <meta name="keywords" content="portal de consulta, identidad ecuador, ruc, matriculación, multas de tránsito, buscar por cédula, datos gubernamentales" />
+    <meta name="author" content="Devzio Solutions" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- OpenGraph (Redes Sociales/WhatsApp) -->
+    <meta property="og:title" content="Portal de Consulta Ciudadana" />
+    <meta property="og:description" content="Plataforma segura y rápida para verificación de identidad, RUC, y multas de tránsito. Accede en milisegundos." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_EC" />
+
     <!-- Content Security Policy (Hardened) -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' ws://localhost:* http://localhost:* http://127.0.0.1:* https://api.devzio.solutions; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data:; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-    <!-- Evitar cliking (X-Frame-Options equivalent via JS but ideally set on server) -->
-    <title>Portal de consulta ciudadana - Terminal</title>
   </head>
   <body>
     <div id="app"></div>
