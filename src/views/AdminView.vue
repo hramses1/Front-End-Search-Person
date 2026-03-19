@@ -85,7 +85,7 @@
               <tr class="border-b" style="border-color: var(--border-color); background-color: rgba(0,0,0,0.02);">
                 <th class="px-6 py-4 text-[9px] uppercase tracking-[0.2em]" style="color: var(--text-secondary);">Usuario</th>
                 <th class="px-6 py-4 text-[9px] uppercase tracking-[0.2em]" style="color: var(--text-secondary);">Plan Actual</th>
-                <th class="px-6 py-4 text-[9px] uppercase tracking-[0.2em]" style="color: var(--text-secondary);">Peticiones</th>
+                <th class="px-6 py-4 text-[9px] uppercase tracking-[0.2em]" style="color: var(--text-secondary);">Peticiones Usadas</th>
                 <th class="px-6 py-4 text-[9px] uppercase tracking-[0.2em]" style="color: var(--text-secondary);">Acciones</th>
               </tr>
             </thead>
@@ -103,16 +103,31 @@
                   </span>
                 </td>
                 <td class="px-6 py-4">
-                  <span class="text-[11px] font-mono" style="color: var(--text-primary);">{{ userItem.token_duration }}</span>
+                  <div class="flex flex-col">
+                    <span class="text-[13px] font-medium font-mono" style="color: var(--text-primary);">{{ userItem.number_requests }}</span>
+                    <span class="text-[9px] opacity-50" style="color: var(--text-secondary);">/ {{ userItem.token_duration }} límite</span>
+                  </div>
                 </td>
                 <td class="px-6 py-4">
-                  <button 
-                    @click="openEditModal(userItem)"
-                    class="px-4 py-1.5 rounded-lg text-[10px] tracking-[0.1em] border border-current hover:bg-current hover:text-white transition-all duration-300"
-                    style="color: var(--accent-color);"
-                  >
-                    EDITAR PLAN
-                  </button>
+                  <div class="flex gap-2">
+                    <button 
+                      @click="openEditModal(userItem)"
+                      class="px-3 py-1.5 rounded-lg text-[10px] tracking-[0.1em] border border-current hover:bg-current hover:text-white transition-all duration-300"
+                      style="color: var(--accent-color);"
+                    >
+                      EDITAR
+                    </button>
+                    <button 
+                      @click="resetRequests(userItem)"
+                      :disabled="userItem.number_requests === 0 || isResetting === userItem.userId"
+                      class="px-3 py-1.5 rounded-lg text-[10px] tracking-[0.1em] border border-current transition-all duration-300 disabled:opacity-30"
+                      style="color: #22c55e;"
+                      title="Reiniciar peticiones a 0"
+                    >
+                      <span v-if="isResetting === userItem.userId">...</span>
+                      <span v-else>↺ RESET</span>
+                    </button>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -139,10 +154,11 @@
               </div>
 
               <div class="space-y-1">
-                <label class="text-[10px] uppercase tracking-[0.2em]" style="color: var(--text-secondary);">Número de Peticiones</label>
+                <label class="text-[10px] uppercase tracking-[0.2em]" style="color: var(--text-secondary);">Peticiones Actuales (editar para ajustar manualmente)</label>
                 <input 
                   v-model="editForm.number_requests" 
                   type="number"
+                  min="0"
                   required
                   class="w-full bg-transparent border-b font-light outline-none pb-2 transition-all duration-300"
                   style="color: var(--text-primary); border-color: var(--input-border);"
@@ -189,6 +205,7 @@ const users = ref<any[]>([]);
 const isLoading = ref(false);
 const showModal = ref(false);
 const isSaving = ref(false);
+const isResetting = ref<string | null>(null);
 
 const editForm = reactive({
   userId: '',
@@ -223,9 +240,25 @@ const handleLogout = () => {
 
 const openEditModal = (userItem: any) => {
   editForm.userId = userItem.userId;
-  editForm.plan = userItem.id; // En el response, id parece ser el plan ID
-  editForm.number_requests = userItem.token_duration;
+  editForm.plan = userItem.id; // 'id' del registro de plan es el Plan ID
+  editForm.number_requests = userItem.number_requests; // peticiones reales del usuario
   showModal.value = true;
+};
+
+const resetRequests = async (userItem: any) => {
+  isResetting.value = userItem.userId;
+  try {
+    await authService.patchUser(userItem.userId, {
+      number_requests: 0
+    });
+    // Actualizar localmente para no refrescar toda la lista
+    const idx = users.value.findIndex(u => u.userId === userItem.userId);
+    if (idx !== -1) users.value[idx].number_requests = 0;
+  } catch (error) {
+    alert('Error al resetear peticiones.');
+  } finally {
+    isResetting.value = null;
+  }
 };
 
 const saveUserChanges = async () => {
