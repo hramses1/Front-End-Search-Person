@@ -337,8 +337,8 @@ const servicesList: Record<ServiceKey, ServiceConfig> = {
     title: 'BÚSQUEDA POR NOMBRE',
     description: 'Localiza a un usuario dentro del padrón consultando por sus nombres y/o apellidos completos.',
     fields: [
-      { key: 'name', label: 'NOMBRE', required: false },
-      { key: 'lastname', label: 'APELLIDO', required: false }
+      { key: 'name', label: 'NOMBRE (EJ: JUAN)', required: false },
+      { key: 'lastname', label: 'APELLIDO (EJ: PÉREZ)', required: false }
     ],
     action: (p) => apiService.getFullname(p.name, p.lastname)
   },
@@ -346,7 +346,7 @@ const servicesList: Record<ServiceKey, ServiceConfig> = {
     title: 'ESTADO RUC',
     description: 'Consulta los datos contributivos, estado legal y todos los establecimientos asociados a un RUC (Registro Único de Contribuyentes).',
     fields: [
-      { key: 'ruc', label: 'NÚMERO DE RUC', required: true, pattern: '^\\d{13}$', minlength: 13, maxlength: 13 }
+      { key: 'ruc', label: 'NÚMERO DE RUC (EJ: 1790000000001)', required: true, pattern: '^\\d{13}$', minlength: 13, maxlength: 13 }
     ],
     action: (p) => apiService.getRuc(p.ruc)
   },
@@ -354,7 +354,7 @@ const servicesList: Record<ServiceKey, ServiceConfig> = {
     title: 'VERIFICACIÓN DE IDENTIDAD',
     description: 'Búsqueda principal por Cédula de Identidad Ecuatoriana. Retorna nombre, clases, fecha de nacimiento, estado civil y más detalles demográficos.',
     fields: [
-      { key: 'ci', label: 'CÉDULA DE IDENTIDAD', required: true, pattern: '^\\d{10}$', minlength: 10, maxlength: 10 }
+      { key: 'ci', label: 'CÉDULA (EJ: 1700234567)', required: true, pattern: '^\\d{10}$', minlength: 10, maxlength: 10 }
     ],
     action: (p) => apiService.getIdCard(p.ci)
   },
@@ -362,7 +362,7 @@ const servicesList: Record<ServiceKey, ServiceConfig> = {
     title: 'LICENCIAS ACTIVAS',
     description: 'Verifica los tipos de licencias de conducir activas de una persona, así como sus puntos de licencia actuales.',
     fields: [
-      { key: 'ci', label: 'CÉDULA DE IDENTIDAD', required: true, pattern: '^\\d{10}$', minlength: 10, maxlength: 10 }
+      { key: 'ci', label: 'CÉDULA (EJ: 1700234567)', required: true, pattern: '^\\d{10}$', minlength: 10, maxlength: 10 }
     ],
     action: (p) => apiService.getLicense(p.ci)
   },
@@ -370,7 +370,7 @@ const servicesList: Record<ServiceKey, ServiceConfig> = {
     title: 'INFRACCIONES DE TRÁNSITO',
     description: 'Consulta el registro completo de citaciones e infracciones vehiculares registradas a la licencia de una persona, incluyendo valores a cancelar.',
     fields: [
-      { key: 'ci', label: 'CÉDULA DE IDENTIDAD', required: true, pattern: '^\\d{10}$', minlength: 10, maxlength: 10 }
+      { key: 'ci', label: 'CÉDULA (EJ: 1700234567)', required: true, pattern: '^\\d{10}$', minlength: 10, maxlength: 10 }
     ],
     action: (p) => apiService.getCitation(p.ci)
   },
@@ -378,7 +378,7 @@ const servicesList: Record<ServiceKey, ServiceConfig> = {
     title: 'REGISTRO DE DENUNCIAS',
     description: 'Accede a los historiales de juicios y denuncias ingresadas buscando específicamente por el documento de identidad asociado.',
     fields: [
-      { key: 'ci', label: 'CÉDULA DE IDENTIDAD', required: true, pattern: '^\\d{10}$', minlength: 10, maxlength: 10 }
+      { key: 'ci', label: 'CÉDULA (EJ: 1700234567)', required: true, pattern: '^\\d{10}$', minlength: 10, maxlength: 10 }
     ],
     action: (p) => apiService.getComplaint(p.ci)
   },
@@ -386,7 +386,7 @@ const servicesList: Record<ServiceKey, ServiceConfig> = {
     title: 'INFORMACIÓN DE JUICIOS',
     description: 'Datos detallados de expedientes de juicio o denuncias anexadas en el sistema de fiscalía y judicatura.',
     fields: [
-      { key: 'ci', label: 'CÉDULA DE IDENTIDAD', required: true, pattern: '^\\d{10}$', minlength: 10, maxlength: 10 }
+      { key: 'ci', label: 'CÉDULA (EJ: 1700234567)', required: true, pattern: '^\\d{10}$', minlength: 10, maxlength: 10 }
     ],
     action: (p) => apiService.getComplaintsInformation(p.ci)
   },
@@ -394,7 +394,7 @@ const servicesList: Record<ServiceKey, ServiceConfig> = {
     title: 'CONSULTA DE VEHÍCULOS',
     description: 'Obtén marca, modelo, año y propietario legal ingresando únicamente el número de matriculación (placa).',
     fields: [
-      { key: 'plate', label: 'NÚMERO DE PLACA', required: true, pattern: '^[a-zA-Z]{3}-\\d{4}$|^[a-zA-Z]{3}\\d{4}$', maxlength: 8 }
+      { key: 'plate', label: 'NÚMERO DE PLACA (EJ: ABC-1234)', required: true, pattern: '^[a-zA-Z]{3}-\\d{4}$|^[a-zA-Z]{3}\\d{4}$', maxlength: 8 }
     ],
     action: (p) => apiService.getVehiclesByPlate(p.plate)
   },
