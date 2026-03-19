@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🛡️ Portal SRI </h1>
+  <h1>🛡️ Portal de Consulta Ciudadana </h1>
   <p>Interfaz Premium, Minimalista y Segura construida en <b>Vue 3 + TypeScript</b> y estilizada con <b>TailwindCSS</b> y Glassmorphism para las consultas demográficas y de vehículos.</p>
 
   [![Vue.js](https://img.shields.io/badge/Vue.js-3.0-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)](https://vuejs.org/)
@@ -22,7 +22,7 @@
 * **Despliegues en un Clic**: Aprovisionado y preparado con reglas estrictas (Headers Content-Security-Policy & anti-clickjacking) para `Vercel` y empaquetado ultra ligero en `Docker`.
 
 ## ⚙️ Consultas Soportadas
-El panel lateral permite a los usuarios acreditados conectarse a la `API SRI` consultando:
+El panel lateral permite a los usuarios acreditados conectarse a la `API del Portal de Consulta Ciudadana` consultando:
 1. Nombres y Apellidos
 2. Estado RUC y Establecimientos
 3. Cédula y Datos Demográficos
@@ -60,10 +60,10 @@ Asegúrate de tener [Node.js](https://nodejs.org/es) (versión 18+ recomendada) 
 El repositorio cuenta con un entorno aislado multifase en Alpine para desplegar una versión de producción ultra veloz sobre un WebServer Nginx nativo.
 ```bash
 # Construir la imagen local
-docker build -t portal-sri-frontend .
+docker build -t portal-consulta-ciudadana-frontend .
 
 # Ejecutar el contenedor escuchando en el puerto 8080 del Host local
-docker run -d -p 8080:80 portal-sri-frontend
+docker run -d -p 8080:80 portal-consulta-ciudadana-frontend
 ```
 
 ## 🛸 Despliegue hacia Vercel

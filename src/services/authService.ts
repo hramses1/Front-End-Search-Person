@@ -49,7 +49,7 @@ export const authService = {
   },
 
   /**
-   * Inicia sesión 2: Obtiene el Token del SRI enviando el ID obtenido.
+   * Inicia sesión 2: Obtiene el Token del Portal de consulta ciudadana enviando el ID obtenido.
    */
   async getApiToken(userId: string) {
     const response = await apiClient.get('/api/main/login/?codigo=' + userId);

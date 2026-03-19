@@ -29,7 +29,7 @@
 
       <!-- Header del Nav -->
       <div class="p-8 border-b" style="border-color: var(--border-color);">
-        <h2 class="text-xl tracking-[0.25em] font-light mb-1 mask-reveal" style="color: var(--text-primary);">PORTAL<span style="color: var(--accent-color);" class="font-bold">SRI</span></h2>
+        <h2 class="text-[14px] leading-tight tracking-[0.15em] font-light mb-1 mask-reveal" style="color: var(--text-primary);">PORTAL DE <br><span style="color: var(--accent-color);" class="font-bold">CONSULTA CIUDADANA</span></h2>
         <p class="text-[9px] uppercase tracking-[0.3em] opacity-70 mask-reveal delay-100" style="color: var(--text-secondary);">Panel de Consultas</p>
       </div>
 
