@@ -68,7 +68,10 @@ export const authService = {
    * Obtiene todos los usuarios con sus planes (Solo Admin).
    */
   async getAllUsersPlans() {
-    const response = await apiClient.get('/api/plan/get_all_users_plans/');
+    const response = await apiClient.get('/api/plan/get_all_users_plans/', {
+      headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
+      params: { _t: Date.now() }
+    });
     return response.data;
   },
 

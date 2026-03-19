@@ -76,7 +76,11 @@
       <div class="border rounded-2xl shadow-negative overflow-hidden" style="background-color: var(--surface-color); border-color: var(--border-color);">
         <div class="px-6 py-4 border-b flex justify-between items-center" style="border-color: var(--border-color);">
           <h3 class="text-[10px] tracking-[0.3em]" style="color: var(--accent-color);">LISTADO DE USUARIOS ACTIVOS</h3>
-          <button @click="fetchUsers" class="text-[9px] tracking-[0.2em] uppercase hover:opacity-80 transition-opacity" style="color: var(--text-secondary);">Refrescar</button>
+          <button @click="fetchUsers" :disabled="isLoading" class="flex items-center gap-1.5 text-[9px] tracking-[0.2em] uppercase hover:opacity-80 transition-opacity disabled:opacity-40" style="color: var(--text-secondary);">
+            <span v-if="isLoading" class="w-2.5 h-2.5 border border-t-transparent rounded-full animate-spin" style="border-color: var(--text-secondary);"></span>
+            <span v-else>&#8635;</span>
+            Refrescar
+          </button>
         </div>
 
         <div class="overflow-x-auto max-h-[600px] overflow-y-auto custom-scrollbar pb-6">
@@ -227,8 +231,8 @@ onMounted(() => {
 const fetchUsers = async () => {
   isLoading.value = true;
   try {
+    // _t param para evitar que el navegador sirva respuesta cacheada
     const data = await authService.getAllUsersPlans();
-    // number_requests ya viene en el payload de getAllUsersPlans, no se necesita otra petición
     users.value = data.items || [];
   } catch (error) {
     console.error('Error fetching users:', error);
