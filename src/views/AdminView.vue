@@ -112,7 +112,7 @@
                   <div class="flex gap-2">
                     <button 
                       @click="openEditModal(userItem)"
-                      class="px-3 py-1.5 rounded-lg text-[10px] tracking-[0.1em] border border-current hover:bg-current hover:text-white transition-all duration-300"
+                      class="px-3 py-1.5 rounded-lg text-[10px] tracking-[0.1em] border border-current hover:opacity-70 transition-all duration-300"
                       style="color: var(--accent-color);"
                     >
                       EDITAR
