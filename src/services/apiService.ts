@@ -63,7 +63,7 @@ apiClient.interceptors.response.use(
 
 // Cache en memoria para optimizar velocidad
 const cache = new Map<string, { timestamp: number, data: any }>();
-const CACHE_TTL = 5 * 60 * 1000; 
+const CACHE_TTL = 5 * 60 * 1000;
 
 const fetchWithCache = async (url: string, params: any = {}) => {
   const key = `${url}:${JSON.stringify(params)}`;
@@ -77,12 +77,12 @@ const fetchWithCache = async (url: string, params: any = {}) => {
   if (pendingRequests.has(key)) {
     pendingRequests.get(key)?.abort();
   }
-  
+
   const controller = new AbortController();
   pendingRequests.set(key, controller);
 
   try {
-    const response = await apiClient.get(url, { 
+    const response = await apiClient.get(url, {
       params,
       signal: controller.signal
     });

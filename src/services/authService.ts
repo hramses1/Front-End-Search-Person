@@ -86,15 +86,15 @@ export const authService = {
   async getUserPlan(userId: string) {
     const response = await apiClient.get('/api/plan/get_for_userid/', { params: { userid: userId } });
     const items = response.data?.items || [];
-    
+
     if (items.length === 0) return null;
-    
+
     // Priorizar plan ADMIN si existe en la lista
-    const adminPlan = items.find((p: any) => 
-      p.planDescription?.toUpperCase().includes('ADMIN') && 
+    const adminPlan = items.find((p: any) =>
+      p.planDescription?.toUpperCase().includes('ADMIN') &&
       p.id === '5rkvp69sbpzz9cv'
     );
-    
+
     return adminPlan || items[0];
   },
 
@@ -124,7 +124,7 @@ export const authService = {
         token: 'not-token'
       }
     };
-    
+
     const response = await apiClient.post('/api/main/auth-with-oauth2/', payload);
     return response.data;
   },
