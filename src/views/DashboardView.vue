@@ -400,9 +400,9 @@ const servicesList: Record<ServiceKey, ServiceConfig> = {
   },
   profile: {
     title: 'ACTUALIZAR PERFIL',
-    description: 'Modifica tu identificador público en el sistema. Asegúrate de elegir un nombre que te identifique correctamente.',
+    description: 'Modifica tu identificador público en el sistema (Ejemplo: usuario_123). Asegúrate de elegir un nombre que te identifique correctamente.',
     fields: [
-      { key: 'newUserName', label: 'NUEVO NOMBRE DE USUARIO', required: true, maxlength: 50 }
+      { key: 'newUserName', label: 'NUEVO USUARIO (EJ: usuario_123)', required: true, maxlength: 50 }
     ],
     action: async (_p) => {
       // Devolvemos el control manual a executeSearch para que handlee el update

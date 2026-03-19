@@ -1,5 +1,19 @@
 <template>
   <div class="auth-wrapper font-primary relative overflow-hidden flex items-center justify-center p-6">
+    <!-- Botón de Tema Flotante -->
+    <button 
+      type="button"
+      @click="toggleTheme" 
+      class="absolute top-6 right-6 z-50 p-3 backdrop-blur-md border rounded-2xl shadow-lg transition-all duration-300 group hover:scale-105"
+      style="background-color: var(--glass-bg); border-color: var(--border-color); color: var(--accent-color);"
+      title="Cambiar Tema"
+    >
+      <transition name="fade-slide" mode="out-in">
+        <svg v-if="isDark" key="sun" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+        <svg v-else key="moon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+      </transition>
+    </button>
+
     <!-- Fondo Atmosférico con Múltiples Capas (Soft Obsidian & Deep Petrol + Grain) -->
     <div class="absolute inset-0 pointer-events-none noise-overlay z-0"></div>
     
@@ -304,7 +318,7 @@ const registerErrors = reactive({
 });
 
 const router = useRouter();
-const { setToken, setupActivityListeners, setUserRecord, setPlanData } = useAuth();
+const { setToken, setupActivityListeners, setUserRecord, setPlanData, toggleTheme, isDark } = useAuth();
 
 // Cinemática del fondo optimizada para evitar lagazo
 const mouseX = ref(0);
