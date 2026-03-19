@@ -2,12 +2,28 @@
   <div class="dashboard-wrapper font-primary min-h-screen flex overflow-hidden relative">
     <!-- Fondo Atmosférico -->
     <div class="absolute inset-0 pointer-events-none noise-overlay z-0"></div>
+
+    <!-- Botón Hamburguesa para Móvil -->
+    <button 
+      @click="isSidebarOpen = !isSidebarOpen"
+      class="lg:hidden fixed top-4 right-4 z-50 p-3 bg-obsidian-soft border border-white/10 rounded-xl text-pale-blue shadow-lg pointer-events-auto"
+      style="background-color: var(--glass-bg); border-color: var(--border-color); color: var(--accent-color);"
+    >
+      <svg v-if="!isSidebarOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+      <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
     
     <!-- Sidebar -->
     <aside 
-      class="fixed inset-y-0 left-0 z-40 w-72 transition-transform duration-300 lg:relative lg:translate-x-0 flex flex-col h-screen bg-obsidian-soft border-r"
+      :class="[
+        'fixed inset-y-0 left-0 z-40 w-72 transition-transform duration-300 lg:relative lg:translate-x-0 flex flex-col h-screen bg-obsidian-soft border-r',
+        isSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
+      ]"
       style="border-color: var(--border-color);"
     >
+      <!-- Overlay para cerrar sidebar en móvil -->
+      <div v-if="isSidebarOpen" @click="isSidebarOpen = false" class="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm -z-10"></div>
+
       <div class="p-8 border-b" style="border-color: var(--border-color);">
         <h2 class="text-xl tracking-[0.25em] font-light mb-1" style="color: var(--text-primary);">PORTAL<span style="color: var(--accent-color);" class="font-bold">ADMIN</span></h2>
         <p class="text-[9px] uppercase tracking-[0.3em] opacity-70" style="color: var(--text-secondary);">Gestión de Usuarios</p>
@@ -167,6 +183,7 @@ import { authService } from '../services/authService';
 const router = useRouter();
 const { logout, userName, isAdmin } = useAuth();
 
+const isSidebarOpen = ref(false);
 const users = ref<any[]>([]);
 const isLoading = ref(false);
 const showModal = ref(false);

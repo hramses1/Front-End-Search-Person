@@ -53,18 +53,23 @@
 
   /* Dynamic Scrollbars */
   .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 4px; /* Hacemos el scrollbar más fino (4px en vez de 6px) */
+    height: 4px;
   }
   .custom-scrollbar::-webkit-scrollbar-track {
-    background: var(--scrollbar-track);
+    background: transparent; /* El track debe ser invisible para no manchar el fondo */
   }
   .custom-scrollbar::-webkit-scrollbar-thumb {
     background: var(--scrollbar-thumb);
-    border-radius: 4px;
+    border-radius: 10px; /* Bordes totalmente redondeados */
+    border: 1px solid transparent; 
+    background-clip: padding-box;
   }
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: var(--scrollbar-thumb-hover);
+    border-radius: 10px;
+    border: 1px solid transparent; 
+    background-clip: padding-box;
   }
 }
 
