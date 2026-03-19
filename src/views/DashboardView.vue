@@ -94,7 +94,7 @@
         </div>
       </div>
 
-      <!-- Footer / Logout -->
+      <!-- Footer / Logout + Trust Signals -->
       <div class="p-6 border-t" style="border-color: var(--border-color);">
         <button 
           @click="handleLogout"
@@ -102,6 +102,17 @@
         >
           DESCONECTAR
         </button>
+        <!-- Pilar 10: Señales de Confianza -->
+        <div class="mt-4 flex flex-wrap justify-center gap-2 text-[8px] uppercase tracking-widest opacity-40 font-mono" style="color: var(--text-secondary);">
+          <span class="flex items-center gap-1">
+            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            SSL
+          </span>
+          <span>·</span>
+          <span>Cifrado TLS</span>
+          <span>·</span>
+          <span>Devzio &copy; 2025</span>
+        </div>
       </div>
     </aside>
 
@@ -200,14 +211,16 @@
               <div class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-500 origin-center" style="background-color: var(--accent-color);"></div>
             </div>
 
-            <!-- Botón Especial para Perfil (Update) vs Consulta Normal -->
+            <!-- Botón Submit Mejorado: Pilar 4 (CTA Efetivo) -->
             <div class="pt-4">
               <button 
                 type="submit" 
-                class="w-full py-4 border rounded-xl text-[11px] tracking-[0.3em] uppercase transition-all duration-500 relative group overflow-hidden hover-smoke-glass flex justify-center items-center gap-2"
+                class="w-full py-4 border rounded-xl text-[11px] tracking-[0.3em] uppercase transition-all duration-500 relative group overflow-hidden hover-smoke-glass flex justify-center items-center gap-3"
                 style="background-color: var(--glass-bg); border-color: var(--accent-color); color: var(--text-primary);"
                 :disabled="isLoading"
               >
+                <span v-if="isLoading" class="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" :style="{ borderColor: 'var(--accent-color)', borderTopColor: 'transparent' }"></span>
+                <span v-else-if="currentService !== 'profile'">⚡</span>
                 {{ isLoading ? 'PROCESANDO...' : (currentService === 'profile' ? 'GUARDAR CAMBIOS' : 'EJECUTAR CONSULTA') }}
               </button>
             </div>
@@ -231,28 +244,44 @@
 
             <!-- Tabla de Resultados -->
             <div v-else-if="hasResults" key="results" class="border rounded-2xl shadow-negative mask-reveal" style="background-color: var(--surface-color); border-color: var(--border-color);">
+              <!-- Pilar 5: Resultados con formato estructurado + Pilar 4: Botón copiar -->
               <div class="px-6 py-4 border-b flex justify-between items-center" style="border-color: var(--border-color);">
                 <h3 class="text-[9px] tracking-[0.3em] opacity-80 flex items-center gap-2" style="color: var(--accent-color);">
                   <span class="w-1 h-1 bg-green-500 rounded-full"></span> 
                   RESULTADOS ENCONTRADOS
                 </h3>
+                <button 
+                  @click="copyResults"
+                  class="flex items-center gap-1.5 text-[9px] tracking-[0.15em] uppercase opacity-50 hover:opacity-100 transition-opacity"
+                  style="color: var(--text-secondary);"
+                  :title="copiedMsg || 'Copiar al portapapeles'"
+                >
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                  {{ copiedMsg || 'COPIAR' }}
+                </button>
               </div>
 
               <div class="p-6 overflow-y-auto max-h-[600px] custom-scrollbar">
+                <!-- Resultados en lista (array) -->
                 <div v-if="Array.isArray(resultsData)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div v-for="(item, idx) in resultsData" :key="idx" class="border rounded-xl p-5 transition-all duration-300 relative overflow-hidden group" style="background-color: var(--card-bg); border-color: var(--border-color);">
-                    <div v-for="(value, key) in item" :key="key" class="flex flex-col border-b last:border-0 pb-3 last:pb-0" style="border-color: var(--border-color);">
-                      <span class="text-[9px] uppercase tracking-[0.2em] opacity-60 mb-1" style="color: var(--text-secondary);">{{ formatKey(String(key)) }}</span>
-                      <span class="text-[12px] font-medium break-words leading-relaxed" style="color: var(--text-primary);">{{ value || 'NO REGISTRA' }}</span>
-                    </div>
+                  <div v-for="(item, idx) in resultsData" :key="idx" class="border rounded-xl p-5 transition-all duration-300" style="background-color: var(--card-bg); border-color: var(--border-color);">
+                    <ResultCard
+                      v-for="(value, key) in item" :key="key"
+                      :label="mapKey(String(key))"
+                      :value="value"
+                      :type="detectType(String(key), value)"
+                    />
                   </div>
                 </div>
 
-                <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div v-for="(value, key) in resultsData" :key="key" class="flex flex-col">
-                    <span class="text-[9px] uppercase tracking-[0.2em] opacity-60 mb-1" style="color: var(--text-secondary);">{{ formatKey(String(key)) }}</span>
-                    <span class="text-[13px] font-medium tracking-wide" style="color: var(--text-primary);">{{ typeof value === 'object' ? '...' : (value || 'NO REGISTRA') }}</span>
-                  </div>
+                <!-- Resultado único (objeto) -->
+                <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-x-10">
+                  <ResultCard
+                    v-for="(value, key) in resultsData" :key="key"
+                    :label="mapKey(String(key))"
+                    :value="value"
+                    :type="detectType(String(key), value)"
+                  />
                 </div>
               </div>
             </div>
@@ -283,6 +312,7 @@ import { useAuth } from '../composables/useAuth';
 import { apiService } from '../services/apiService';
 import { authService } from '../services/authService';
 import SkeletonResult from '../components/SkeletonResult.vue';
+import ResultCard from '../components/ResultCard.vue';
 
 const isSidebarOpen = ref(false);
 const isProfileMenuOpen = ref(false);
@@ -496,13 +526,72 @@ const executeSearch = async () => {
   }
 };
 
-// Formatea los keys de la API para que sean legibles (ej: 'FechaNacimiento' -> 'Fecha Nacimiento').
-const formatKey = (key: string) => {
-  if (!key) return '';
+// Pilar 5: Mapa de claves de la API al español legible
+const KEY_MAP: Record<string, string> = {
+  // Identidad
+  cedula: 'Cédula', cedula_identidad: 'Cédula', ci: 'Cédula',
+  primer_nombre: 'Primer Nombre', segundo_nombre: 'Segundo Nombre',
+  primer_apellido: 'Primer Apellido', segundo_apellido: 'Segundo Apellido',
+  nombre_completo: 'Nombre Completo', nombres: 'Nombres', apellidos: 'Apellidos',
+  fecha_nacimiento: 'Fecha de Nacimiento', lugar_nacimiento: 'Lugar de Nacimiento',
+  estado_civil: 'Estado Civil', genero: 'Género', sexo: 'Sexo',
+  nacionalidad: 'Nacionalidad', pais: 'País',
+  // Contacto
+  email: 'Correo Electrónico', telefono: 'Teléfono', celular: 'Celular',
+  direccion: 'Dirección', provincia: 'Provincia', canton: 'Cantón', ciudad: 'Ciudad',
+  // RUC / Tributario
+  ruc: 'RUC', razon_social: 'Razón Social', nombre_comercial: 'Nombre Comercial',
+  estado_ruc: 'Estado RUC', tipo_contribuyente: 'Tipo Contribuyente',
+  actividad_economica: 'Actividad Económica', fecha_inicio_actividades: 'Inicio Actividades',
+  // Licencias
+  tipo_licencia: 'Tipo Licencia', clase: 'Clase', puntaje: 'Puntos',
+  fecha_expedicion: 'Fecha Expedición', fecha_caducidad: 'Fecha Caducidad',
+  estado: 'Estado', vigente: 'Vigente', activo: 'Activo',
+  // Vehículo
+  placa: 'Placa', marca: 'Marca', modelo: 'Modelo', anio: 'Año', color: 'Color',
+  cilindraje: 'Cilindraje', tonelaje: 'Tonelaje', propietario: 'Propietario',
+  // Infracciones
+  numero_infraccion: 'N° Infracción', fecha_infraccion: 'Fecha Infracción',
+  valor: 'Valor', valor_a_pagar: 'Valor a Pagar', descripcion: 'Descripción',
+  ubicacion: 'Ubicación', agente: 'Agente',
+};
+
+const KEY_STATUS = ['estado', 'estado_ruc', 'vigente', 'activo', 'status'];
+const KEY_DATE = ['fecha_nacimiento', 'fecha_expedicion', 'fecha_caducidad', 'fecha_inicio_actividades', 'fecha_infraccion'];
+const KEY_CURRENCY = ['valor', 'valor_a_pagar', 'monto', 'saldo'];
+
+// Detecta tipo de dato para el ResultCard
+const detectType = (key: string, value: any): 'badge' | 'date' | 'currency' | 'text' => {
+  const k = key.toLowerCase();
+  if (KEY_STATUS.some(s => k.includes(s))) return 'badge';
+  if (KEY_DATE.some(d => k.includes(d))) return 'date';
+  if (KEY_CURRENCY.some(c => k.includes(c))) return 'currency';
+  return 'text';
+};
+
+// Mapea clave de API a español usando diccionario; si no existe, aplica formateo genérico
+const mapKey = (key: string): string => {
+  const k = key.toLowerCase();
+  if (KEY_MAP[k]) return KEY_MAP[k];
   return key
-    .replace(/([A-Z])/g, ' $1') // Espacios antes de mayúsculas
-    .replace(/_/g, ' ') // Guiones bajos a espacios
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/_/g, ' ')
     .trim();
+};
+
+
+// Pilar 4: Copiar resultados al portapapeles
+const copiedMsg = ref('');
+const copyResults = async () => {
+  try {
+    const text = JSON.stringify(resultsData.value, null, 2);
+    await navigator.clipboard.writeText(text);
+    copiedMsg.value = '✓ COPIADO';
+    setTimeout(() => copiedMsg.value = '', 2000);
+  } catch {
+    copiedMsg.value = 'ERROR';
+    setTimeout(() => copiedMsg.value = '', 2000);
+  }
 };
 
 </script>
