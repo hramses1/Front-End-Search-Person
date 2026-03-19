@@ -97,7 +97,7 @@
                   </div>
                 </td>
                 <td class="px-6 py-4">
-                  <span class="text-[10px] px-2 py-0.5 rounded-full border border-current font-mono tracking-widest" :style="{ color: userItem.planDescription.includes('ADMIN') ? 'var(--accent-color)' : 'var(--text-secondary)' }">
+                  <span class="inline-block whitespace-nowrap text-[10px] px-3 py-1 rounded-full border border-current font-mono tracking-widest" :style="{ color: userItem.planDescription.includes('ADMIN') ? 'var(--accent-color)' : 'var(--text-secondary)' }">
                     {{ userItem.planDescription }}
                   </span>
                 </td>
