@@ -62,7 +62,7 @@
           <button @click="fetchUsers" class="text-[9px] tracking-[0.2em] uppercase hover:opacity-80 transition-opacity" style="color: var(--text-secondary);">Refrescar</button>
         </div>
 
-        <div class="overflow-x-auto max-h-[600px] overflow-y-auto custom-scrollbar">
+        <div class="overflow-x-auto max-h-[600px] overflow-y-auto custom-scrollbar pb-6">
           <table class="w-full text-left border-collapse">
             <thead>
               <tr class="border-b" style="border-color: var(--border-color); background-color: rgba(0,0,0,0.02);">
