@@ -304,6 +304,45 @@
           </transition>
         </div>
       </div>
+
+      <!-- Footer Premium -->
+      <footer class="mt-16 sm:mt-24 pt-8 border-t flex flex-col xl:flex-row items-center justify-between gap-6" style="border-color: var(--border-color);">
+        <!-- Izquierda: Copyright -->
+        <div class="text-[10px] sm:text-[11px] font-light opacity-60 tracking-[0.05em]" style="color: var(--text-primary);">
+          © 2026 <span class="font-medium" style="color: var(--accent-color);">Devzio</span>. Todos los derechos reservados.
+        </div>
+
+        <!-- Centro: Lema -->
+        <div class="text-[9px] sm:text-[10px] font-medium tracking-[0.3em] uppercase text-center xl:absolute xl:left-1/2 xl:-translate-x-1/2 w-full xl:w-auto" style="color: var(--text-secondary);">
+          Construyendo el futuro de la ingeniería de software.
+        </div>
+
+        <!-- Derecha: Redes y Subir -->
+        <div class="flex items-center gap-4 z-10">
+          <!-- LinkedIn -->
+          <a 
+            href="https://www.linkedin.com/in/hector-arismendi-469551167/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+            style="border-color: var(--border-color); color: var(--accent-color); background-color: var(--glass-bg);"
+            title="Conectar en LinkedIn"
+          >
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          </a>
+          
+          <!-- Botón Arriba -->
+          <button 
+            @click="scrollToTop"
+            class="w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ml-2"
+            style="border-color: var(--border-color); color: var(--accent-color); background-color: var(--card-bg);"
+            title="Volver Arriba"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+          </button>
+        </div>
+      </footer>
+
     </main>
   </div>
 </template>
@@ -554,6 +593,13 @@ const executeSearch = async () => {
     }
   } finally {
     isLoading.value = false;
+  }
+};
+
+const scrollToTop = () => {
+  const mainEl = document.querySelector('main');
+  if (mainEl) {
+    mainEl.scrollTo({ top: 0, behavior: 'smooth' });
   }
 };
 
