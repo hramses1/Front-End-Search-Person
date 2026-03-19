@@ -523,7 +523,11 @@ const executeSearch = async () => {
     }
 
     if (Object.keys(data).length === 0 && data.constructor === Object) {
-        throw new Error('La consulta no arrojó resultados válidos encontrados.');
+      throw new Error('La consulta no arrojó resultados válidos encontrados.');
+    }
+    // Array vacío = sin registros (ej: sin infracciones)
+    if (Array.isArray(data) && data.length === 0) {
+      throw new Error('No se encontraron registros para esta consulta. La persona no tiene infracciones o datos registrados.');
     }
     resultsData.value = data;
 
