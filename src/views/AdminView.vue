@@ -225,6 +225,7 @@ const fetchUsers = async () => {
   isLoading.value = true;
   try {
     const data = await authService.getAllUsersPlans();
+    // number_requests ya viene en el payload de getAllUsersPlans, no se necesita otra petición
     users.value = data.items || [];
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -248,10 +249,8 @@ const openEditModal = (userItem: any) => {
 const resetRequests = async (userItem: any) => {
   isResetting.value = userItem.userId;
   try {
-    await authService.patchUser(userItem.userId, {
-      number_requests: 0
-    });
-    // Actualizar localmente para no refrescar toda la lista
+    // Usa el mismo endpoint que el update de username
+    await authService.updateUser(userItem.userId, { number_requests: 0 });
     const idx = users.value.findIndex(u => u.userId === userItem.userId);
     if (idx !== -1) users.value[idx].number_requests = 0;
   } catch (error) {
@@ -264,10 +263,10 @@ const resetRequests = async (userItem: any) => {
 const saveUserChanges = async () => {
   isSaving.value = true;
   try {
-    await authService.patchUser(editForm.userId, {
-      plan: editForm.plan,
-      number_requests: editForm.number_requests
-    });
+    // Actualizar plan con patchUser (PATCH /users/patch?codigo=)
+    await authService.patchUser(editForm.userId, { plan: editForm.plan });
+    // Actualizar peticiones con updateUser (PATCH /users/patch/ con params)
+    await authService.updateUser(editForm.userId, { number_requests: editForm.number_requests });
     showModal.value = false;
     fetchUsers();
   } catch (error) {
