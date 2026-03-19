@@ -104,7 +104,9 @@
                 </td>
                 <td class="px-6 py-4">
                   <div class="flex flex-col">
-                    <span class="text-[13px] font-medium font-mono" style="color: var(--text-primary);">{{ userItem.number_requests }}</span>
+                    <span class="text-[13px] font-medium font-mono" :style="{ color: (userItem.number_requests ?? 0) >= userItem.token_duration ? '#ef4444' : 'var(--text-primary)' }">
+                      {{ userItem.number_requests ?? '—' }}
+                    </span>
                     <span class="text-[9px] opacity-50" style="color: var(--text-secondary);">/ {{ userItem.token_duration }} límite</span>
                   </div>
                 </td>
@@ -206,6 +208,7 @@ const isLoading = ref(false);
 const showModal = ref(false);
 const isSaving = ref(false);
 const isResetting = ref<string | null>(null);
+const isLoadingRequests = ref(false);
 
 const editForm = reactive({
   userId: '',
@@ -239,21 +242,34 @@ const handleLogout = () => {
   router.push('/auth');
 };
 
-const openEditModal = (userItem: any) => {
+const openEditModal = async (userItem: any) => {
   editForm.userId = userItem.userId;
-  editForm.plan = userItem.id; // 'id' del registro de plan es el Plan ID
-  editForm.number_requests = userItem.number_requests; // peticiones reales del usuario
+  editForm.plan = userItem.id;
+  editForm.number_requests = 0;
   showModal.value = true;
+  isLoadingRequests.value = true;
+  try {
+    // Una sola petición al hacer clic para ver las peticiones reales
+    const userData = await authService.getUserData(userItem.userId);
+    editForm.number_requests = userData?.number_requests ?? 0;
+    // Actualizar también en la tabla sin recargar todo
+    const idx = users.value.findIndex(u => u.userId === userItem.userId);
+    if (idx !== -1) users.value[idx].number_requests = editForm.number_requests;
+  } catch {
+    editForm.number_requests = userItem.number_requests ?? 0;
+  } finally {
+    isLoadingRequests.value = false;
+  }
 };
 
 const resetRequests = async (userItem: any) => {
   isResetting.value = userItem.userId;
   try {
-    // Usa el mismo endpoint que el update de username
-    await authService.updateUser(userItem.userId, { number_requests: 0 });
+    await authService.patchUser(userItem.userId, { number_requests: 0 });
     const idx = users.value.findIndex(u => u.userId === userItem.userId);
     if (idx !== -1) users.value[idx].number_requests = 0;
   } catch (error) {
+    console.error('Error al resetear peticiones:', error);
     alert('Error al resetear peticiones.');
   } finally {
     isResetting.value = null;
