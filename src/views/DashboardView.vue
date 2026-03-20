@@ -155,14 +155,20 @@
                     <span class="text-[11px] uppercase tracking-[0.2em] font-medium text-amber-500 flex items-center gap-2">
                        ☕ Invítame un cafecito
                     </span>
-                    <button @click="isDonationMenuOpen = false" class="opacity-50 hover:opacity-100 transition-opacity">
+                    <button @click="isDonationMenuOpen = false; isQRExpanded = false" class="opacity-50 hover:opacity-100 transition-opacity">
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                   </div>
                   
-                  <div class="flex flex-col items-center">
-                    <img src="/Cafecito-qrcode.png" alt="QR para donar" class="w-32 h-32 object-contain bg-white rounded-xl p-2 mb-5 shadow-lg" />
-                    <div class="w-full">
+                  <div class="flex flex-col items-center relative">
+                    <img 
+                      src="/Cafecito-qrcode.png" 
+                      alt="QR para donar" 
+                      @click="isQRExpanded = !isQRExpanded"
+                      class="object-contain bg-white rounded-xl shadow-lg cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:ring-2 ring-amber-500/50 relative z-10"
+                      :class="isQRExpanded ? 'w-56 h-56 md:w-64 md:h-64 p-3 mb-2 translate-y-2' : 'w-32 h-32 p-2 mb-5 hover:scale-105'" 
+                    />
+                    <div class="w-full transition-all duration-500" :class="isQRExpanded ? 'opacity-20 blur-[2px] pointer-events-none scale-95 origin-top translate-y-4' : 'opacity-100 scale-100 origin-top'">
                       <form action="https://www.paypal.com/ncp/payment/4M6VX3YHV39U4" method="post" target="_blank" class="flex flex-col items-center gap-3 w-full">
                         <input 
                           class="w-full text-center border-none rounded-lg h-10 font-bold bg-[#FFD140] hover:bg-[#ffc400] text-black text-[11px] tracking-widest cursor-pointer transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg focus:outline-none" 
@@ -416,6 +422,7 @@ const profileBtnRef = ref<HTMLElement | null>(null);
 
 const isDonationMenuOpen = ref(false);
 const donationBtnRef = ref<HTMLElement | null>(null);
+const isQRExpanded = ref(false);
 
 // Posición del dropdown calculada dinámicamente para Teleport
 const dropdownStyle = computed(() => {
@@ -448,6 +455,7 @@ const handleOutsideClick = (e: MouseEvent) => {
     const targetElement = e.target as HTMLElement;
     if (!targetElement.closest('.fixed.w-72.md\\:w-80')) {
       isDonationMenuOpen.value = false;
+      isQRExpanded.value = false;
     }
   }
 };
