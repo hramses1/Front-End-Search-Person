@@ -93,28 +93,6 @@
           </div>
         </div>
 
-        <!-- Donaciones / Apóyanos -->
-        <div class="rounded-xl border p-4 mb-3 flex flex-col items-center justify-center transition-all duration-300 hover:bg-amber-500/10" style="border-color: rgba(245, 158, 11, 0.3); background-color: rgba(245, 158, 11, 0.05);">
-          <span class="text-[10px] tracking-[0.2em] font-medium uppercase text-amber-500 mb-3 flex items-center justify-center gap-2">
-            ☕ Invítame un cafecito
-          </span>
-          <img src="/Cafecito-qrcode.png" alt="QR para donar" class="w-28 h-28 object-contain bg-white rounded-xl p-1.5 mb-4 shadow-lg" />
-          
-          <div class="w-full">
-            <form action="https://www.paypal.com/ncp/payment/4M6VX3YHV39U4" method="post" target="_blank" class="flex flex-col items-center gap-2.5 w-full">
-              <input 
-                class="w-full text-center border-none rounded-lg h-9 font-bold bg-[#FFD140] hover:bg-[#ffc400] text-black text-[10px] tracking-widest cursor-pointer transition-all duration-300 hover:-translate-y-0.5 shadow-md hover:shadow-lg focus:outline-none" 
-                style="font-family: 'Helvetica Neue', Arial, sans-serif;"
-                type="submit" 
-                value="DONAR CON PAYPAL" 
-              />
-              <img src="https://www.paypalobjects.com/images/Debit_Credit.svg" alt="cards" class="h-3.5 opacity-80 mt-1" />
-              <section class="opacity-60 flex items-center justify-center gap-1.5 text-[8px] tracking-wider uppercase mt-1" style="color: var(--text-secondary);"> 
-                Seguro vía <img src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-wordmark-color.svg" alt="paypal" style="height:0.75rem; filter: grayscale(1) brightness(1.5);" />
-              </section>
-            </form>
-          </div>
-        </div>
       </div>
 
       <!-- Footer / Logout + Trust Signals -->
@@ -150,7 +128,60 @@
         </div>
 
         <!-- Perfil de Usuario Simplificado y Tema -->
-        <div class="flex items-center gap-4 self-end md:self-auto">
+        <div class="flex items-center gap-3 sm:gap-4 self-end md:self-auto">
+          
+          <!-- Botón de Donación -->
+          <div class="relative" ref="donationBtnRef">
+            <button 
+              @click="isDonationMenuOpen = !isDonationMenuOpen" 
+              class="flex items-center gap-2 px-3 py-2 sm:px-4 backdrop-blur-md border rounded-2xl shadow-lg transition-all duration-300 hover:bg-amber-500/10 group bg-amber-500/5 h-[46px]"
+              style="border-color: rgba(245, 158, 11, 0.3); color: var(--accent-color);"
+              title="Apoyar el proyecto"
+            >
+              <span class="text-amber-500 group-hover:scale-110 transition-transform">☕</span>
+              <span class="hidden sm:inline text-[10px] sm:text-[11px] font-bold tracking-[0.15em] uppercase text-amber-500">Donación</span>
+            </button>
+
+            <!-- Menú Flotante de Donación -->
+            <Teleport to="body">
+              <transition name="slide-up">
+                <div 
+                  v-if="isDonationMenuOpen" 
+                  class="fixed w-72 md:w-80 backdrop-blur-xl border rounded-2xl shadow-2xl overflow-hidden z-[999] flex flex-col p-5"
+                  :style="donationDropdownStyle"
+                  style="background-color: var(--surface-color); border-color: rgba(245, 158, 11, 0.3);"
+                >
+                  <div class="flex items-center justify-between mb-4 border-b pb-3 border-white/5" style="border-color: var(--border-color);">
+                    <span class="text-[11px] uppercase tracking-[0.2em] font-medium text-amber-500 flex items-center gap-2">
+                       ☕ Invítame un cafecito
+                    </span>
+                    <button @click="isDonationMenuOpen = false" class="opacity-50 hover:opacity-100 transition-opacity">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                  </div>
+                  
+                  <div class="flex flex-col items-center">
+                    <img src="/Cafecito-qrcode.png" alt="QR para donar" class="w-32 h-32 object-contain bg-white rounded-xl p-2 mb-5 shadow-lg" />
+                    <div class="w-full">
+                      <form action="https://www.paypal.com/ncp/payment/4M6VX3YHV39U4" method="post" target="_blank" class="flex flex-col items-center gap-3 w-full">
+                        <input 
+                          class="w-full text-center border-none rounded-lg h-10 font-bold bg-[#FFD140] hover:bg-[#ffc400] text-black text-[11px] tracking-widest cursor-pointer transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg focus:outline-none" 
+                          style="font-family: 'Helvetica Neue', Arial, sans-serif;"
+                          type="submit" 
+                          value="DONAR CON PAYPAL" 
+                        />
+                        <img src="https://www.paypalobjects.com/images/Debit_Credit.svg" alt="cards" class="h-4 opacity-80 mt-1" />
+                        <section class="opacity-60 flex items-center justify-center gap-1.5 text-[9px] tracking-wider uppercase mt-1" style="color: var(--text-secondary);"> 
+                          Seguro vía <img src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-wordmark-color.svg" alt="paypal" style="height:0.8rem; filter: grayscale(1) brightness(1.5);" />
+                        </section>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </transition>
+            </Teleport>
+          </div>
+          
           <!-- Botón de Tema (Light/Dark) -->
           <button 
             @click="toggleTheme" 
@@ -383,6 +414,9 @@ const isSidebarOpen = ref(false);
 const isProfileMenuOpen = ref(false);
 const profileBtnRef = ref<HTMLElement | null>(null);
 
+const isDonationMenuOpen = ref(false);
+const donationBtnRef = ref<HTMLElement | null>(null);
+
 // Posición del dropdown calculada dinámicamente para Teleport
 const dropdownStyle = computed(() => {
   if (!profileBtnRef.value) return {};
@@ -393,10 +427,28 @@ const dropdownStyle = computed(() => {
   };
 });
 
+const donationDropdownStyle = computed(() => {
+  if (!donationBtnRef.value) return {};
+  const rect = donationBtnRef.value.getBoundingClientRect();
+  const rightOffset = window.innerWidth - rect.right;
+  return {
+    top: `${rect.bottom + 8}px`,
+    right: `${Math.max(rightOffset, 16)}px`, // Evitar overflow en móvil
+  };
+});
+
 // Cerrar el dropdown al hacer click fuera
 const handleOutsideClick = (e: MouseEvent) => {
   if (profileBtnRef.value && !profileBtnRef.value.contains(e.target as Node)) {
     isProfileMenuOpen.value = false;
+  }
+  
+  // Si hace click fuera del botón de donación y no está haciendo click dentro del pop-up (aseguramos ignorar clics dentro de la ventana de donación)
+  if (donationBtnRef.value && !donationBtnRef.value.contains(e.target as Node)) {
+    const targetElement = e.target as HTMLElement;
+    if (!targetElement.closest('.fixed.w-72.md\\:w-80')) {
+      isDonationMenuOpen.value = false;
+    }
   }
 };
 
