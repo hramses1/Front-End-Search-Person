@@ -24,8 +24,7 @@
               <div class="flex flex-col gap-2">
                 <span class="opacity-50 uppercase tracking-wider text-[9px]" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
                 <div 
-                  class="prose prose-invert max-w-none text-[11px] leading-relaxed opacity-90 p-3 rounded-lg border border-dashed"
-                  style="background-color: var(--glass-bg); border-color: var(--border-color);"
+                  class="prose prose-sm prose-invert max-w-none w-full opacity-90 p-4 rounded-lg bg-black/20 border border-white/10 overflow-x-auto"
                   v-html="sanitizeHTML(String(v))"
                 ></div>
               </div>
@@ -71,7 +70,7 @@
           <template v-if="isHtmlContent(v)">
             <div class="flex flex-col gap-2">
               <span class="opacity-50 uppercase tracking-wider text-[9px]" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
-              <div class="prose prose-invert max-w-none text-[11px] leading-relaxed opacity-90 p-3 rounded-lg border border-dashed" style="background-color: var(--glass-bg); border-color: var(--border-color);" v-html="sanitizeHTML(String(v))"></div>
+              <div class="prose prose-sm prose-invert max-w-none w-full opacity-90 p-4 rounded-lg bg-black/20 border border-white/10 overflow-x-auto" v-html="sanitizeHTML(String(v))"></div>
             </div>
           </template>
           <!-- Si el sub-valor es a su vez un objeto o array, llamamos a ResultCard recursivamente -->
@@ -113,7 +112,7 @@
       </span>
 
       <!-- Contenido HTML de primer nivel -->
-      <div v-else-if="isHtmlContent(value)" class="prose prose-invert max-w-none text-[12px] leading-relaxed opacity-90 mt-2 p-3 rounded-lg border border-dashed" style="background-color: var(--glass-bg); border-color: var(--border-color);" v-html="sanitizeHTML(String(value))">
+      <div v-else-if="isHtmlContent(value)" class="prose prose-sm prose-invert max-w-none w-full opacity-90 mt-2 p-4 rounded-lg bg-black/20 border border-white/10 overflow-x-auto" v-html="sanitizeHTML(String(value))">
       </div>
 
       <!-- Texto largo normal de primer nivel -->
@@ -194,8 +193,9 @@ const isHtmlContent = (val: any) => {
 
 const sanitizeHTML = (htmlRaw: string) => {
   return DOMPurify.sanitize(htmlRaw, {
-    ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br', 'ul', 'ol', 'li', 'span', 'div', 'table', 'thead', 'tbody', 'tr', 'th', 'td'],
-    ALLOWED_ATTR: ['href', 'target', 'style', 'class']
+    ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br', 'ul', 'ol', 'li', 'span', 'div', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'],
+    ALLOWED_ATTR: ['href', 'target'],
+    FORBID_ATTR: ['style', 'class', 'width', 'height', 'border', 'cellpadding', 'cellspacing', 'valign', 'align']
   });
 };
 </script>
