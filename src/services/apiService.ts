@@ -130,7 +130,9 @@ export const apiService = {
   },
 
   async getVehiclesByPlate(plate: string) {
-    return fetchWithCache('/api/main/vehicles/by-plate/', { plate });
+    // Limpieza de datos: remover guiones, espacios y asegurar mayúsculas
+    const cleanPlate = plate.replace(/[-\s]/g, '').toUpperCase();
+    return fetchWithCache('/api/main/vehicles/by-plate/', { plate: cleanPlate });
   },
 
   clearCache() {
