@@ -14,12 +14,44 @@
         <div
           v-for="(item, i) in (value as any[])"
           :key="i"
-          class="rounded-xl border p-3"
+          class="rounded-xl border p-4 shadow-sm"
           style="background-color: var(--card-bg); border-color: var(--border-color);"
         >
-          <div v-for="(v, k) in item" :key="k" class="flex justify-between items-start gap-4 py-1 border-b last:border-0 text-[11px]" style="border-color: var(--border-color);">
-            <span class="opacity-50 uppercase tracking-wider text-[9px]" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
-            <span class="font-medium text-right break-words max-w-[60%]" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v ?? '—' }}</span>
+          <div v-for="(v, k) in item" :key="k" class="py-2 border-b last:border-0" style="border-color: var(--border-color);">
+            
+            <!-- Contenido HTML o Textos muy largos (bloque completo) -->
+            <template v-if="isHtmlContent(v)">
+              <div class="flex flex-col gap-2">
+                <span class="opacity-50 uppercase tracking-wider text-[9px]" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
+                <div 
+                  class="prose prose-invert max-w-none text-[11px] leading-relaxed opacity-90 p-3 rounded-lg border border-dashed"
+                  style="background-color: var(--glass-bg); border-color: var(--border-color);"
+                  v-html="sanitizeHTML(String(v))"
+                ></div>
+              </div>
+            </template>
+            
+            <!-- Si el sub-valor es a su vez un objeto o array, llamamos a ResultCard recursivamente -->
+            <template v-else-if="v !== null && typeof v === 'object'">
+              <ResultCard :label="formatKey(String(k))" :value="v" />
+            </template>
+
+            <!-- Textos puros de longitud mediana/larga (bloque completo) -->
+            <template v-else-if="typeof v === 'string' && v.length > 50">
+              <div class="flex flex-col gap-1">
+                <span class="opacity-50 uppercase tracking-wider text-[9px]" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
+                <span class="font-medium text-[11px] whitespace-pre-line leading-relaxed pb-1" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v }}</span>
+              </div>
+            </template>
+
+            <!-- Datos cortos (en línea) -->
+            <template v-else>
+              <div class="flex justify-between items-start gap-4 text-[11px]">
+                <span class="opacity-50 uppercase tracking-wider text-[9px]" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
+                <span class="font-medium text-right break-words max-w-[60%]" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v ?? '—' }}</span>
+              </div>
+            </template>
+
           </div>
         </div>
       </div>
@@ -35,15 +67,35 @@
 
       <!-- Objeto simple – pares clave/valor -->
       <div v-else-if="isPlainObject" class="mt-2 space-y-1">
-        <div v-for="(v, k) in (value as any)" :key="k" class="flex justify-between text-[11px]">
-          <span class="opacity-50 uppercase tracking-wider text-[9px]" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
-          <span class="font-medium" style="color: var(--text-primary);">{{ v ?? '—' }}</span>
+        <div v-for="(v, k) in (value as any)" :key="k" class="py-1 border-b last:border-0" style="border-color: var(--border-color);">
+          <template v-if="isHtmlContent(v)">
+            <div class="flex flex-col gap-2">
+              <span class="opacity-50 uppercase tracking-wider text-[9px]" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
+              <div class="prose prose-invert max-w-none text-[11px] leading-relaxed opacity-90 p-3 rounded-lg border border-dashed" style="background-color: var(--glass-bg); border-color: var(--border-color);" v-html="sanitizeHTML(String(v))"></div>
+            </div>
+          </template>
+          <!-- Si el sub-valor es a su vez un objeto o array, llamamos a ResultCard recursivamente -->
+          <template v-else-if="v !== null && typeof v === 'object'">
+            <ResultCard :label="formatKey(String(k))" :value="v" />
+          </template>
+          <template v-else-if="typeof v === 'string' && v.length > 50">
+            <div class="flex flex-col gap-1">
+              <span class="opacity-50 uppercase tracking-wider text-[9px]" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
+              <span class="font-medium text-[11px] whitespace-pre-line leading-relaxed" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v }}</span>
+            </div>
+          </template>
+          <template v-else>
+            <div class="flex justify-between text-[11px]">
+              <span class="opacity-50 uppercase tracking-wider text-[9px]" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
+              <span class="font-medium text-right break-words max-w-[60%]" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v ?? '—' }}</span>
+            </div>
+          </template>
         </div>
       </div>
 
       <!-- Badge de estado -->
       <span v-else-if="type === 'badge'"
-        class="inline-flex items-center gap-1.5 text-[10px] font-medium px-2.5 py-0.5 rounded-full w-fit tracking-wider"
+        class="inline-flex items-center gap-1.5 text-[10px] font-medium px-2.5 py-0.5 rounded-full w-fit tracking-wider mt-1"
         :class="badgeClass"
       >
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
@@ -51,17 +103,26 @@
       </span>
 
       <!-- Fecha -->
-      <span v-else-if="type === 'date'" class="text-[13px] font-medium" style="color: var(--text-primary);">
+      <span v-else-if="type === 'date'" class="text-[13px] font-medium mt-1" style="color: var(--text-primary);">
         📅 {{ displayValue }}
       </span>
 
       <!-- Moneda -->
-      <span v-else-if="type === 'currency'" class="text-[13px] font-medium font-mono" style="color: #22c55e;">
+      <span v-else-if="type === 'currency'" class="text-[13px] font-medium font-mono mt-1" style="color: #22c55e;">
         $ {{ displayValue }}
       </span>
 
+      <!-- Contenido HTML de primer nivel -->
+      <div v-else-if="isHtmlContent(value)" class="prose prose-invert max-w-none text-[12px] leading-relaxed opacity-90 mt-2 p-3 rounded-lg border border-dashed" style="background-color: var(--glass-bg); border-color: var(--border-color);" v-html="sanitizeHTML(String(value))">
+      </div>
+
+      <!-- Texto largo normal de primer nivel -->
+      <span v-else-if="typeof value === 'string' && value.length > 80" class="text-[12px] font-medium tracking-wide break-words leading-relaxed whitespace-pre-line mt-1 opacity-90" style="color: var(--text-primary);">
+        {{ displayValue }}
+      </span>
+
       <!-- Texto por defecto -->
-      <span v-else class="text-[13px] font-medium tracking-wide break-words leading-relaxed" style="color: var(--text-primary);">
+      <span v-else class="text-[13px] font-medium tracking-wide break-words leading-relaxed mt-1" style="color: var(--text-primary);">
         {{ displayValue }}
       </span>
     </slot>
@@ -70,6 +131,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import DOMPurify from 'dompurify';
 
 const props = defineProps<{
   label: string;
@@ -114,7 +176,7 @@ const badgeClass = computed(() => {
   return 'border text-current opacity-80';
 });
 
-// Helpers para sub-objetos
+// Helpers
 const BADGE_VALUES = ['activo', 'inactivo', 'vigente', 'suspendido', 'true', 'false', 'aprobado', 'cancelado'];
 const isBadgeValue = (v: string) => BADGE_VALUES.includes(v.toLowerCase());
 const badgeColor = (v: string) =>
@@ -122,4 +184,19 @@ const badgeColor = (v: string) =>
 
 const formatKey = (key: string) =>
   key.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ').trim();
+
+// HTML Detection & Sanitization
+const isHtmlContent = (val: any) => {
+  if (typeof val !== 'string') return false;
+  // Simple check for HTML tags
+  return /<\/?[a-z][\s\S]*>/i.test(val);
+};
+
+const sanitizeHTML = (htmlRaw: string) => {
+  return DOMPurify.sanitize(htmlRaw, {
+    ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br', 'ul', 'ol', 'li', 'span', 'div', 'table', 'thead', 'tbody', 'tr', 'th', 'td'],
+    ALLOWED_ATTR: ['href', 'target', 'style', 'class']
+  });
+};
 </script>
+
