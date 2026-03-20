@@ -170,9 +170,9 @@
                           type="submit" 
                           value="DONAR CON PAYPAL" 
                         />
-                        <img src="https://www.paypalobjects.com/images/Debit_Credit.svg" alt="cards" class="h-4 opacity-80 mt-1" />
+                        <img src="/paypal-cards.svg" alt="cards" class="h-4 opacity-80 mt-1" />
                         <section class="opacity-60 flex items-center justify-center gap-1.5 text-[9px] tracking-wider uppercase mt-1" style="color: var(--text-secondary);"> 
-                          Seguro vía <img src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-wordmark-color.svg" alt="paypal" style="height:0.8rem; filter: grayscale(1) brightness(1.5);" />
+                          Seguro vía <img src="/paypal-logo.svg" alt="paypal" style="height:0.8rem; filter: grayscale(1) brightness(1.5);" />
                         </section>
                       </form>
                     </div>
