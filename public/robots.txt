@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Allow: /auth
+
+# No indexar rutas privadas
+Disallow: /dashboard
+Disallow: /admin
+
+# Sitemap
+Sitemap: https://devzio.solutions/sitemap.xml

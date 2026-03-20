@@ -36,5 +36,29 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
+
+    <!-- Datos Estructurados JSON-LD: ayuda a Google a entender el sitio -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Portal de Consulta Ciudadana",
+      "url": "https://devzio.solutions",
+      "description": "Plataforma segura para verificación de identidad, estado de RUC, licencias de conducir e infracciones vehiculares en Ecuador.",
+      "applicationCategory": "GovernmentService",
+      "operatingSystem": "Web",
+      "inLanguage": "es-EC",
+      "author": {
+        "@type": "Organization",
+        "name": "Devzio Solutions",
+        "url": "https://devzio.solutions"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
   </body>
 </html>

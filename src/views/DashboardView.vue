@@ -92,6 +92,29 @@
             </div>
           </div>
         </div>
+
+        <!-- Donaciones / Apóyanos -->
+        <div class="rounded-xl border p-4 mb-3 flex flex-col items-center justify-center transition-all duration-300 hover:bg-amber-500/10" style="border-color: rgba(245, 158, 11, 0.3); background-color: rgba(245, 158, 11, 0.05);">
+          <span class="text-[10px] tracking-[0.2em] font-medium uppercase text-amber-500 mb-3 flex items-center justify-center gap-2">
+            ☕ Invítame un cafecito
+          </span>
+          <img src="/Cafecito-qrcode.png" alt="QR para donar" class="w-28 h-28 object-contain bg-white rounded-xl p-1.5 mb-4 shadow-lg" />
+          
+          <div class="w-full">
+            <form action="https://www.paypal.com/ncp/payment/4M6VX3YHV39U4" method="post" target="_blank" class="flex flex-col items-center gap-2.5 w-full">
+              <input 
+                class="w-full text-center border-none rounded-lg h-9 font-bold bg-[#FFD140] hover:bg-[#ffc400] text-black text-[10px] tracking-widest cursor-pointer transition-all duration-300 hover:-translate-y-0.5 shadow-md hover:shadow-lg focus:outline-none" 
+                style="font-family: 'Helvetica Neue', Arial, sans-serif;"
+                type="submit" 
+                value="DONAR CON PAYPAL" 
+              />
+              <img src="https://www.paypalobjects.com/images/Debit_Credit.svg" alt="cards" class="h-3.5 opacity-80 mt-1" />
+              <section class="opacity-60 flex items-center justify-center gap-1.5 text-[8px] tracking-wider uppercase mt-1" style="color: var(--text-secondary);"> 
+                Seguro vía <img src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-wordmark-color.svg" alt="paypal" style="height:0.75rem; filter: grayscale(1) brightness(1.5);" />
+              </section>
+            </form>
+          </div>
+        </div>
       </div>
 
       <!-- Footer / Logout + Trust Signals -->
