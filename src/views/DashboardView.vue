@@ -146,8 +146,9 @@
             <Teleport to="body">
               <transition name="slide-up">
                 <div 
+                  id="donation-dropdown-panel"
                   v-if="isDonationMenuOpen" 
-                  class="fixed w-72 md:w-80 backdrop-blur-xl border rounded-2xl shadow-2xl overflow-hidden z-[999] flex flex-col p-5"
+                  class="fixed backdrop-blur-xl border rounded-2xl shadow-2xl overflow-hidden z-[999] flex flex-col p-5"
                   :style="donationDropdownStyle"
                   style="background-color: var(--surface-color); border-color: rgba(245, 158, 11, 0.3);"
                 >
@@ -437,10 +438,24 @@ const dropdownStyle = computed(() => {
 const donationDropdownStyle = computed(() => {
   if (!donationBtnRef.value) return {};
   const rect = donationBtnRef.value.getBoundingClientRect();
+  
+  // En móviles, centramos el menú perfectamente evitando que rebase el borde
+  if (window.innerWidth < 640) {
+    const width = Math.min(window.innerWidth - 32, 320);
+    const leftOffset = (window.innerWidth - width) / 2;
+    return {
+      top: `${rect.bottom + 12}px`,
+      left: `${leftOffset}px`,
+      width: `${width}px`
+    };
+  }
+  
+  // En Desktop, lo alineamos similar al profileBtn pero reservamos 320px
   const rightOffset = window.innerWidth - rect.right;
   return {
     top: `${rect.bottom + 8}px`,
-    right: `${Math.max(rightOffset, 16)}px`, // Evitar overflow en móvil
+    right: `${Math.max(rightOffset, 16)}px`,
+    width: '320px'
   };
 });
 
@@ -453,7 +468,7 @@ const handleOutsideClick = (e: MouseEvent) => {
   // Si hace click fuera del botón de donación y no está haciendo click dentro del pop-up (aseguramos ignorar clics dentro de la ventana de donación)
   if (donationBtnRef.value && !donationBtnRef.value.contains(e.target as Node)) {
     const targetElement = e.target as HTMLElement;
-    if (!targetElement.closest('.fixed.w-72.md\\:w-80')) {
+    if (!targetElement.closest('#donation-dropdown-panel')) {
       isDonationMenuOpen.value = false;
       isQRExpanded.value = false;
     }
