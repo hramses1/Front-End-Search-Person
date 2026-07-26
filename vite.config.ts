@@ -16,7 +16,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://api.devzio.solutions',
+        target: 'https://api.devzio.site',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
