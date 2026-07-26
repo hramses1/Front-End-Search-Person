@@ -6,7 +6,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://api.devzio.solutions/$1"
+      "destination": "https://api.devzio.site/$1"
     },
     {
       "source": "/(.*)",
