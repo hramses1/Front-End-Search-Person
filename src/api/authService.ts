@@ -6,14 +6,22 @@ export const authService = {
   /**
    * Registra un nuevo usuario.
    *
-   * El servidor genera el `id` e impone `plan`, `number_requests`, `token` y
-   * `disable`: si se mandan, los ignora en silencio. Por eso ya no se envían
-   * desde aquí ni existe `generatePocketBaseId()`.
+   * OJO con la asimetría: el servidor IGNORA los valores de `plan`,
+   * `number_requests`, `token` y `disable`, pero el modelo UserCreate los
+   * declara obligatorios, así que deben viajar igualmente. Omitirlos devuelve
+   * 422 con la lista completa en detail.fields.
+   *
+   * El `id` sí es opcional y lo genera el servidor: por eso desapareció
+   * `generatePocketBaseId()`.
    */
   async register(userData: Partial<UserCreate>) {
     const response = await apiClient.post('/api/users/create', {
+      plan: 'free',
+      number_requests: 0,
+      token: '',
       ...userData,
-      emailVisibility: true
+      emailVisibility: true,
+      disable: false
     });
     return response.data;
   },
@@ -118,7 +126,15 @@ export const authService = {
       code,
       codeVerifier,
       redirectUrl,
-      createData: { emailVisibility: true }
+      // createData acaba pasando por el mismo modelo, así que lleva los
+      // campos obligatorios aunque el servidor imponga sus propios valores.
+      createData: {
+        emailVisibility: true,
+        disable: false,
+        plan: 'free',
+        number_requests: 0,
+        token: ''
+      }
     });
     return response.data;
   }
