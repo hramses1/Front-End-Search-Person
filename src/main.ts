@@ -6,7 +6,7 @@ import { useAuth } from './composables/useAuth'
 
 const app = createApp(App)
 
-// Inicializa axios headers si hay token en localStorage
+// Restaura la sesión y los listeners de inactividad si hay token en sessionStorage
 const { initializeAuth } = useAuth()
 initializeAuth()
 

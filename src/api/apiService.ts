@@ -1,100 +1,44 @@
-import axios from 'axios';
-import { useAuth } from '../composables/useAuth';
+import { apiClient } from './client';
+import {
+  buildKey,
+  clearCache,
+  forgetInFlight,
+  readCache,
+  readInFlight,
+  trackInFlight,
+  writeCache
+} from './cache';
 
-const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL as string,
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
+/**
+ * Ejecuta una consulta apoyándose en el cache compartido.
+ *
+ * Si ya hay una petición idéntica en vuelo se devuelve su promesa en lugar de
+ * lanzar otra. Antes se abortaba la anterior, lo que dejaba a su llamador con
+ * un CanceledError que las secciones mostraban como si la consulta hubiera
+ * fallado.
+ */
+const fetchWithCache = async (url: string, params: Record<string, any> = {}) => {
+  const key = buildKey(url, params);
 
-// Helper para decodificar datos obfuscados (Base64)
-const decodeData = (data: any): any => {
-  if (typeof data === 'string' && data.length > 10) {
-    try {
-      // Intentamos decodificar si parece Base64
-      const decoded = atob(data);
-      return JSON.parse(decoded);
-    } catch {
-      return data;
-    }
-  }
-  return data;
-};
+  const cached = readCache(key);
+  if (cached !== undefined) return cached;
 
-// Interceptor para inyectar token
-apiClient.interceptors.request.use((config) => {
-  const { token } = useAuth();
-  if (token.value) {
-    if (config.headers && typeof config.headers.set === 'function') {
-      config.headers.set('Authorization', `Bearer ${token.value}`);
-    } else {
-      config.headers.Authorization = `Bearer ${token.value}`;
-    }
-  }
-  return config;
-});
+  const pending = readInFlight(key);
+  if (pending) return pending;
 
-// AbortController para prevenir spam
-const pendingRequests = new Map<string, AbortController>();
-
-// Interceptor Global de Errores (Token Inválido, Expirado, Permisos)
-apiClient.interceptors.response.use(
-  response => {
-    // Si la respuesta viene como un string crudo o dentro de un objeto 'secure_payload'
-    if (response.data) {
-      if (typeof response.data === 'string') {
-        response.data = decodeData(response.data);
-      } else if (response.data.payload) {
-        response.data = decodeData(response.data.payload);
+  const request = apiClient
+    .get(url, { params })
+    .then((response) => {
+      if (response.status === 200) {
+        writeCache(key, response.data);
       }
-    }
-    return response;
-  },
-  err => {
-    if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-      console.warn("Seguridad: Sesión expirada o token inválido.");
-      sessionStorage.clear();
-      window.location.href = '/auth'; // Hard redirect prevents infinite loops on vue-router sometimes 
-    }
-    return Promise.reject(err);
-  }
-);
+      return response.data;
+    })
+    .finally(() => forgetInFlight(key));
 
-// Cache en memoria para optimizar velocidad
-const cache = new Map<string, { timestamp: number, data: any }>();
-const CACHE_TTL = 5 * 60 * 1000;
+  trackInFlight(key, request);
 
-const fetchWithCache = async (url: string, params: any = {}) => {
-  const key = `${url}:${JSON.stringify(params)}`;
-  const cached = cache.get(key);
-
-  if (cached && (Date.now() - cached.timestamp < CACHE_TTL)) {
-    return cached.data;
-  }
-
-  // Abortar si ya existe una petición en curso idéntica
-  if (pendingRequests.has(key)) {
-    pendingRequests.get(key)?.abort();
-  }
-
-  const controller = new AbortController();
-  pendingRequests.set(key, controller);
-
-  try {
-    const response = await apiClient.get(url, {
-      params,
-      signal: controller.signal
-    });
-
-    if (response.status === 200) {
-      cache.set(key, { timestamp: Date.now(), data: response.data });
-    }
-
-    return response.data;
-  } finally {
-    pendingRequests.delete(key);
-  }
+  return request;
 };
 
 export const apiService = {
@@ -129,13 +73,22 @@ export const apiService = {
     return fetchWithCache('/api/main/citation/', { ci });
   },
 
+  /**
+   * Consulta de procesos judiciales.
+   *
+   * JudgementSection ya llamaba a este método, pero no existía: la pestaña
+   * lanzaba un TypeError en cada búsqueda. Pendiente de que el backend exponga
+   * /api/main/judgement/ (hasta entonces responderá 404).
+   */
+  async getJudgement(ci: string) {
+    return fetchWithCache('/api/main/judgement/', { ci });
+  },
+
   async getVehiclesByPlate(plate: string) {
     // Limpieza de datos: remover guiones, espacios y asegurar mayúsculas
     const cleanPlate = plate.replace(/[-\s]/g, '').toUpperCase();
     return fetchWithCache('/api/main/vehicles/by-plate/', { plate: cleanPlate });
   },
 
-  clearCache() {
-    cache.clear();
-  }
+  clearCache
 };

@@ -1,47 +1,29 @@
-import axios from 'axios';
+import { apiClient } from './client';
+import type { Quota } from '../utils/quota';
 import type { UserCreate } from '../types/api';
-
-const apiClient = axios.create({
-  // SECURITY: URL definida en .env, nunca en el código fuente.
-  baseURL: import.meta.env.VITE_API_BASE_URL as string,
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
-
-// Función para generar un ID aleatorio tipo PocketBase (15 caracteres alfanuméricos)
-function generatePocketBaseId() {
-  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  for (let i = 0; i < 15; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-}
 
 export const authService = {
   /**
-   * Registra un nuevo usuario aplicando las directivas del contrato.
+   * Registra un nuevo usuario.
+   *
+   * El servidor genera el `id` e impone `plan`, `number_requests`, `token` y
+   * `disable`: si se mandan, los ignora en silencio. Por eso ya no se envían
+   * desde aquí ni existe `generatePocketBaseId()`.
    */
   async register(userData: Partial<UserCreate>) {
-    // Valores por defecto explícitos requeridos
-    const payload = {
-      id: generatePocketBaseId(), // El contrato exige ID
+    const response = await apiClient.post('/api/users/create', {
       ...userData,
-      emailVisibility: true,
-      disable: false,
-      plan: 'cbbhqmwd0n978pi',
-      number_requests: 0,
-      token: 'not-token'
-    };
-
-    // Endpoint para crear usuarios (POST /api/users/create)
-    const response = await apiClient.post('/api/users/create', payload);
+      emailVisibility: true
+    });
     return response.data;
   },
 
   /**
-   * Inicia sesión 1: Obtiene el ID llamando a la ruta de auth-with-password.
+   * Autenticación con contraseña.
+   *
+   * La respuesta trae DOS tokens: `token` es el de PocketBase y `access_token`
+   * es el Bearer que acepta nuestra API. Mandar el de PocketBase da 401 en
+   * todos los endpoints.
    */
   async login(payload: { identity: string; password: string }) {
     const response = await apiClient.post('/api/main/auth-with-password/', payload);
@@ -49,23 +31,68 @@ export const authService = {
   },
 
   /**
-   * Inicia sesión 2: Obtiene el Token del Portal de consulta ciudadana enviando el ID obtenido.
+   * Renueva el token del usuario autenticado.
+   *
+   * Exige Bearer válido y ya no descuenta cuota. Con tokens de 60 minutos y
+   * cierre por inactividad a los 10, en la práctica no hace falta llamarlo.
    */
-  async getApiToken(userId: string) {
-    const response = await apiClient.get('/api/main/login/?codigo=' + userId);
+  async renewToken(userId: string) {
+    const response = await apiClient.get('/api/main/login/', { params: { codigo: userId } });
     return response.data;
   },
 
-  /**
-   * Obtiene los datos actuales del usuario (incluyendo number_requests actualizado).
-   */
+  /** Datos del usuario autenticado. */
   async getUserData(userId: string) {
     const response = await apiClient.get('/api/users/get/', { params: { codigo: userId } });
     return response.data;
   },
 
+  /** Cuota diaria del usuario autenticado. Consultarla no la consume. */
+  async getQuota(): Promise<Quota> {
+    const response = await apiClient.get('/api/users/quota/');
+    return response.data;
+  },
+
   /**
-   * Obtiene todos los usuarios con sus planes (Solo Admin).
+   * Actualiza el usuario autenticado.
+   *
+   * Solo admite `username`, `name`, `emailVisibility` y contraseñas. Enviar
+   * `plan`, `number_requests`, `token` o `disable` devuelve 403 con la lista de
+   * campos rechazados en `detail.fields`.
+   */
+  async updateUser(userId: string, data: any) {
+    const response = await apiClient.patch('/api/users/patch/', data, {
+      params: { codigo: userId }
+    });
+    return response.data;
+  },
+
+  /**
+   * Alias de `updateUser` para las escrituras del panel de administración.
+   * Requiere que el token lleve el claim de admin.
+   */
+  async patchUser(userId: string, data: any) {
+    return this.updateUser(userId, data);
+  },
+
+  /**
+   * Plan del usuario: descripción y límite diario.
+   *
+   * Ya no busca el plan de ADMIN por ID. El rol viaja como claim `role` firmado
+   * en el JWT y se resuelve en el servidor.
+   */
+  async getUserPlan(userId: string) {
+    const response = await apiClient.get('/api/plan/get_for_userid/', { params: { userid: userId } });
+    const items = response.data?.items || [];
+    return items.length > 0 ? items[0] : null;
+  },
+
+  /**
+   * Listado de usuarios con su plan, para el panel de administración.
+   *
+   * PENDIENTE: el backend eliminó /api/plan/get_all_users_plans/ al cerrar A1
+   * y no publicó reemplazo, así que hoy responde 404. Se mantiene la llamada
+   * para no borrar AdminView hasta decidir si se reexpone con guard de admin.
    */
   async getAllUsersPlans() {
     const response = await apiClient.get('/api/plan/get_all_users_plans/', {
@@ -75,77 +102,23 @@ export const authService = {
     return response.data;
   },
 
-  /**
-   * Actualiza los datos de un usuario (Solo Admin).
-   */
-  async patchUser(userId: string, data: any) {
-    const response = await apiClient.patch(`/api/users/patch?codigo=${userId}`, data);
-    return response.data;
-  },
-
-  /**
-   * Obtiene la descripción del plan del usuario. Si hay varios, prioriza el de mayor nivel (ADMIN).
-   */
-  async getUserPlan(userId: string) {
-    const response = await apiClient.get('/api/plan/get_for_userid/', { params: { userid: userId } });
-    const items = response.data?.items || [];
-
-    if (items.length === 0) return null;
-
-    // Priorizar plan ADMIN si existe en la lista
-    const adminPlan = items.find((p: any) =>
-      p.planDescription?.toUpperCase().includes('ADMIN') &&
-      p.id === '5rkvp69sbpzz9cv'
-    );
-
-    return adminPlan || items[0];
-  },
-
-  /**
-   * Obtiene los métodos de autenticación disponibles (Ej: Google OAuth2)
-   */
+  /** Métodos de autenticación disponibles (ej. Google OAuth2). */
   async getAuthMethods() {
     const response = await apiClient.get('/api/main/auth-methods/');
     return response.data;
   },
 
   /**
-   * Inicia sesión o registra un usuario procesando el código de retorno de OAuth2 (Google)
+   * Inicia sesión o registra vía OAuth2. Devuelve la misma forma que
+   * `login()`, `access_token` incluido.
    */
   async authWithOAuth2(provider: string, code: string, codeVerifier: string, redirectUrl: string) {
-    const payload = {
+    const response = await apiClient.post('/api/main/auth-with-oauth2/', {
       provider,
       code,
       codeVerifier,
       redirectUrl,
-      createData: {
-        id: generatePocketBaseId(),
-        emailVisibility: true,
-        disable: false,
-        plan: 'cbbhqmwd0n978pi', // Plan Free por defecto si es usuario nuevo
-        number_requests: 0,
-        token: 'not-token'
-      }
-    };
-
-    const response = await apiClient.post('/api/main/auth-with-oauth2/', payload);
-    return response.data;
-  },
-
-  /**
-   * Obtiene el token oficial del sistema llamando al Login Endpoint principal usando el ID de PocketBase
-   */
-  async getSystemToken(codigo: string) {
-    const response = await apiClient.get('/api/main/login/', { params: { codigo } });
-    return response.data;
-  },
-
-  /**
-   * Actualiza datos específicos del usuario en PocketBase (Ej: Username)
-   */
-  async updateUser(userId: string, data: any) {
-    const response = await apiClient.patch('/api/users/patch/', data, {
-      params: { codigo: userId }
+      createData: { emailVisibility: true }
     });
     return response.data;
   }

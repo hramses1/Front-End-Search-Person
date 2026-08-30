@@ -106,6 +106,13 @@
               </button>
             </div>
 
+            <p
+              v-if="loadError"
+              class="mb-4 rounded-xl border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-[10px] leading-relaxed tracking-wide text-amber-500"
+            >
+              {{ loadError }}
+            </p>
+
             <div class="overflow-x-auto custom-scrollbar">
               <table class="w-full text-left border-collapse border-b border-[var(--border-color)]">
                 <thead>
@@ -239,6 +246,7 @@ const showModal = ref(false);
 const isSaving = ref(false);
 const isResetting = ref<string | null>(null);
 const isLoadingRequests = ref(false);
+const loadError = ref('');
 
 const editForm = reactive({
   userId: '',
@@ -257,10 +265,18 @@ onMounted(() => {
 
 const fetchUsers = async () => {
   isLoading.value = true;
+  loadError.value = '';
   try {
     const data = await authService.getAllUsersPlans();
     users.value = data.items || [];
-  } catch (error) {
+  } catch (error: any) {
+    // El listado de usuarios se quedó sin endpoint al endurecer la API.
+    // Se avisa de forma explícita en vez de mostrar una tabla vacía, que
+    // se leería como "no hay usuarios".
+    users.value = [];
+    loadError.value = error?.response?.status === 404
+      ? 'El listado de usuarios no está disponible: el backend retiró /api/plan/get_all_users_plans/ y aún no hay reemplazo.'
+      : (error?.message || 'No se pudo cargar el listado de usuarios.');
     console.error('Error fetching users:', error);
   } finally {
     isLoading.value = false;

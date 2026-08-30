@@ -79,6 +79,9 @@
                 <div class="h-1 w-full bg-black/40 rounded-full overflow-hidden">
                     <div class="h-full bg-[var(--accent-color)] transition-all duration-1000" :style="{ width: Math.min((userRequests / tokenLimit * 100), 100) + '%' }"></div>
                 </div>
+                <p v-if="quotaCountdown" class="text-[8px] tracking-widest uppercase opacity-40 pt-1">
+                    Se renueva {{ quotaCountdown }}
+                </p>
             </div>
         </div>
       </div>
@@ -157,10 +160,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, markRaw, onMounted } from 'vue';
+import { ref, computed, markRaw, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuth } from '../composables/useAuth';
 import { authService } from '../api/authService';
+import { formatCountdown } from '../utils/quota';
 
 // Componentes
 import DonationMenu from './dashboard/components/DonationMenu.vue';
@@ -179,7 +183,7 @@ import JudgementSection from './dashboard/sections/JudgementSection.vue';
 import ProfileSection from './dashboard/sections/ProfileSection.vue';
 
 const router = useRouter();
-const { logout, userName, isDark, toggleTheme, userPlan, userRequests, tokenLimit, isAdmin, userId, setPlanData, updateUserRequests } = useAuth();
+const { logout, userName, isDark, toggleTheme, userPlan, userRequests, tokenLimit, quotaResetAt, isAdmin, userId, setPlanData, setQuota } = useAuth();
 
 const isSidebarOpen = ref(false);
 
@@ -213,17 +217,42 @@ const activeComponent = computed(() => {
 });
 
 const refreshUserData = async () => {
-    if (userId.value) {
-        try {
-            const plan = await authService.getUserPlan(userId.value);
-            if (plan) setPlanData(plan.planDescription, plan.token_duration, plan.id);
-            const data = await authService.getUserData(userId.value);
-            if (data) updateUserRequests(data.number_requests);
-        } catch (e) { console.error(e); }
+    if (!userId.value) return;
+
+    // La cuota manda: el servidor es la autoridad sobre used/limit/reset_at.
+    // El contador local es solo indicativo y no debe bloquear consultas.
+    try {
+        setQuota(await authService.getQuota());
+    } catch (e) {
+        console.error('No se pudo recuperar la cuota:', e);
+    }
+
+    // El plan solo aporta la descripción que se pinta en la barra lateral.
+    try {
+        const plan = await authService.getUserPlan(userId.value);
+        if (plan) setPlanData(plan.planDescription, plan.token_duration, plan.id);
+    } catch (e) {
+        console.error('No se pudo recuperar el plan:', e);
     }
 };
 
-onMounted(refreshUserData);
+// Reloj de baja frecuencia para que la cuenta atrás de la cuota no se congele.
+const ahora = ref(Date.now());
+let relojCuota: ReturnType<typeof setInterval> | undefined;
+
+const quotaCountdown = computed(() => {
+    ahora.value; // dependencia explícita: obliga a recalcular en cada tick
+    return formatCountdown(quotaResetAt.value);
+});
+
+onMounted(() => {
+    refreshUserData();
+    relojCuota = setInterval(() => { ahora.value = Date.now(); }, 60000);
+});
+
+onUnmounted(() => {
+    if (relojCuota) clearInterval(relojCuota);
+});
 
 const handleLogout = () => {
   logout();

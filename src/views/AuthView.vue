@@ -384,7 +384,31 @@ const registerErrors = reactive({
 });
 
 const router = useRouter();
-const { setToken, setupActivityListeners, setUserRecord, setPlanData, toggleTheme, isDark } = useAuth();
+const { setToken, setupActivityListeners, setUserRecord, setPlanData, setQuota, toggleTheme, isDark } = useAuth();
+
+/**
+ * Carga plan y cuota una vez fijado el token.
+ *
+ * Ambos endpoints exigen Bearer, así que solo pueden llamarse después de
+ * setToken(). Ninguno es crítico para entrar: si fallan, el dashboard los
+ * vuelve a pedir al montarse.
+ */
+const loadAccountState = async (recordId: string) => {
+  try {
+    const planData = await authService.getUserPlan(recordId);
+    if (planData) {
+      setPlanData(planData.planDescription || 'FREE', planData.token_duration || 20, planData.id);
+    }
+  } catch (e) {
+    console.error('No se pudo recuperar el plan:', e);
+  }
+
+  try {
+    setQuota(await authService.getQuota());
+  } catch (e) {
+    console.error('No se pudo recuperar la cuota:', e);
+  }
+};
 
 // Cinemática del fondo optimizada para evitar lagazo
 const mouseX = ref(0);
@@ -428,38 +452,15 @@ const handleOAuthCallback = async () => {
         const redirectUrl = window.location.origin + window.location.pathname; 
         const response = await authService.authWithOAuth2(provider, code, codeVerifier, redirectUrl);
         
-        if (response && response.record) {
-          
-          let finalToken = response.token;
-          
-          // Generar el token oficial del sistema (requerido para todo el flujo)
-          try {
-             const systemLoginResponse = await authService.getSystemToken(response.record.id);
-             if (systemLoginResponse && systemLoginResponse.access_token) {
-                 finalToken = systemLoginResponse.access_token;
-             } else if (systemLoginResponse && systemLoginResponse.token) {
-                 finalToken = systemLoginResponse.token;
-             }
-          } catch(e) {
-             console.error('Error generando token de sistema post-oauth2:', e);
-          }
-
-          // Guardar datos
+        if (response && response.record && response.access_token) {
+          // auth-with-oauth2 devuelve la misma forma que auth-with-password:
+          // `access_token` es el Bearer de nuestra API, `token` el de PocketBase.
           setUserRecord(response.record);
-          setToken(finalToken);
+          setToken(response.access_token);
           setupActivityListeners();
 
-          // Obtener el plan del usuario
-          try {
-            const planData = await authService.getUserPlan(response.record.id);
-            if (planData) {
-              setPlanData(planData.planDescription || 'FREE', planData.token_duration || 20, planData.id);
-            }
-          } catch (e) {
-            console.error('Error al recuperar descripción del plan tras oauth:', e);
-          }
+          await loadAccountState(response.record.id);
 
-          // Redirección Exitosa
           router.push('/dashboard');
         } else {
           throw new Error('Fallo la autenticación con el proveedor.');
@@ -638,37 +639,19 @@ const handleSubmit = async () => {
         password: loginForm.password
       });
 
-      // Validamos que exista el record y el ID
-      if (response && response.record && response.record.id) {
-        // Guardamos los datos básicos iniciales
+      // La respuesta trae DOS tokens: `token` es el de PocketBase y
+      // `access_token` es el Bearer que acepta nuestra API. Mandar el de
+      // PocketBase da 401 en todos los endpoints, así que solo vale este.
+      if (response && response.record && response.record.id && response.access_token) {
         setUserRecord(response.record);
+        setToken(response.access_token);
+        setupActivityListeners();
 
-        // OBLIGATORIO: Obtener descripción real del plan antes de entrar
-        try {
-          const planData = await authService.getUserPlan(response.record.id);
-          if (planData) {
-            // Esto actualiza el 'userPlan' global con la descripción (ej: ADMIN)
-            setPlanData(planData.planDescription || 'FREE', planData.token_duration || 20, planData.id);
-          }
-        } catch (e) {
-          console.error('Error al recuperar descripción del plan:', e);
-        }
-        
-        // Obtenemos el token real usando este ID del usuario
-        const tokenResponse = await authService.getApiToken(response.record.id);
+        // A partir de aquí ya hay sesión, así que plan y cuota (que exigen
+        // Bearer) se piden después de fijar el token, nunca antes.
+        await loadAccountState(response.record.id);
 
-        if (tokenResponse && tokenResponse.access_token) {
-          setToken(tokenResponse.access_token);
-          setupActivityListeners();
-          router.push('/dashboard');
-        } else if (tokenResponse && tokenResponse.token) {
-          setToken(tokenResponse.token);
-          setupActivityListeners();
-          router.push('/dashboard');
-        } else {
-          throw new Error('No se recibió un token válido en el segundo paso de autenticación.');
-        }
-
+        router.push('/dashboard');
       } else {
         throw new Error('Credenciales inválidas o datos de usuario no encontrados.');
       }
