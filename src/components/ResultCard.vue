@@ -131,6 +131,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import DOMPurify from 'dompurify';
+import { mapKey } from '../utils/formatters';
 
 const props = defineProps<{
   label: string;
@@ -181,8 +182,10 @@ const isBadgeValue = (v: string) => BADGE_VALUES.includes(v.toLowerCase());
 const badgeColor = (v: string) =>
   ['activo', 'vigente', 'true', 'aprobado'].includes(v.toLowerCase()) ? '#22c55e' : '#ef4444';
 
-const formatKey = (key: string) =>
-  key.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ').trim();
+// Reutiliza el formateador compartido: antes duplicaba la lógica con la regex
+// antigua, así que las etiquetas de KEY_MAP no llegaban a las estructuras
+// anidadas y las siglas se partían letra a letra.
+const formatKey = mapKey;
 
 // HTML Detection & Sanitization
 const isHtmlContent = (val: any) => {

@@ -11,6 +11,17 @@ export const mapKey = (key: string): string => {
     juicio: 'N.º de Juicio', delito: 'Delito', fecha: 'Fecha',
     nombremateria: 'Materia', nombretipoaccion: 'Tipo de Acción',
     iedocumentoadjunto: 'Documento Adjunto', informacion: 'Información',
+    // Arbol judicial anidado dentro de Informacion:
+    // JudicaturaModel -> IncidenteJudicaturaModel -> LitiganteModel
+    nombrejudicatura: 'Judicatura', idjudicatura: 'ID Judicatura',
+    ciudad: 'Ciudad', lstincidentejudicatura: 'Incidentes',
+    idincidentejudicatura: 'ID Incidente', idjudicaturadestino: 'Judicatura Destino',
+    idmovimientojuicioincidente: 'ID Movimiento', fechacrea: 'Fecha de Creación',
+    incidente: 'Incidente',
+    lstlitiganteactor: 'Demandantes', lstlitigantedemandado: 'Demandados',
+    litiganteactor: 'Demandante', litigantedemandado: 'Demandado',
+    tipolitigante: 'Tipo de Litigante', nombreslitigante: 'Nombre',
+    representadopor: 'Representado por', idlitigante: 'ID Litigante',
   };
   const k = key.toLowerCase();
   if (KEY_MAP[k]) return KEY_MAP[k];
