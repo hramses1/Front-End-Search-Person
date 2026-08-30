@@ -117,6 +117,8 @@ export interface ApiError extends AxiosError<ApiErrorBody> {
   apiCode?: ApiErrorCode | string;
   /** Momento de renovación de la cuota. Solo en `quota_exceeded`. */
   quotaResetAt?: string;
+  /** Campos señalados por el backend en `invalid_input` y en `forbidden`. */
+  invalidFields?: string[];
 }
 
 const CODE_MESSAGES: Record<string, string> = {
@@ -171,6 +173,18 @@ const normalizeError = (err: ApiError): void => {
     err.message = cuando
       ? `Agotaste tus consultas del día. Se renuevan ${cuando}.`
       : 'Agotaste tus consultas del día.';
+    return;
+  }
+
+  // invalid_input y forbidden pueden traer la lista de campos rechazados en
+  // detail.fields. El PATCH de usuario la usa para decir cuáles son
+  // privilegiados.
+  const fields: string[] = Array.isArray(body?.detail?.fields) ? body.detail.fields : [];
+  if (fields.length && (code === 'invalid_input' || code === 'forbidden')) {
+    err.invalidFields = fields;
+    err.message = code === 'invalid_input'
+      ? `Revisa estos campos: ${fields.join(', ')}.`
+      : `No puedes modificar estos campos: ${fields.join(', ')}.`;
     return;
   }
 
