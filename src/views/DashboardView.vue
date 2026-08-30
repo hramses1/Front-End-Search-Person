@@ -194,7 +194,7 @@ const sections = {
   license: 'LICENCIAS ACTIVAS',
   citation: 'INFRACCIONES DE TRÁNSITO',
   complaint: 'REGISTRO DE DENUNCIAS',
-  judgement: 'INFORMACIÓN DE JUICIOS',
+  judgement: 'JUICIOS COMO DEMANDANTE',
   vehicles: 'CONSULTA DE VEHÍCULOS',
   profile: 'ACTUALIZAR PERFIL'
 };

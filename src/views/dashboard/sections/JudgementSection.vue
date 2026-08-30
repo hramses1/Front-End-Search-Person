@@ -10,7 +10,7 @@
           maxlength="10"
           class="custom-input peer" 
         />
-        <label for="ci_judgement">CÉDULA DEL IMPLICADO (EJ: 1712345678)</label>
+        <label for="ci_judgement">CÉDULA DEL DEMANDANTE (EJ: 1712345678)</label>
       </div>
     </template>
     <template #results="{ data }">
@@ -52,7 +52,7 @@ const executeSearch = async () => {
   try {
     const data = await apiService.getJudgement(cleanCi);
     if (!data || (Array.isArray(data) && data.length === 0)) {
-        throw new Error('No se encontraron procesos judiciales para esta cédula.');
+        throw new Error('No se encontraron juicios en los que esta cédula figure como demandante.');
     }
     resultsData.value = data;
     emit('refresh-stats');
