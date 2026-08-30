@@ -96,16 +96,16 @@ export const authService = {
   },
 
   /**
-   * Listado de usuarios con su plan, para el panel de administración.
+   * Listado de usuarios con su plan. Requiere token de admin.
    *
-   * PENDIENTE: el backend eliminó /api/plan/get_all_users_plans/ al cerrar A1
-   * y no publicó reemplazo, así que hoy responde 404. Se mantiene la llamada
-   * para no borrar AdminView hasta decidir si se reexpone con guard de admin.
+   * Devuelve PlanUsersPaginatedResponseForUser: además de `items` trae `page`,
+   * `perPage`, `totalPages` y `totalItems`. El panel no tiene paginación, así
+   * que pide una página amplia y avisa si aun así se queda corta.
    */
-  async getAllUsersPlans() {
+  async getAllUsersPlans(perPage = 200) {
     const response = await apiClient.get('/api/plan/get_all_users_plans/', {
       headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
-      params: { _t: Date.now() }
+      params: { page: 1, perPage, _t: Date.now() }
     });
     return response.data;
   },

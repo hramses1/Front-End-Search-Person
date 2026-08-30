@@ -269,14 +269,17 @@ const fetchUsers = async () => {
   try {
     const data = await authService.getAllUsersPlans();
     users.value = data.items || [];
+
+    // El panel no pagina: si el backend reporta mas de una pagina, se avisa
+    // en vez de dejar creer que estan todos los usuarios.
+    if ((data.totalPages ?? 1) > 1) {
+      loadError.value = `Mostrando ${users.value.length} de ${data.totalItems} usuarios: hay ${data.totalPages} páginas y este panel solo carga la primera.`;
+    }
   } catch (error: any) {
-    // El listado de usuarios se quedó sin endpoint al endurecer la API.
     // Se avisa de forma explícita en vez de mostrar una tabla vacía, que
     // se leería como "no hay usuarios".
     users.value = [];
-    loadError.value = error?.response?.status === 404
-      ? 'El listado de usuarios no está disponible: el backend retiró /api/plan/get_all_users_plans/ y aún no hay reemplazo.'
-      : (error?.message || 'No se pudo cargar el listado de usuarios.');
+    loadError.value = error?.message || 'No se pudo cargar el listado de usuarios.';
     console.error('Error fetching users:', error);
   } finally {
     isLoading.value = false;
@@ -286,6 +289,15 @@ const fetchUsers = async () => {
     const results = await Promise.allSettled(
       users.value.map((u: any) => authService.getUserData(u.userId))
     );
+
+    // El listado no incluye number_requests: hay que pedirlo usuario a usuario.
+    // Si esas lecturas fallan (users/get/ es "propio"), la columna mostraria 0
+    // para todos, que se lee como "nadie ha consultado nada". Mejor decirlo.
+    const fallidas = results.filter(r => r.status === 'rejected').length;
+    if (fallidas > 0 && !loadError.value) {
+      loadError.value = `No se pudo leer el consumo de ${fallidas} de ${results.length} usuarios; esa columna puede estar incompleta.`;
+    }
+
     results.forEach((result, idx) => {
       if (result.status === 'fulfilled' && result.value) {
         users.value[idx] = {
