@@ -125,12 +125,18 @@ export function useAuth() {
     sessionStorage.setItem('user_requests', String(count));
   };
 
-  const setPlanData = (planDescription: string, limit: number, id?: string) => {
+  /**
+   * Descripción del plan y su ID.
+   *
+   * Ya no toca `tokenLimit`: el límite es competencia exclusiva de setQuota(),
+   * que lo toma de /api/users/quota/. Antes venía de `plan.token_duration`, un
+   * campo retirado del backend que llegaba como undefined y dejaba la barra de
+   * cuota en "usadas / undefined".
+   */
+  const setPlanData = (planDescription: string, id?: string) => {
     userPlan.value = planDescription;
-    tokenLimit.value = limit;
     sessionStorage.setItem('user_plan', planDescription);
-    sessionStorage.setItem('token_limit', String(limit));
-    
+
     if (id) {
       planId.value = id;
       sessionStorage.setItem('plan_id', id);

@@ -397,7 +397,7 @@ const loadAccountState = async (recordId: string) => {
   try {
     const planData = await authService.getUserPlan(recordId);
     if (planData) {
-      setPlanData(planData.planDescription || 'FREE', planData.token_duration || 20, planData.id);
+      setPlanData(planData.planDescription || 'FREE', planData.id);
     }
   } catch (e) {
     console.error('No se pudo recuperar el plan:', e);

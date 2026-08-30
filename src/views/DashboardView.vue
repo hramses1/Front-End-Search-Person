@@ -230,7 +230,7 @@ const refreshUserData = async () => {
     // El plan solo aporta la descripción que se pinta en la barra lateral.
     try {
         const plan = await authService.getUserPlan(userId.value);
-        if (plan) setPlanData(plan.planDescription, plan.token_duration, plan.id);
+        if (plan) setPlanData(plan.planDescription, plan.id);
     } catch (e) {
         console.error('No se pudo recuperar el plan:', e);
     }
