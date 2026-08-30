@@ -363,7 +363,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { authService } from '../services/authService';
+import { authService } from '../api/authService';
 import { useAuth } from '../composables/useAuth';
 
 const isLogin = ref(true);

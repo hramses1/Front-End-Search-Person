@@ -1,192 +1,217 @@
 <template>
-  <div class="dashboard-wrapper font-primary min-h-screen flex overflow-hidden relative">
-    <!-- Fondo Atmosférico -->
-    <div class="absolute inset-0 pointer-events-none noise-overlay z-0"></div>
+  <div class="dashboard-wrapper font-primary min-h-screen flex overflow-hidden relative selection:bg-[var(--accent-color)]/30">
+    <!-- Capas Atmosféricas -->
+    <div class="absolute inset-0 pointer-events-none noise-overlay z-0 opacity-20"></div>
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      <div class="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-[var(--accent-color)]/5 blur-[120px] rounded-full"></div>
+      <div class="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] bg-[var(--accent-color)]/3 blur-[100px] rounded-full"></div>
+    </div>
 
-    <!-- Botón Hamburguesa para Móvil -->
+    <!-- Botón Hamburguesa Móvil -->
     <button 
       @click="isSidebarOpen = !isSidebarOpen"
-      class="lg:hidden fixed top-4 right-4 z-50 p-3 bg-obsidian-soft border border-white/10 rounded-xl text-pale-blue shadow-lg pointer-events-auto"
-      style="background-color: var(--glass-bg); border-color: var(--border-color); color: var(--accent-color);"
+      class="lg:hidden fixed top-4 right-4 z-50 p-3 glass-panel rounded-2xl text-[var(--accent-color)] shadow-xl active:scale-90 transition-transform"
     >
       <svg v-if="!isSidebarOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
       <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
     </button>
     
-    <!-- Overlay para cerrar sidebar en móvil -->
-    <div v-if="isSidebarOpen" @click="isSidebarOpen = false" class="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-30"></div>
+    <!-- Overlay Móvil -->
+    <transition enter-active-class="duration-300 ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100" leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0">
+        <div v-if="isSidebarOpen" @click="isSidebarOpen = false" class="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-30"></div>
+    </transition>
     
     <!-- Sidebar -->
     <aside 
-      :class="[
-        'fixed inset-y-0 left-0 z-40 w-72 transition-transform duration-300 lg:relative lg:translate-x-0 flex flex-col h-screen bg-obsidian-soft border-r',
-        isSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
-      ]"
-      style="border-color: var(--border-color);"
+      :class="['fixed inset-y-0 left-0 z-40 w-72 transition-all duration-500 lg:relative lg:translate-x-0 flex flex-col h-screen glass-panel', 
+      isSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0']"
     >
-
-      <div class="p-8 border-b" style="border-color: var(--border-color);">
-        <h2 class="text-xl tracking-[0.25em] font-light mb-1" style="color: var(--text-primary);">PORTAL<span style="color: var(--accent-color);" class="font-bold">ADMIN</span></h2>
-        <p class="text-[9px] uppercase tracking-[0.3em] opacity-70" style="color: var(--text-secondary);">Gestión de Usuarios</p>
+      <div class="p-6 border-b border-[var(--border-color)]">
+        <h2 class="text-[13px] leading-tight tracking-[0.25em] font-light mb-1 uppercase" style="color: var(--text-primary);">
+          Portal <br />
+          <span class="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FFDD00] via-[#0033A0] to-[#ED1C24]">
+            ADMINISTRACIÓN
+          </span>
+        </h2>
+        <div class="mt-2 flex gap-1">
+            <div class="h-1 w-6 rounded-full bg-[#FFDD00]"></div>
+            <div class="h-1 w-3 rounded-full bg-[#0033A0]"></div>
+            <div class="h-1 w-2 rounded-full bg-[#ED1C24]"></div>
+        </div>
       </div>
 
-      <div class="flex-1 overflow-y-auto p-4 custom-scrollbar">
-        <nav class="space-y-1">
-          <button 
-            @click="router.push('/dashboard')"
-            class="w-full text-left px-5 py-3 rounded-xl text-[11px] tracking-[0.1em] transition-all duration-300 border border-transparent hover:bg-white/5"
-            style="color: var(--text-secondary);"
-          >
-            VOLVER AL PANEL
-          </button>
-        </nav>
-      </div>
-
-      <div class="p-6 border-t" style="border-color: var(--border-color);">
+      <div class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+        <p class="text-[8px] font-bold tracking-[0.3em] mb-4 opacity-40 uppercase px-2">Navegación</p>
         <button 
-          @click="handleLogout"
-          class="w-full py-3 bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 rounded-xl text-red-500 text-[10px] tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-2"
+          @click="router.push('/dashboard')"
+          class="w-full flex items-center justify-between px-5 py-3 rounded-2xl text-[11px] font-bold tracking-widest text-[var(--text-secondary)] hover:bg-white/5 hover:translate-x-1 transition-all"
         >
-          DESCONECTAR
+          <span>← VOLVER AL PANEL</span>
         </button>
+      </div>
+
+      <div class="p-4 border-t border-[var(--border-color)] bg-black/10">
+        <button @click="handleLogout" class="w-full py-2.5 text-red-400 hover:bg-red-500/5 text-[9px] font-bold tracking-[0.2em] rounded-xl border border-red-500/10 hover:border-red-500/20 transition-all uppercase mb-4">
+          Cerrar Sesión Admin
+        </button>
+
+        <!-- Sellos de Seguridad -->
+        <div class="mt-4 flex flex-wrap justify-center gap-3 text-[8px] uppercase tracking-widest opacity-40 font-mono text-[var(--text-secondary)]">
+            <span class="flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-width="2.5"></path></svg>
+                SSL
+            </span>
+            <span>·</span>
+            <span class="flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-width="2.5"></path></svg>
+                CIFRADO TLS
+            </span>
+            <span>·</span>
+            <span class="flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" stroke-width="2.5"></path></svg>
+                DEVZIO © 2026
+            </span>
+        </div>
       </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-screen relative z-10 p-6 sm:p-10 overflow-y-auto custom-scrollbar">
-      <header class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <main class="flex-1 flex flex-col h-screen relative z-10 p-6 sm:p-8 overflow-y-auto custom-scrollbar animate-fade-in">
+      <header class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 class="text-3xl font-light tracking-[0.1em]" style="color: var(--text-primary);">PANEL DE ADMINISTRACIÓN</h1>
-          <p class="text-sm mt-2 font-light tracking-wide" style="color: var(--text-secondary);">Control total de usuarios, planes y límites del sistema.</p>
+          <p class="text-[9px] font-black tracking-[0.3em] text-[var(--accent-color)] uppercase mb-1">Panel de Control</p>
+          <h1 class="text-3xl font-light tracking-tight text-[var(--text-primary)] uppercase">Gestión de Usuarios</h1>
         </div>
         
-        <!-- User Profile -->
-        <div class="flex items-center gap-4 bg-white/[0.03] backdrop-blur-md border border-white/5 py-2 px-4 rounded-2xl shadow-lg">
-          <div class="flex flex-col text-right">
-            <span class="text-[11px] text-silver font-medium tracking-widest uppercase" style="color: var(--text-primary);">{{ userName }}</span>
-            <span class="text-[8px] text-pale-blue/40 tracking-[0.2em] uppercase" style="color: var(--text-secondary);">ADMINISTRADOR</span>
-          </div>
-          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pale-blue/20 to-pale-blue/5 border border-white/10 flex items-center justify-center text-pale-blue text-[11px] font-bold shadow-inner" style="background-color: var(--accent-color); color: #ffffff;">
-            {{ userName.substring(0, 2).toUpperCase() }}
-          </div>
+        <div class="flex items-center gap-3">
+            <div class="flex flex-col items-end">
+                <span class="text-[11px] font-bold tracking-widest text-[var(--text-primary)]">{{ userName }}</span>
+                <span class="text-[8px] font-black tracking-widest text-[var(--accent-color)] opacity-80">ADMINISTRADOR</span>
+            </div>
+            <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-[11px] font-black text-white shadow-lg shadow-amber-500/20">
+                {{ userName.substring(0, 2).toUpperCase() }}
+            </div>
         </div>
       </header>
 
       <!-- Users Table -->
-      <div class="border rounded-2xl shadow-negative overflow-hidden" style="background-color: var(--surface-color); border-color: var(--border-color);">
-        <div class="px-6 py-4 border-b flex justify-between items-center" style="border-color: var(--border-color);">
-          <h3 class="text-[10px] tracking-[0.3em]" style="color: var(--accent-color);">LISTADO DE USUARIOS ACTIVOS</h3>
-          <button @click="fetchUsers" :disabled="isLoading" class="flex items-center gap-1.5 text-[9px] tracking-[0.2em] uppercase hover:opacity-80 transition-opacity disabled:opacity-40" style="color: var(--text-secondary);">
-            <span v-if="isLoading" class="w-2.5 h-2.5 border border-t-transparent rounded-full animate-spin" style="border-color: var(--text-secondary);"></span>
-            <span v-else>&#8635;</span>
-            Refrescar
-          </button>
-        </div>
+      <div class="flex-1">
+          <div class="glass-card overflow-hidden">
+            <div class="px-6 py-4 border-b border-[var(--border-color)] flex justify-between items-center bg-[var(--surface-color)]/50">
+              <h3 class="text-[10px] font-black tracking-[0.2em] uppercase opacity-60">Usuarios del Sistema</h3>
+              <button @click="fetchUsers" :disabled="isLoading" class="flex items-center gap-2 text-[9px] font-bold tracking-widest uppercase hover:text-[var(--accent-color)] transition-all disabled:opacity-40">
+                <span v-if="isLoading" class="w-3 h-3 border-2 border-t-transparent rounded-full animate-spin border-[var(--accent-color)]"></span>
+                <span v-else>↻</span>
+                Refrescar
+              </button>
+            </div>
 
-        <div class="overflow-x-auto max-h-[600px] overflow-y-auto custom-scrollbar pb-6">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b" style="border-color: var(--border-color); background-color: rgba(0,0,0,0.02);">
-                <th class="px-6 py-4 text-[9px] uppercase tracking-[0.2em]" style="color: var(--text-secondary);">Usuario</th>
-                <th class="px-6 py-4 text-[9px] uppercase tracking-[0.2em]" style="color: var(--text-secondary);">Plan Actual</th>
-                <th class="px-6 py-4 text-[9px] uppercase tracking-[0.2em]" style="color: var(--text-secondary);">Peticiones Usadas</th>
-                <th class="px-6 py-4 text-[9px] uppercase tracking-[0.2em]" style="color: var(--text-secondary);">Acciones</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y" style="border-color: var(--border-color);">
-              <tr v-for="userItem in users" :key="userItem.userId" class="hover:bg-white/[0.01] transition-colors">
-                <td class="px-6 py-4">
-                  <div class="flex flex-col">
-                    <span class="text-[12px] font-medium" style="color: var(--text-primary);">{{ userItem.userName }}</span>
-                    <span class="text-[10px] opacity-50" style="color: var(--text-secondary);">ID: {{ userItem.userId }}</span>
-                  </div>
-                </td>
-                <td class="px-6 py-4">
-                  <span class="inline-block whitespace-nowrap text-[10px] px-3 py-1 rounded-full border border-current font-mono tracking-widest" :style="{ color: userItem.planDescription.includes('ADMIN') ? 'var(--accent-color)' : 'var(--text-secondary)' }">
-                    {{ userItem.planDescription }}
-                  </span>
-                </td>
-                <td class="px-6 py-4">
-                  <div class="flex flex-col">
-                    <span class="text-[13px] font-medium font-mono" :style="{ color: (userItem.number_requests ?? 0) >= userItem.token_duration ? '#ef4444' : 'var(--text-primary)' }">
-                      {{ userItem.number_requests ?? '—' }}
-                    </span>
-                    <span class="text-[9px] opacity-50" style="color: var(--text-secondary);">/ {{ userItem.token_duration }} límite</span>
-                  </div>
-                </td>
-                <td class="px-6 py-4">
-                  <div class="flex gap-2">
-                    <button 
-                      @click="openEditModal(userItem)"
-                      class="px-3 py-1.5 rounded-lg text-[10px] tracking-[0.1em] border border-current hover:opacity-70 transition-all duration-300"
-                      style="color: var(--accent-color);"
-                    >
-                      EDITAR
-                    </button>
-                    <button 
-                      @click="resetRequests(userItem)"
-                      :disabled="userItem.number_requests === 0 || isResetting === userItem.userId"
-                      class="px-3 py-1.5 rounded-lg text-[10px] tracking-[0.1em] border border-current transition-all duration-300 disabled:opacity-30"
-                      style="color: #22c55e;"
-                      title="Reiniciar peticiones a 0"
-                    >
-                      <span v-if="isResetting === userItem.userId">...</span>
-                      <span v-else>↺ RESET</span>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="w-full text-left border-collapse border-b border-[var(--border-color)]">
+                <thead>
+                  <tr class="border-b border-[var(--border-color)] bg-black/5">
+                    <th class="px-6 py-4 text-[9px] font-black uppercase tracking-widest opacity-40">Usuario</th>
+                    <th class="px-6 py-4 text-[9px] font-black uppercase tracking-widest opacity-40">Plan</th>
+                    <th class="px-6 py-4 text-[9px] font-black uppercase tracking-widest opacity-40">Peticiones</th>
+                    <th class="px-6 py-4 text-[9px] font-black uppercase tracking-widest opacity-40 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-[var(--border-color)]">
+                  <tr v-for="userItem in users" :key="userItem.userId" class="hover:bg-white/[0.02] transition-colors group">
+                    <td class="px-6 py-4">
+                      <div class="flex flex-col">
+                        <span class="text-[12px] font-bold text-[var(--text-primary)]">{{ userItem.userName }}</span>
+                        <span class="text-[9px] font-mono opacity-30 tracking-tighter">{{ userItem.userId }}</span>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4">
+                      <span class="inline-block text-[9px] font-black px-3 py-1 rounded-lg border border-[var(--border-color)] tracking-widest uppercase" :style="{ color: userItem.planDescription.includes('ADMIN') ? 'var(--accent-color)' : 'var(--text-secondary)' }">
+                        {{ userItem.planDescription }}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4">
+                      <div class="flex items-center gap-3">
+                        <div class="flex flex-col min-w-[60px]">
+                            <span class="text-[12px] font-black tabular-nums" :style="{ color: (userItem.number_requests ?? 0) >= userItem.token_duration ? '#ef4444' : 'var(--text-primary)' }">
+                            {{ userItem.number_requests ?? 0 }}
+                            </span>
+                            <span class="text-[8px] font-bold opacity-30 tracking-widest">/ {{ userItem.token_duration }}</span>
+                        </div>
+                        <div class="hidden sm:block flex-1 h-1 bg-black/20 rounded-full overflow-hidden max-w-[80px]">
+                            <div class="h-full bg-[var(--accent-color)] opacity-50" :style="{ width: Math.min(((userItem.number_requests ?? 0) / userItem.token_duration * 100), 100) + '%' }"></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                      <div class="flex justify-end gap-2">
+                        <button 
+                          @click="openEditModal(userItem)"
+                          class="px-3 py-1.5 rounded-xl text-[9px] font-black tracking-widest border border-[var(--border-color)] hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-all uppercase"
+                        >
+                          Editar
+                        </button>
+                        <button 
+                          @click="resetRequests(userItem)"
+                          :disabled="userItem.number_requests === 0 || isResetting === userItem.userId"
+                          class="px-3 py-1.5 rounded-xl text-[9px] font-black tracking-widest border border-red-500/20 text-red-500/60 hover:text-red-500 hover:border-red-500/50 transition-all uppercase disabled:opacity-20"
+                        >
+                          <span v-if="isResetting === userItem.userId">...</span>
+                          <span v-else>Reset</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
       </div>
 
+      <!-- Footer en Admin -->
+      <MainFooter />
+
       <!-- Edit Modal -->
-      <transition name="fade-slide">
-        <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
-          <div class="w-full max-w-md border rounded-3xl p-8 shadow-2xl relative" style="background-color: var(--bg-color); border-color: var(--border-color);">
-            <h3 class="text-lg font-light tracking-[0.1em] mb-6" style="color: var(--text-primary);">EDITAR USUARIO</h3>
+      <transition 
+        enter-active-class="duration-300 ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100"
+        leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
+      >
+        <div v-if="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-md">
+          <div class="w-full max-w-md glass-card p-8 relative animate-fade-in shadow-2xl">
+            <h3 class="text-xl font-bold tracking-tight mb-8 flex items-center gap-3">
+                <span class="w-2 h-8 bg-[var(--accent-color)] rounded-full"></span>
+                EDITAR USUARIO
+            </h3>
             
-            <form @submit.prevent="saveUserChanges" class="space-y-6">
-              <div class="space-y-1">
-                <label class="text-[10px] uppercase tracking-[0.2em]" style="color: var(--text-secondary);">Plan ID</label>
-                <input 
-                  v-model="editForm.plan" 
-                  type="text"
-                  required
-                  class="w-full bg-transparent border-b font-light outline-none pb-2 transition-all duration-300"
-                  style="color: var(--text-primary); border-color: var(--input-border);"
-                />
+            <form @submit.prevent="saveUserChanges" class="space-y-8">
+              <div class="relative group input-container">
+                <input v-model="editForm.userName" type="text" id="edit_username" placeholder=" " class="custom-input peer" required />
+                <label for="edit_username">Nombre de Usuario (Ej: Juan_12)</label>
               </div>
 
-              <div class="space-y-1">
-                <label class="text-[10px] uppercase tracking-[0.2em]" style="color: var(--text-secondary);">Peticiones Actuales (editar para ajustar manualmente)</label>
-                <input 
-                  v-model="editForm.number_requests" 
-                  type="number"
-                  min="0"
-                  required
-                  class="w-full bg-transparent border-b font-light outline-none pb-2 transition-all duration-300"
-                  style="color: var(--text-primary); border-color: var(--input-border);"
-                />
+              <div class="relative group input-container">
+                <input v-model="editForm.plan" type="text" id="edit_plan" placeholder=" " class="custom-input peer" required />
+                <label for="edit_plan">Plan ID (Código de 15 caracteres)</label>
+              </div>
+
+              <div class="relative group input-container">
+                <input v-model="editForm.number_requests" type="number" id="edit_requests" placeholder=" " class="custom-input peer" required min="0" />
+                <label for="edit_requests">Peticiones Consumidas</label>
               </div>
 
               <div class="flex gap-4 pt-4">
                 <button 
                   type="button" 
                   @click="showModal = false"
-                  class="flex-1 py-3 rounded-xl text-[10px] tracking-[0.2em] border"
-                  style="border-color: var(--border-color); color: var(--text-secondary);"
+                  class="flex-1 py-4 rounded-2xl text-[10px] font-black tracking-widest border border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-white/5 transition-all uppercase"
                 >
-                  CANCELAR
+                  Cancelar
                 </button>
                 <button 
                   type="submit" 
-                  class="flex-1 py-3 rounded-xl text-[10px] tracking-[0.2em] text-white"
-                  style="background-color: var(--accent-color);"
+                  class="flex-1 py-4 btn-primary text-[10px] font-black tracking-widest uppercase"
                   :disabled="isSaving"
                 >
-                  {{ isSaving ? 'GUARDANDO...' : 'GUARDAR' }}
+                  {{ isSaving ? 'Guardando...' : 'Confirmar Cambios' }}
                 </button>
               </div>
             </form>
@@ -201,7 +226,8 @@
 import { ref, onMounted, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuth } from '../composables/useAuth';
-import { authService } from '../services/authService';
+import { authService } from '../api/authService';
+import MainFooter from '../ui/components/MainFooter.vue';
 
 const router = useRouter();
 const { logout, userName, isAdmin } = useAuth();
@@ -216,6 +242,7 @@ const isLoadingRequests = ref(false);
 
 const editForm = reactive({
   userId: '',
+  userName: '',
   plan: '',
   number_requests: 0
 });
@@ -239,8 +266,6 @@ const fetchUsers = async () => {
     isLoading.value = false;
   }
 
-  // En segundo plano: enriquecer cada usuario con su number_requests real
-  // Usamos Promise.allSettled para que un fallo individual no detenga los demás
   if (users.value.length > 0) {
     const results = await Promise.allSettled(
       users.value.map((u: any) => authService.getUserData(u.userId))
@@ -263,15 +288,14 @@ const handleLogout = () => {
 
 const openEditModal = async (userItem: any) => {
   editForm.userId = userItem.userId;
+  editForm.userName = userItem.userName;
   editForm.plan = userItem.id;
   editForm.number_requests = 0;
   showModal.value = true;
   isLoadingRequests.value = true;
   try {
-    // Una sola petición al hacer clic para ver las peticiones reales
     const userData = await authService.getUserData(userItem.userId);
     editForm.number_requests = userData?.number_requests ?? 0;
-    // Actualizar también en la tabla sin recargar todo
     const idx = users.value.findIndex(u => u.userId === userItem.userId);
     if (idx !== -1) users.value[idx].number_requests = editForm.number_requests;
   } catch {
@@ -282,6 +306,7 @@ const openEditModal = async (userItem: any) => {
 };
 
 const resetRequests = async (userItem: any) => {
+  if (!confirm(`¿Reiniciar peticiones para ${userItem.userName}?`)) return;
   isResetting.value = userItem.userId;
   try {
     await authService.patchUser(userItem.userId, { number_requests: 0 });
@@ -289,7 +314,6 @@ const resetRequests = async (userItem: any) => {
     if (idx !== -1) users.value[idx].number_requests = 0;
   } catch (error) {
     console.error('Error al resetear peticiones:', error);
-    alert('Error al resetear peticiones.');
   } finally {
     isResetting.value = null;
   }
@@ -298,10 +322,11 @@ const resetRequests = async (userItem: any) => {
 const saveUserChanges = async () => {
   isSaving.value = true;
   try {
-    // Actualizar plan con patchUser (PATCH /users/patch?codigo=)
+    await authService.updateUser(editForm.userId, { 
+        username: editForm.userName,
+        number_requests: editForm.number_requests 
+    });
     await authService.patchUser(editForm.userId, { plan: editForm.plan });
-    // Actualizar peticiones con updateUser (PATCH /users/patch/ con params)
-    await authService.updateUser(editForm.userId, { number_requests: editForm.number_requests });
     showModal.value = false;
     fetchUsers();
   } catch (error) {
@@ -313,25 +338,7 @@ const saveUserChanges = async () => {
 </script>
 
 <style scoped>
-.dashboard-wrapper { 
-  min-height: 100vh;
-  background-color: var(--bg-color); 
-}
-
-.bg-obsidian-soft { 
-  background-color: var(--surface-color); 
-  backdrop-filter: blur(16px); 
-}
-
-.shadow-negative { 
-  box-shadow: 0 10px 30px var(--shadow-color);
-}
-
-.fade-slide-enter-active, .fade-slide-leave-active {
-  transition: all 0.2s ease;
-}
-.fade-slide-enter-from, .fade-slide-leave-to {
-  opacity: 0;
-  transform: translateY(10px);
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
 }
 </style>

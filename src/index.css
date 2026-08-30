@@ -1,80 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --bg-color: #121214;
-  --surface-color: rgba(22, 22, 26, 0.4);
-  --text-primary: #e4e4e9;
-  --text-secondary: #8a8a95;
-  --accent-color: #b1c1d3;
-  --border-color: rgba(255, 255, 255, 0.05);
-  --input-border: rgba(255, 255, 255, 0.1);
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --shadow-color: rgba(0, 0, 0, 0.6);
-  --card-bg: rgba(255, 255, 255, 0.02);
-  --scrollbar-track: rgba(255, 255, 255, 0.02);
-  --scrollbar-thumb: rgba(177, 193, 211, 0.2);
-  --scrollbar-thumb-hover: rgba(177, 193, 211, 0.4);
-  --autofill-bg: #16161a;
-  --autofill-text: #e4e4e9;
+  --bg-color:        #fdfaf6; /* Crema muy suave (Warm White) */
+  --surface-color:   #f7f1eb; /* Arena pastel */
+  --border-color:    #e8dfd5; /* Lino suave */
+  --accent-color:    #8d6e63; /* Terracota apagado (Cálido) */
+  --accent-inverse:  #ffffff;
+  --text-primary:    #4a4440; /* Café oscuro profundo (Suave) */
+  --text-secondary:  #7d746d; /* Arcilla suave */
+  --text-muted:      #b5aca2; /* Piedra cálida */
+  --input-bg:        #ffffff;
+  --glass-bg:        rgba(253, 250, 246, 0.8);
 }
 
-.light-mode {
-  --bg-color: #F7F8FA; /* Soft pearl gray */
-  --surface-color: #FFFFFF;
-  --text-primary: #1C1E21; /* Very dark slate, almost black */
-  --text-secondary: #6B7280; /* Elegant gray */
-  --accent-color: #2C5282; /* Premium deep blue */
-  --border-color: rgba(0, 0, 0, 0.06); /* Very subtle borders */
-  --input-border: rgba(0, 0, 0, 0.12);
-  --glass-bg: rgba(255, 255, 255, 0.85); /* Frost effect */
-  --shadow-color: rgba(0, 0, 0, 0.04);
-  --card-bg: rgba(255, 255, 255, 0.6);
-  --scrollbar-track: transparent;
-  --scrollbar-thumb: #CBD5E1; /* Gris sólido para que no se vea transparente */
-  --scrollbar-thumb-hover: #94A3B8;
-  --autofill-bg: #F0F4F8;
-  --autofill-text: #1C1E21;
+.dark {
+  --bg-color:        #24211f; /* Café chocolate profundo */
+  --surface-color:   #2d2926; /* Tierra oscuro */
+  --border-color:    #3d3834; /* Borde madera */
+  --accent-color:    #d7ccc8; /* Beige pastel */
+  --accent-inverse:  #24211f;
+  --text-primary:    #ede7e3;
+  --text-secondary:  #bcaaa4;
+  --text-muted:      #8d837d;
+  --input-bg:        #2d2926;
+  --glass-bg:        rgba(36, 33, 31, 0.85);
 }
 
-@layer base {
-  body {
-    background-color: var(--bg-color);
-    color: var(--text-primary);
-    @apply font-primary m-0 p-0 antialiased transition-colors duration-500;
-  }
+body {
+  @apply bg-[var(--bg-color)] text-[var(--text-primary)] transition-colors duration-500;
+  font-family: 'Jost', sans-serif;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.01em;
+  line-height: 1.6;
 }
 
-@layer utilities {
-  .custom-input {
-    transition: background-color 5000s ease-in-out 0s, border-color 0.3s ease, color 0.3s ease;
-  }
+/* ─── Scrollbar Cálida ────────────────────────────────────── */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: var(--bg-color); }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 20px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--accent-color); opacity: 0.5; }
 
-  /* Dynamic Scrollbars */
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: var(--scrollbar-track);
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-    border-radius: 6px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-thumb-hover);
-  }
+/* ─── Botón Principal Cálido ──────────────────────────── */
+.btn-primary {
+  @apply px-8 py-3.5 bg-[var(--accent-color)] text-[var(--accent-inverse)]
+         font-medium rounded-2xl tracking-[0.1em] text-[10px] uppercase
+         hover:brightness-110 active:scale-[0.98] transition-all duration-500
+         shadow-sm hover:shadow-md;
 }
 
-/* Fix Autocomplete para Chrome respetando diseño light/dark */
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0px 1000px var(--autofill-bg) inset !important;
-  -webkit-text-fill-color: var(--autofill-text) !important;
+/* ─── Inputs de Línea Fina ────────────────────────────────── */
+.custom-input {
+  @apply w-full bg-transparent border-b border-[var(--border-color)] py-4
+         outline-none transition-all duration-500 font-light text-sm
+         text-[var(--text-primary)] placeholder:opacity-0;
+}
+
+/* Forzar estilo en autocompletado del navegador */
+.custom-input:-webkit-autofill,
+.custom-input:-webkit-autofill:hover, 
+.custom-input:-webkit-autofill:focus, 
+.custom-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--bg-color) inset !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
   transition: background-color 5000s ease-in-out 0s;
-  caret-color: var(--text-primary);
+}
+
+.custom-input:focus {
+  border-color: var(--accent-color);
+  @apply translate-x-1;
+}
+
+label {
+  @apply absolute left-0 top-4 text-[10px] font-medium tracking-[0.12em]
+         transition-all duration-500 pointer-events-none uppercase opacity-40;
+}
+
+.custom-input:focus ~ label,
+.custom-input:not(:placeholder-shown) ~ label {
+  @apply -translate-y-8 translate-x-[-2px] opacity-100 scale-[0.95];
+  color: var(--accent-color);
+  letter-spacing: 0.15em;
+}
+
+/* ─── Cards y Paneles ────────────────────────────────────── */
+.glass-card {
+  @apply rounded-[24px] border border-[var(--border-color)] bg-[var(--surface-color)] shadow-sm;
+}
+
+.glass-panel {
+  @apply bg-[var(--glass-bg)] border border-[var(--border-color)] backdrop-blur-xl rounded-[20px];
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

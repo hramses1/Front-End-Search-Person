@@ -1,6 +1,8 @@
 import { ref, computed } from 'vue';
 import axios from 'axios';
 
+// NOTE: Ideally these should be injected or used via useCases
+// For now, let's keep them as refs to maintain current functionality
 const token = ref<string | null>(sessionStorage.getItem('auth_token'));
 const user = ref<any>(null);
 const userPlan = ref<string>(sessionStorage.getItem('user_plan') || 'FREE');
@@ -9,7 +11,7 @@ const userRequests = ref<number>(parseInt(sessionStorage.getItem('user_requests'
 const userId = ref<string>(sessionStorage.getItem('user_id') || '');
 const userName = ref<string>(sessionStorage.getItem('user_name') || '');
 const tokenLimit = ref<number>(parseInt(sessionStorage.getItem('token_limit') || '20', 10));
-const isDark = ref<boolean>(sessionStorage.getItem('theme') !== 'light'); // Default to dark
+const isDark = ref<boolean>(sessionStorage.getItem('theme') !== 'light');
 
 let inactivityTimer: ReturnType<typeof setTimeout> | null = null;
 const INACTIVITY_LIMIT_MS = 10 * 60 * 1000; // 10 minutos
@@ -17,8 +19,6 @@ const INACTIVITY_LIMIT_MS = 10 * 60 * 1000; // 10 minutos
 export function useAuth() {
   const setToken = (newToken: string) => {
     token.value = newToken;
-
-    console.log('Token set:', sessionStorage);
     sessionStorage.setItem('auth_token', newToken);
     axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
   };
@@ -105,7 +105,7 @@ export function useAuth() {
     isDark.value = !isDark.value;
     sessionStorage.setItem('theme', isDark.value ? 'dark' : 'light');
     if (typeof document !== 'undefined') {
-      document.documentElement.classList.toggle('light-mode', !isDark.value);
+      document.documentElement.classList.toggle('dark', isDark.value);
     }
   };
 
@@ -120,7 +120,7 @@ export function useAuth() {
       setupActivityListeners();
     }
     if (typeof document !== 'undefined') {
-      document.documentElement.classList.toggle('light-mode', !isDark.value);
+      document.documentElement.classList.toggle('dark', isDark.value);
     }
   };
 
@@ -135,7 +135,6 @@ export function useAuth() {
     userName: computed(() => userName.value),
     isDark: computed(() => isDark.value),
     isAdmin: computed(() => {
-      console.log('[DEBUG] isAdmin check:', { planId: planId.value, userPlan: userPlan.value });
       return planId.value === '5rkvp69sbpzz9cv' && userPlan.value.toUpperCase().includes('ADMIN');
     }),
     isAuthenticated: computed(() => !!token.value),

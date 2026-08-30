@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
-
-// Importaciones directas para evitar fallos de carga en desarrollo
 import AuthView from '../views/AuthView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import AdminView from '../views/AdminView.vue'

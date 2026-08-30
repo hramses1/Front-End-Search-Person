@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        primary: ['Space Grotesk', 'sans-serif'],
+        primary: ['Jost', 'Helvetica Neue', 'Arial', 'sans-serif'],
       },
       colors: {
         obsidian: {
