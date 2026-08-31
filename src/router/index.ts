@@ -1,55 +1,88 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
 import PublicLandingView from '../views/PublicLandingView.vue'
-import LegalView from '../views/LegalView.vue'
-import AuthView from '../views/AuthView.vue'
-import DashboardView from '../views/DashboardView.vue'
-import AdminView from '../views/AdminView.vue'
+
+/**
+ * La portada se carga de forma sincrona porque es la puerta de entrada y su
+ * LCP es el que mide Google. El resto va en trozos aparte: quien solo visita
+ * la portada no descarga el panel ni la administracion.
+ */
+const LegalView = () => import('../views/LegalView.vue')
+const AuthView = () => import('../views/AuthView.vue')
+const DashboardView = () => import('../views/DashboardView.vue')
+const AdminView = () => import('../views/AdminView.vue')
+
+const MARCA = 'Portal de Consulta Ciudadana'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior(to, _from, guardado) {
+    if (guardado) return guardado
+    if (to.hash) return { el: to.hash, behavior: 'smooth' }
+    return { top: 0 }
+  },
   routes: [
     {
       // Portada publica: catalogo, guias y preguntas frecuentes. Es lo primero
       // que ve un visitante; consultar exige cuenta y se le explica alli.
       path: '/',
       name: 'home',
-      component: PublicLandingView
+      component: PublicLandingView,
+      meta: {
+        titulo: 'Consulta cédula, RUC y placas del Ecuador',
+        descripcion: 'Consulta cédula, RUC, licencias, multas y vehículos del Ecuador en un solo lugar. Datos del Registro Civil, SRI, ANT y Función Judicial. Cuenta gratuita.'
+      }
     },
     {
       // Documentos legales: mismo componente, distinto contenido segun el
       // nombre de ruta. Publicos, sin sesion.
       path: '/terminos',
       name: 'terminos',
-      component: LegalView
+      component: LegalView,
+      meta: {
+        titulo: 'Términos de servicio',
+        descripcion: 'Condiciones de uso del Portal de Consulta Ciudadana: cuenta, cuota diaria de consultas, uso aceptable, exactitud de los datos y disponibilidad del servicio.'
+      }
     },
     {
       path: '/privacidad',
       name: 'privacidad',
-      component: LegalView
+      component: LegalView,
+      meta: {
+        titulo: 'Política de privacidad',
+        descripcion: 'Qué datos tratamos y para qué: cuenta, cuota y sesión. Sin cookies, sin analítica y sin rastreo. Cómo ejercer tus derechos de acceso y eliminación.'
+      }
     },
     {
       path: '/contacto',
       name: 'contacto',
-      component: LegalView
+      component: LegalView,
+      meta: {
+        titulo: 'Contacto y soporte',
+        descripcion: 'Cómo contactarnos para soporte de uso, problemas con la cuota, solicitudes sobre tus datos personales o para reportar una vulnerabilidad de seguridad.'
+      }
     },
     {
       path: '/auth',
       name: 'auth',
       component: AuthView,
-      meta: { guestOnly: true }
+      meta: {
+        guestOnly: true,
+        titulo: 'Acceder o crear cuenta',
+        descripcion: 'Entra a tu cuenta o crea una gratis para consultar cédula, RUC, licencias, multas y vehículos del Ecuador. Sin tarjeta de crédito.'
+      }
     },
     {
       path: '/dashboard',
       name: 'dashboard',
       component: DashboardView,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true, titulo: 'Panel de consultas', noIndexar: true }
     },
     {
       path: '/admin',
       name: 'admin',
       component: AdminView,
-      meta: { requiresAuth: true, requiresAdmin: true }
+      meta: { requiresAuth: true, requiresAdmin: true, titulo: 'Administración', noIndexar: true }
     },
     {
       path: '/:pathMatch(.*)*',
@@ -58,9 +91,9 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const { isAuthenticated, isAdmin } = useAuth();
-  
+
   if (to.meta.requiresAuth && !isAuthenticated.value) {
     next({ name: 'auth' })
   } else if (to.meta.requiresAdmin && !isAdmin.value) {
@@ -70,6 +103,37 @@ router.beforeEach((to, from, next) => {
   } else {
     next()
   }
+})
+
+/**
+ * Titulo y descripcion por ruta.
+ *
+ * Al ser una SPA, sin esto las siete rutas comparten el mismo <title>, que es
+ * justo lo que penaliza el buscador. Se actualizan tambien el canonical y las
+ * etiquetas OpenGraph para que al compartir un enlace se vea la pagina real.
+ */
+const fijarEtiqueta = (selector: string, atributo: string, valor: string) => {
+  const el = document.head.querySelector(selector)
+  if (el) el.setAttribute(atributo, valor)
+}
+
+router.afterEach((to) => {
+  const titulo = (to.meta.titulo as string) || MARCA
+  document.title = titulo === MARCA ? titulo : `${titulo} | ${MARCA}`
+
+  const desc = to.meta.descripcion as string | undefined
+  if (desc) {
+    fijarEtiqueta('meta[name="description"]', 'content', desc)
+    fijarEtiqueta('meta[property="og:description"]', 'content', desc)
+  }
+
+  fijarEtiqueta('meta[property="og:title"]', 'content', document.title)
+  fijarEtiqueta('link[rel="canonical"]', 'href', `https://devzio.site${to.path}`)
+  fijarEtiqueta('meta[property="og:url"]', 'content', `https://devzio.site${to.path}`)
+
+  // Las rutas con sesion no deben indexarse
+  const robots = document.head.querySelector('meta[name="robots"]')
+  if (robots) robots.setAttribute('content', to.meta.noIndexar ? 'noindex, nofollow' : 'index, follow')
 })
 
 export default router

@@ -45,7 +45,12 @@
       @click="isQrZoomed = !isQrZoomed"
       :class="['p-md bg-white rounded-base shadow-xl ring-1 ring-black/5 cursor-pointer transition-all duration-base ease-[cubic-bezier(0.34,1.56,0.64,1)]', isQrZoomed ? 'scale-110 sm:scale-125 z-50 mb-2xl sm:mb-14 shadow-2xl' : 'hover:scale-105 active:scale-95 mb-0']"
   >
-      <img src="/Cafecito-qrcode.png" alt="QR" class="w-full h-auto object-contain max-w-[140px] sm:max-w-[160px]" />
+      <img
+        src="/Cafecito-qrcode.png"
+        alt="Código QR para donar mediante Cafecito"
+        width="160" height="160" loading="lazy" decoding="async"
+        class="w-full h-auto object-contain max-w-[140px] sm:max-w-[160px]"
+      />
       <p v-if="!isQrZoomed" class="text-caption font-black text-center mt-sm text-[var(--text-muted)] uppercase tracking-tighter">Clic para ampliar</p>
   </div>
 
@@ -61,7 +66,7 @@
       </form>
 
       <div class="flex flex-col items-center gap-sm opacity-80">
-          <img src="/paypal-cards.svg" alt="cards" class="h-4" />
+          <img src="/paypal-cards.svg" alt="Tarjetas aceptadas por PayPal" width="120" height="16" loading="lazy" decoding="async" class="h-4 w-auto" />
           <p class="text-caption text-center font-bold text-[var(--text-muted)] uppercase tracking-tighter">
             100% Protegido
           </p>

@@ -65,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted, onUnmounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuth } from '../composables/useAuth';
 
@@ -278,6 +278,35 @@ const documentos: Record<string, any> = {
 };
 
 const doc = computed(() => documentos[String(route.name)] ?? documentos.terminos);
+
+/**
+ * BreadcrumbList para el buscador.
+ *
+ * Se inyecta y se retira con la vista para que no quede colgado un rastro de
+ * migas de una pagina que ya no se esta viendo.
+ */
+let scriptMigas: HTMLScriptElement | null = null;
+
+const pintarMigas = () => {
+  const datos = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://devzio.site/' },
+      { '@type': 'ListItem', position: 2, name: doc.value.titulo, item: `https://devzio.site${route.path}` }
+    ]
+  };
+  if (!scriptMigas) {
+    scriptMigas = document.createElement('script');
+    scriptMigas.type = 'application/ld+json';
+    document.head.appendChild(scriptMigas);
+  }
+  scriptMigas.textContent = JSON.stringify(datos);
+};
+
+onMounted(pintarMigas);
+watch(() => route.path, pintarMigas);
+onUnmounted(() => { scriptMigas?.remove(); scriptMigas = null; });
 
 const otros = computed(() =>
   [
