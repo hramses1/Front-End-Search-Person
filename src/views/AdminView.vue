@@ -162,7 +162,7 @@
                       {{ users.length === 0 ? 'No hay usuarios que mostrar.' : 'Ningún usuario coincide con los filtros.' }}
                     </td>
                   </tr>
-                  <tr v-for="userItem in usuariosFiltrados" :key="userItem.userId" class="hover:bg-white/[0.02] transition-colors group">
+                  <tr v-for="userItem in usuariosVisibles" :key="userItem.userId" class="hover:bg-white/[0.02] transition-colors group">
                     <td class="px-lg py-md">
                       <div class="flex flex-col min-w-0" :title="`ID: ${userItem.userId}`">
                         <span class="text-body font-bold text-[var(--text-primary)] truncate">{{ userItem.userName }}</span>
@@ -228,6 +228,15 @@
                   </tr>
                 </tbody>
               </table>
+
+              <div v-if="usuariosVisibles.length < usuariosFiltrados.length" class="flex items-center justify-center gap-md py-lg">
+                <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                  {{ usuariosVisibles.length }} de {{ usuariosFiltrados.length }}
+                </p>
+                <button type="button" class="btn-secondary" @click="visibles += PASO_FILAS">
+                  Mostrar {{ Math.min(PASO_FILAS, usuariosFiltrados.length - usuariosVisibles.length) }} más
+                </button>
+              </div>
             </div>
           </div>
       </div>
@@ -364,7 +373,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, reactive } from 'vue';
+import { ref, computed, watch, onMounted, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import BrandMark from '../ui/components/BrandMark.vue';
 import SecuritySeals from '../ui/components/SecuritySeals.vue';
@@ -400,6 +409,13 @@ const loadError = ref('');
    peticion, asi que filtrar en servidor no ahorraria nada.
    ───────────────────────────────────────────────────────────── */
 const buscaUsuario = ref('');
+/** Copia con retardo: evita recalcular y repintar en cada tecla. */
+const buscaAplicada = ref('');
+let temporizadorBusca: ReturnType<typeof setTimeout> | undefined;
+
+/** Cuantas filas se pintan. Con miles de usuarios, pintarlas todas cuesta. */
+const PASO_FILAS = 100;
+const visibles = ref(PASO_FILAS);
 const filtroPlan = ref('');
 const minPeticiones = ref<number | null>(null);
 const orden = ref<'nombre' | 'mas' | 'menos' | 'nuevos' | 'antiguos'>('nombre');
@@ -456,7 +472,7 @@ const planesEnUso = computed(() => {
 const usuariosFiltrados = computed(() => {
   let lista = [...users.value];
 
-  const q = normaliza(buscaUsuario.value);
+  const q = normaliza(buscaAplicada.value);
   if (q) {
     lista = lista.filter(u =>
       normaliza(u.userName).includes(q) ||
@@ -494,6 +510,19 @@ const usuariosFiltrados = computed(() => {
   return lista;
 });
 
+/** La lista que de verdad llega al DOM. */
+const usuariosVisibles = computed(() => usuariosFiltrados.value.slice(0, visibles.value));
+
+/** Cualquier cambio de filtro vuelve al primer tramo. */
+watch([buscaAplicada, filtroPlan, minPeticiones, desde, hasta, orden], () => {
+  visibles.value = PASO_FILAS;
+});
+
+watch(buscaUsuario, (v) => {
+  clearTimeout(temporizadorBusca);
+  temporizadorBusca = setTimeout(() => { buscaAplicada.value = v; }, 200);
+});
+
 const hayFiltros = computed(() =>
   !!buscaUsuario.value || !!filtroPlan.value || minPeticiones.value !== null
   || !!desde.value || !!hasta.value
@@ -501,6 +530,7 @@ const hayFiltros = computed(() =>
 
 const limpiarFiltros = () => {
   buscaUsuario.value = '';
+  buscaAplicada.value = '';
   filtroPlan.value = '';
   minPeticiones.value = null;
   desde.value = '';
@@ -569,10 +599,10 @@ const fetchUsers = async () => {
       consumoDesconocido: !u.quota
     }));
 
-    // El panel no pagina: si el backend reporta mas de una pagina, se avisa
-    // en vez de dejar creer que estan todos los usuarios.
-    if ((data.totalPages ?? 1) > 1) {
-      loadError.value = `Mostrando ${users.value.length} de ${data.totalItems} usuarios: hay ${data.totalPages} páginas y este panel solo carga la primera.`;
+    // Ya se recorren todas las paginas; solo se avisa si el tope de seguridad
+    // dejo alguna fuera.
+    if (data.paginasOmitidas > 0) {
+      loadError.value = `Mostrando ${users.value.length} de ${data.totalItems} usuarios: quedaron ${data.paginasOmitidas} páginas sin cargar.`;
     }
   } catch (error: any) {
     // Se avisa de forma explícita en vez de mostrar una tabla vacía, que

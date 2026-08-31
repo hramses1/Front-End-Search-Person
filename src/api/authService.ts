@@ -132,19 +132,38 @@ export const authService = {
   },
 
   /**
-   * Listado de usuarios con su plan. Requiere token de admin.
+   * Listado completo de usuarios con su plan. Requiere token de admin.
    *
-   * Devuelve PlanUsersPaginatedResponseForUser: además de `items` trae `page`,
-   * `perPage`, `totalPages` y `totalItems`. El panel no tiene paginación, así
-   * que pide una página amplia y avisa si aun así se queda corta.
+   * El backend topa perPage en 200, asi que con mas usuarios hace falta
+   * recorrer las paginas. La primera se pide sola para saber cuantas hay y el
+   * resto van en paralelo: son pocas peticiones y el limite por IP es de 120
+   * por minuto, de modo que no hay riesgo de rafaga.
    */
-  async getAllUsersPlans(perPage = 200) {
-    const response = await apiClient.get('/api/plan/get_all_users_plans/', {
-      headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
-      params: { page: 1, perPage, _t: Date.now() }
-    });
-    return response.data;
+  async getAllUsersPlans(perPage = 200, maxPaginas = 25) {
+    const pedir = async (page: number) => {
+      const r = await apiClient.get('/api/plan/get_all_users_plans/', {
+        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
+        params: { page, perPage, _t: Date.now() }
+      });
+      return r.data;
+    };
+
+    const primera = await pedir(1);
+    const totalPaginas = Math.min(primera?.totalPages ?? 1, maxPaginas);
+    if (totalPaginas <= 1) return primera;
+
+    const resto = await Promise.all(
+      Array.from({ length: totalPaginas - 1 }, (_, i) => pedir(i + 2))
+    );
+
+    return {
+      ...primera,
+      items: [primera?.items ?? [], ...resto.map(r => r?.items ?? [])].flat(),
+      // Se informa de si quedaron paginas fuera por el tope de seguridad.
+      paginasOmitidas: Math.max(0, (primera?.totalPages ?? 1) - maxPaginas)
+    };
   },
+
 
   /**
    * Catalogo de planes. Requiere token de admin.
