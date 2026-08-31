@@ -62,9 +62,18 @@ export const authService = {
   },
 
 
-  /** Cuota diaria del usuario autenticado. Consultarla no la consume. */
+  /**
+   * Cuota diaria del usuario autenticado. Consultarla no la consume.
+   *
+   * Va sin cache de forma explicita: es un GET que cambia con cada consulta,
+   * y tanto el navegador como el edge pueden reutilizar la respuesta anterior
+   * por heuristica, devolviendo un contador viejo.
+   */
   async getQuota(): Promise<Quota> {
-    const response = await apiClient.get('/api/users/quota/');
+    const response = await apiClient.get('/api/users/quota/', {
+      headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
+      params: { _t: Date.now() }
+    });
     return response.data;
   },
 

@@ -296,13 +296,23 @@ const quotaCountdown = computed(() => {
     return formatCountdown(quotaResetAt.value);
 });
 
+/**
+ * Al volver a la pestana se recarga la cuota: puede haber cambiado desde otra
+ * sesion, otro dispositivo o el panel de administracion.
+ */
+const alVolver = () => {
+    if (document.visibilityState === 'visible') refreshUserData();
+};
+
 onMounted(() => {
     refreshUserData();
     relojCuota = setInterval(() => { ahora.value = Date.now(); }, 60000);
+    document.addEventListener('visibilitychange', alVolver);
 });
 
 onUnmounted(() => {
     if (relojCuota) clearInterval(relojCuota);
+    document.removeEventListener('visibilitychange', alVolver);
 });
 
 const handleLogout = () => {
