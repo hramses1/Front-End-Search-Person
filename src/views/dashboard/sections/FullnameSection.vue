@@ -148,8 +148,13 @@
           <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
             {{ data.length }} {{ data.length === 1 ? 'coincidencia' : 'coincidencias' }}
           </p>
+          <!--
+            Solo se ofrece con pocas coincidencias: cada ficha desplegada son
+            una docena de tarjetas, asi que abrir cien de golpe congelaria la
+            vista un instante sin que el usuario sepa por que.
+          -->
           <button
-            v-if="data.length > 1"
+            v-if="data.length > 1 && data.length <= LIMITE_EXPANDIR"
             type="button"
             class="btn-tertiary"
             @click="expandido = expandido === -2 ? -1 : -2"
@@ -246,6 +251,9 @@ const normalize = (text: any): string => {
  * Indice de la fila desplegada. -1 ninguna, -2 todas.
  */
 const expandido = ref(-1);
+
+/** Por encima de esto no se ofrece abrir todas a la vez. */
+const LIMITE_EXPANDIR = 15;
 const estaAbierto = (idx: number) => expandido.value === -2 || expandido.value === idx;
 const alternar = (idx: number) => {
   expandido.value = estaAbierto(idx) && expandido.value !== -2 ? -1 : idx;
