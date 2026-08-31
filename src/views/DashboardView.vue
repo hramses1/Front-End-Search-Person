@@ -66,33 +66,6 @@
         </div>
       </div>
 
-      <!-- Stats / Plan -->
-      <div class="px-3 pb-3">
-        <div class="rounded-lg border border-[var(--border-color)] p-3 bg-white/[0.02]">
-            <div class="flex items-center justify-between mb-3">
-                <span class="text-[9px] font-black tracking-[0.25em] opacity-40 uppercase">Plan Actual</span>
-                <span class="text-[9px] font-mono px-2 py-0.5 rounded-full border border-[var(--accent-color)] text-[var(--accent-color)] bg-[var(--accent-color)]/5 font-black tracking-widest uppercase">
-                    {{ planMostrado }}
-                </span>
-            </div>
-            
-            <div class="space-y-2">
-                <div class="flex justify-between text-[9px] font-bold">
-                    <span class="opacity-40 uppercase">Peticiones usadas</span>
-                    <span class="text-[var(--accent-color)]">
-                        {{ cuotaSinTope ? `${userRequests} · sin límite` : `${userRequests} / ${tokenLimit}` }}
-                    </span>
-                </div>
-                <div v-if="!cuotaSinTope" class="h-1 w-full bg-black/40 rounded-full overflow-hidden">
-                    <div class="h-full bg-[var(--accent-color)] transition-all duration-1000" :style="{ width: Math.min((userRequests / tokenLimit * 100), 100) + '%' }"></div>
-                </div>
-                <p v-if="quotaCountdown" class="text-[8px] tracking-widest uppercase opacity-40 pt-1">
-                    Se renueva {{ quotaCountdown }}
-                </p>
-            </div>
-        </div>
-      </div>
-
       <div class="p-4 border-t border-[var(--border-color)]">
         <button @click="handleLogout" class="w-full py-2.5 bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 hover:border-red-500/20 rounded-lg text-red-500 text-[9px] font-bold tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-2 uppercase">
           DESCONECTAR
@@ -128,7 +101,26 @@
           </h1>
         </div>
 
-        <div class="flex items-center gap-4 self-end md:self-auto">
+        <div class="flex items-center gap-3 self-end md:self-auto">
+          <!--
+            Plan y cuota vivian en una tarjeta de la barra lateral que ocupaba
+            demasiado para lo que dice. Aqui van en una linea, junto al resto
+            de controles de cuenta.
+          -->
+          <div class="flex items-center gap-2.5 glass-panel py-2 px-3 rounded-2xl">
+            <span class="text-[8px] font-black tracking-[0.2em] uppercase px-1.5 py-0.5 rounded-full border border-[var(--accent-color)] text-[var(--accent-color)] bg-[var(--accent-color)]/5">
+              {{ planMostrado }}
+            </span>
+            <div class="flex flex-col leading-none">
+              <span class="text-[10px] font-bold tabular-nums text-[var(--text-primary)]">
+                {{ cuotaSinTope ? `${userRequests} consultas` : `${userRequests} / ${tokenLimit}` }}
+              </span>
+              <span v-if="quotaCountdown" class="text-[7px] tracking-widest uppercase opacity-40 mt-0.5 hidden sm:block">
+                Renueva {{ quotaCountdown }}
+              </span>
+            </div>
+          </div>
+
           <DonationMenu />
           <div class="h-10 w-[0.5px] bg-[var(--border-color)] mx-2 hidden sm:block"></div>
           <div class="flex items-center gap-3">
