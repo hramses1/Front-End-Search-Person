@@ -255,31 +255,36 @@ const activeComponent = computed(() => {
 const refreshUserData = async () => {
     if (!userId.value) return;
 
-    // Una sola fuente para el consumo: get_for_userid devuelve el mismo modelo
-    // que usa el panel de administracion, y desde el ultimo despliegue del
-    // backend incluye number_requests y quota_reset_at. Antes se pedia a
-    // users/get/, cuya forma de respuesta no esta declarada en el spec: si no
-    // venia plana, el valor caia en silencio al de la ventana de 24 h.
-    let plan: any = null;
+    let items: any[] = [];
     try {
-        plan = await authService.getUserPlan(userId.value, userRole.value);
-        if (plan) setPlanData(plan.planDescription, plan.id);
+        items = await authService.getPlanItems(userId.value);
     } catch (e) {
-        console.error('[cuota] no se pudo recuperar el plan:', e);
+        console.error('[cuota] no se pudieron recuperar las filas de plan:', e);
+    }
+
+    // La descripcion sale de la fila que casa con el rol firmado; el consumo,
+    // del mayor number_requests de todas. Es una propiedad del usuario, no de
+    // la fila, asi que si dos filas discrepan la buena es la mas alta: la baja
+    // es una copia que se quedo atras. Quedarse con items[0] mostraba un
+    // numero distinto al del panel de administracion.
+    const rol = userRole.value?.toUpperCase();
+    const filaRol = rol ? items.find(i => i.planDescription?.toUpperCase().includes(rol)) : undefined;
+    const fila = filaRol || items[0];
+    if (fila) setPlanData(fila.planDescription, fila.id);
+
+    const consumos = items.map(i => i.number_requests).filter(n => typeof n === 'number');
+    const consumo = consumos.length ? Math.max(...consumos) : undefined;
+
+    if (items.length > 1 && new Set(consumos).size > 1) {
+        console.warn('[cuota] las filas de plan discrepan en number_requests:', consumos, items);
     }
 
     try {
         const cuota = await authService.getQuota();
-        const consumo = plan?.number_requests;
-
-        if (consumo === undefined || consumo === null) {
-            console.warn('[cuota] el plan no trae number_requests; se usa el de la ventana', { plan, cuota });
-        }
-
         setQuota({
             ...cuota,
             used: consumo ?? cuota.used,
-            reset_at: plan?.quota_reset_at ?? cuota.reset_at
+            reset_at: fila?.quota_reset_at ?? cuota.reset_at
         });
     } catch (e) {
         console.error('[cuota] no se pudo recuperar la cuota:', e);

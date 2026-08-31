@@ -158,6 +158,22 @@ export const authService = {
     return response.data;
   },
 
+  /**
+   * Filas de plan del usuario, sin filtrar.
+   *
+   * get_for_userid devuelve una lista y un usuario puede tener varias filas.
+   * number_requests es una propiedad del USUARIO, no de la fila, asi que todas
+   * deberian traer el mismo valor; cuando no coinciden, quedarse con la
+   * primera daba un numero distinto al del panel de administracion.
+   */
+  async getPlanItems(userId: string) {
+    const response = await apiClient.get('/api/plan/get_for_userid/', {
+      headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
+      params: { userid: userId, _t: Date.now() }
+    });
+    return (response.data?.items || []) as any[];
+  },
+
   /** Métodos de autenticación disponibles (ej. Google OAuth2). */
   async getAuthMethods() {
     const response = await apiClient.get('/api/main/auth-methods/');
