@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
+import PublicLandingView from '../views/PublicLandingView.vue'
 import AuthView from '../views/AuthView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import AdminView from '../views/AdminView.vue'
@@ -7,6 +8,13 @@ import AdminView from '../views/AdminView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      // Portada publica: catalogo, guias y preguntas frecuentes. Es lo primero
+      // que ve un visitante; consultar exige cuenta y se le explica alli.
+      path: '/',
+      name: 'home',
+      component: PublicLandingView
+    },
     {
       path: '/auth',
       name: 'auth',
@@ -27,7 +35,7 @@ const router = createRouter({
     },
     {
       path: '/:pathMatch(.*)*',
-      redirect: '/dashboard'
+      redirect: '/'
     }
   ]
 })
