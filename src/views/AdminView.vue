@@ -171,8 +171,8 @@
                           mejor a una persona. El ID queda en el title, que es
                           donde hace falta para soporte.
                         -->
-                        <span v-if="userItem.email" class="text-caption text-[var(--text-secondary)] truncate">
-                          {{ userItem.email }}
+                        <span v-if="correoDe(userItem)" class="text-caption text-[var(--text-secondary)] truncate">
+                          {{ correoDe(userItem) }}
                         </span>
                         <span v-else class="text-caption font-mono text-[var(--text-muted)] tracking-tighter truncate">
                           {{ userItem.userId }}
@@ -459,6 +459,19 @@ const ordenes = [
   { valor: 'antiguos' as const, texto: 'Más antiguos' }
 ];
 
+/**
+ * Correo del usuario, buscando la clave por patron.
+ *
+ * El esquema publicado no lo declara, y ya paso con create_at que el nombre
+ * real no era el esperado. En vez de fijar una clave se busca cualquiera que
+ * contenga mail o correo, asi da igual como se llame.
+ */
+const correoDe = (u: any): string => {
+  if (!u) return '';
+  const clave = Object.keys(u).find(k => /mail|correo/i.test(k));
+  return clave ? String(u[clave] ?? '').trim() : '';
+};
+
 const normaliza = (t: any) => String(t ?? '')
   .toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
 
@@ -476,7 +489,7 @@ const usuariosFiltrados = computed(() => {
   if (q) {
     lista = lista.filter(u =>
       normaliza(u.userName).includes(q) ||
-      normaliza(u.email).includes(q) ||
+      normaliza(correoDe(u)).includes(q) ||
       normaliza(u.userId).includes(q)
     );
   }
@@ -583,6 +596,12 @@ const fetchUsers = async () => {
     // El listado ya trae la cuota de cada usuario, asi que basta una peticion.
     // Antes habia que pedir el consumo uno a uno contra users/get/: 36 llamadas
     // para 35 usuarios, con fallos por limite por IP y por permisos.
+    // Traza de diagnostico: que campos devuelve realmente el backend, que no
+    // siempre coincide con lo que declara el esquema publicado.
+    if (data.items?.[0]) {
+      console.info('[admin] campos recibidos por usuario:', Object.keys(data.items[0]));
+    }
+
     users.value = (data.items || []).map((u: any) => ({
       ...u,
       // El contador que manda es number_requests, que es el que el backend
