@@ -305,12 +305,10 @@ const planMostrado = computed(() => {
   return userPlan.value || 'FREE';
 });
 
-// La cuota se reinicia a medianoche, no 24 h despues de la primera consulta,
-// y solo la de los planes con tope. Un plan sin limite no renueva nada, asi
-// que no tiene sentido mostrarle una cuenta atras.
+// El contador se reinicia a medianoche para todos los planes, tengan tope o
+// no, asi que la cuenta atras se muestra siempre.
 const quotaCountdown = computed(() => {
     ahora.value; // dependencia explícita: obliga a recalcular en cada tick
-    if (cuotaSinTope.value) return '';
     return formatCountdown(proximaRenovacion());
 });
 
