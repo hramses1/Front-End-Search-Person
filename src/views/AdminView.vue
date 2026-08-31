@@ -107,6 +107,19 @@
                   <label for="min_peticiones">Peticiones desde</label>
                 </div>
 
+                <div class="relative input-container w-full lg:w-40">
+                  <input v-model="desde" id="f_desde" type="date" placeholder=" " class="custom-input peer" />
+                  <label for="f_desde">Registrado desde</label>
+                </div>
+
+                <div class="relative input-container w-full lg:w-40">
+                  <input v-model="hasta" id="f_hasta" type="date" placeholder=" " class="custom-input peer" />
+                  <label for="f_hasta">Hasta</label>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-xs">
+                <span class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mr-sm">Orden</span>
                 <div class="flex flex-wrap gap-xs">
                   <button
                     v-for="o in ordenes" :key="o.valor"
@@ -144,12 +157,13 @@
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Usuario</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Plan</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Peticiones</th>
+                    <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Registro</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)] text-right">Acciones</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-[var(--border-color)]">
                   <tr v-if="!isLoading && usuariosFiltrados.length === 0">
-                    <td colspan="4" class="px-lg py-2xl text-center text-body text-[var(--text-muted)]">
+                    <td colspan="5" class="px-lg py-2xl text-center text-body text-[var(--text-muted)]">
                       {{ users.length === 0 ? 'No hay usuarios que mostrar.' : 'Ningún usuario coincide con los filtros.' }}
                     </td>
                   </tr>
@@ -181,6 +195,12 @@
                             <div class="h-full bg-[var(--accent-color)] text-[var(--text-secondary)]" :style="{ width: Math.min(((userItem.number_requests ?? 0) / userItem.limite * 100), 100) + '%' }"></div>
                         </div>
                       </div>
+                    </td>
+                    <td class="px-lg py-md">
+                      <span v-if="userItem.registro" class="text-caption text-[var(--text-secondary)] tabular-nums" :title="userItem.registro">
+                        {{ fechaCorta(userItem.registro) }}
+                      </span>
+                      <span v-else class="text-caption text-[var(--text-muted)]">—</span>
                     </td>
                     <td class="px-lg py-md text-right">
                       <div class="flex justify-end gap-sm">
@@ -377,12 +397,30 @@ const loadError = ref('');
 const buscaUsuario = ref('');
 const filtroPlan = ref('');
 const minPeticiones = ref<number | null>(null);
-const orden = ref<'nombre' | 'mas' | 'menos'>('nombre');
+const orden = ref<'nombre' | 'mas' | 'menos' | 'nuevos' | 'antiguos'>('nombre');
+const desde = ref('');
+const hasta = ref('');
+
+/** Fecha legible; PocketBase entrega ISO o "YYYY-MM-DD HH:mm:ss.SSSZ". */
+const fechaCorta = (v: string) => {
+  const d = new Date(String(v).replace(' ', 'T'));
+  return Number.isNaN(d.getTime())
+    ? '—'
+    : d.toLocaleDateString('es-EC', { day: '2-digit', month: 'short', year: 'numeric' });
+};
+
+/** Solo la parte de fecha, para comparar contra los input type=date. */
+const soloFecha = (v: any) => {
+  const d = new Date(String(v ?? '').replace(' ', 'T'));
+  return Number.isNaN(d.getTime()) ? '' : d.toISOString().slice(0, 10);
+};
 
 const ordenes = [
   { valor: 'nombre' as const, texto: 'A-Z' },
   { valor: 'mas' as const, texto: 'Más peticiones' },
-  { valor: 'menos' as const, texto: 'Menos peticiones' }
+  { valor: 'menos' as const, texto: 'Menos peticiones' },
+  { valor: 'nuevos' as const, texto: 'Más recientes' },
+  { valor: 'antiguos' as const, texto: 'Más antiguos' }
 ];
 
 const normaliza = (t: any) => String(t ?? '')
@@ -413,7 +451,17 @@ const usuariosFiltrados = computed(() => {
     lista = lista.filter(u => (u.number_requests ?? 0) >= minPeticiones.value!);
   }
 
-  if (orden.value === 'mas') {
+  if (desde.value) {
+    lista = lista.filter(u => u.registro && soloFecha(u.registro) >= desde.value);
+  }
+  if (hasta.value) {
+    lista = lista.filter(u => u.registro && soloFecha(u.registro) <= hasta.value);
+  }
+
+  if (orden.value === 'nuevos' || orden.value === 'antiguos') {
+    const signo = orden.value === 'nuevos' ? -1 : 1;
+    lista.sort((a, b) => signo * (soloFecha(a.registro).localeCompare(soloFecha(b.registro))));
+  } else if (orden.value === 'mas') {
     lista.sort((a, b) => (b.number_requests ?? 0) - (a.number_requests ?? 0));
   } else if (orden.value === 'menos') {
     lista.sort((a, b) => (a.number_requests ?? 0) - (b.number_requests ?? 0));
@@ -426,12 +474,15 @@ const usuariosFiltrados = computed(() => {
 
 const hayFiltros = computed(() =>
   !!buscaUsuario.value || !!filtroPlan.value || minPeticiones.value !== null
+  || !!desde.value || !!hasta.value
 );
 
 const limpiarFiltros = () => {
   buscaUsuario.value = '';
   filtroPlan.value = '';
   minPeticiones.value = null;
+  desde.value = '';
+  hasta.value = '';
 };
 
 // Los planes sin tope usan un limite centinela enorme; pintarlo literal daba
@@ -488,7 +539,10 @@ const fetchUsers = async () => {
       number_requests: u.number_requests ?? u.quota?.used ?? 0,
       // La fila avisa si el dato viene del respaldo y no del campo real.
       consumoDeRespaldo: u.number_requests === undefined,
-      limite: u.quota?.limit ?? u.token_duration,
+      // daily_limit es el cupo del plan tal cual; quota.limit y token_duration
+      // quedan de respaldo por si alguna fila viniera sin el.
+      limite: u.daily_limit ?? u.quota?.limit ?? u.token_duration,
+      registro: u.create_at ?? null,
       // quota es nullable: si no viene, no inventamos un cero.
       consumoDesconocido: !u.quota
     }));
