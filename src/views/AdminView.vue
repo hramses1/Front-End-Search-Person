@@ -774,7 +774,13 @@ const fetchPlanes = async () => {
     planes.value = items;
 
     if (items.length === 0) {
-      errorPlanes.value = 'El servidor respondió sin planes. Comprueba que la colección no esté vacía.';
+      // Se describe la respuesta recibida para poder distinguir una coleccion
+      // vacia de un listado que llega en otra clave.
+      const claves = data && typeof data === 'object' ? Object.keys(data) : [];
+      const total = (data as any)?.totalItems;
+      errorPlanes.value =
+        `El servidor respondió sin planes en "items". Devolvió: ${claves.length ? claves.join(', ') : typeof data}`
+        + (total !== undefined ? ` · totalItems: ${total}` : '');
     }
     console.info('[admin] respuesta de /api/plan/get/:', data);
   } catch (error: any) {
