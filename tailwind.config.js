@@ -6,20 +6,72 @@ export default {
   ],
   theme: {
     extend: {
+      /**
+       * Dos familias y solo dos: Jost para titulos, que es la voz de marca ya
+       * establecida, e Inter para cuerpo, que aguanta mucho mejor los tamanos
+       * de lectura.
+       */
       fontFamily: {
+        display: ['Jost', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        body: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        // Alias historico: varias vistas todavia usan font-primary.
         primary: ['Jost', 'Helvetica Neue', 'Arial', 'sans-serif'],
       },
+
+      /**
+       * Escala tipografica de razon 1.25: 14 / 16 / 20 / 25 / 31 / 39 / 49.
+       * Interlineado 1.5-1.6 en cuerpo y 1.1-1.2 en titulos.
+       * El cuerpo nunca baja de 16px; 14 queda reservado a etiquetas y pies.
+       */
+      fontSize: {
+        caption: ['0.875rem', { lineHeight: '1.5' }],   // 14
+        body:    ['1rem',     { lineHeight: '1.6' }],   // 16
+        lead:    ['1.25rem',  { lineHeight: '1.5' }],   // 20
+        h4:      ['1.5625rem', { lineHeight: '1.2' }],  // 25
+        h3:      ['1.9375rem', { lineHeight: '1.2' }],  // 31
+        h2:      ['2.4375rem', { lineHeight: '1.15' }], // 39
+        h1:      ['3.0625rem', { lineHeight: '1.1' }],  // 49
+      },
+
+      /**
+       * Escala de espaciado: 4, 8, 16, 24, 32, 48, 64.
+       * Coinciden con los pasos 1, 2, 4, 6, 8, 12 y 16 de Tailwind, asi que se
+       * nombran ademas de forma explicita para poder auditarlos.
+       */
+      spacing: {
+        xs: '4px',
+        sm: '8px',
+        md: '16px',
+        lg: '24px',
+        xl: '32px',
+        '2xl': '48px',
+        '3xl': '64px',
+      },
+
+      /** Un unico radio base para botones, tarjetas, entradas y paneles. */
+      borderRadius: {
+        base: '16px',
+      },
+
+      /** Transiciones entre 150 y 200 ms. Nada instantaneo, nada por encima. */
+      transitionDuration: {
+        fast: '150ms',
+        base: '200ms',
+      },
+
+      /** Ancho de linea de lectura: 50-75 caracteres. */
+      maxWidth: {
+        prose: '68ch',
+      },
+
       colors: {
-        obsidian: {
-          light: '#28282e',
-          soft: 'rgba(22, 22, 26, 0.4)',
-          DEFAULT: '#16161a',
-          dark: '#0f0f11'
+        /** Colores de la bandera, reservados al logotipo. No usar en UI. */
+        bandera: {
+          amarillo: '#FFDD00',
+          azul: '#0033A0',
+          rojo: '#ED1C24',
         },
-        smoke: '#8a8a95',
-        silver: '#e4e4e9',
-        'pale-blue': '#b1c1d3'
-      }
+      },
     },
   },
   plugins: [

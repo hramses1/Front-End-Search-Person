@@ -1,106 +1,196 @@
-@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ─────────────────────────────────────────────────────────────
+   Paleta 60-30-10, verificada contra WCAG AA en ambos temas.
+
+   60%  base neutra cálida (fondo y superficies)
+   30%  secundario (texto y bordes)
+   10%  acento, reservado a la acción principal
+
+   Los colores de la bandera pertenecen solo al logotipo y viven
+   en BrandMark.vue, fuera de estos tokens.
+   ───────────────────────────────────────────────────────────── */
 :root {
-  --bg-color:        #fdfaf6; /* Crema muy suave (Warm White) */
-  --surface-color:   #f7f1eb; /* Arena pastel */
-  --border-color:    #e8dfd5; /* Lino suave */
-  --accent-color:    #8d6e63; /* Terracota apagado (Cálido) */
-  --accent-inverse:  #ffffff;
-  --text-primary:    #4a4440; /* Café oscuro profundo (Suave) */
-  --text-secondary:  #7d746d; /* Arcilla suave */
-  --text-muted:      #b5aca2; /* Piedra cálida */
-  --input-bg:        #ffffff;
-  --glass-bg:        rgba(253, 250, 246, 0.8);
+  --bg-color:        #FAF7F3;
+  --surface-color:   #FFFFFF;
+  --border-color:    #E4DACE;
+  --accent-color:    #9A3F1F;  /* 6.33:1 sobre el fondo */
+  --accent-inverse:  #FFFFFF;  /* 6.76:1 sobre el acento */
+  --text-primary:    #241F1B;  /* 15.28:1 */
+  --text-secondary:  #5A524A;  /*  7.18:1 */
+  --text-muted:      #6E655C;  /*  5.42:1 — sigue pasando AA */
+  --input-bg:        #FFFFFF;
+  --glass-bg:        rgba(250, 247, 243, 0.85);
+
+  --estado-exito:    #1F6B3F;
+  --estado-error:    #A4241C;
+  --estado-aviso:    #8A5A08;
 }
 
 .dark {
-  --bg-color:        #24211f; /* Café chocolate profundo */
-  --surface-color:   #2d2926; /* Tierra oscuro */
-  --border-color:    #3d3834; /* Borde madera */
-  --accent-color:    #d7ccc8; /* Beige pastel */
-  --accent-inverse:  #24211f;
-  --text-primary:    #ede7e3;
-  --text-secondary:  #bcaaa4;
-  --text-muted:      #8d837d;
-  --input-bg:        #2d2926;
-  --glass-bg:        rgba(36, 33, 31, 0.85);
+  --bg-color:        #1A1613;
+  --surface-color:   #241F1B;
+  --border-color:    #3A332C;
+  --accent-color:    #F0A27E;  /* 8.71:1 sobre el fondo */
+  --accent-inverse:  #241F1B;  /* 7.91:1 sobre el acento */
+  --text-primary:    #F7F2EC;  /* 16.15:1 */
+  --text-secondary:  #BDB0A3;  /*  8.48:1 */
+  --text-muted:      #9C9086;  /*  5.72:1 */
+  --input-bg:        #241F1B;
+  --glass-bg:        rgba(26, 22, 19, 0.85);
+
+  --estado-exito:    #7BD69F;
+  --estado-error:    #FF9B92;
+  --estado-aviso:    #F0C26B;
 }
 
+/* ─── Tipografía base ─────────────────────────────────────────
+   Cuerpo en Inter a 16px, nunca menos. Títulos en Jost, que es
+   la voz de marca. Interlineado 1.6 en cuerpo, 1.1-1.2 en títulos.
+   ───────────────────────────────────────────────────────────── */
 body {
-  @apply bg-[var(--bg-color)] text-[var(--text-primary)] transition-colors duration-500;
-  font-family: 'Jost', sans-serif;
-  font-size: 15px;
-  -webkit-font-smoothing: antialiased;
-  letter-spacing: -0.01em;
+  @apply bg-[var(--bg-color)] text-[var(--text-primary)] transition-colors;
+  transition-duration: 200ms;
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ─── Scrollbar Cálida ────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+/* Ancho de lectura: entre 50 y 75 caracteres por línea. */
+.prose-limit {
+  max-width: 68ch;
+}
+
+/* ─── Scrollbar ───────────────────────────────────────────── */
 .custom-scrollbar::-webkit-scrollbar { width: 4px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: var(--bg-color); }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 20px; }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--accent-color); opacity: 0.5; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 9999px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
 
-/* ─── Botón Principal Cálido ──────────────────────────── */
+/* ─────────────────────────────────────────────────────────────
+   Botones. Tres niveles y una sola definición de cada uno.
+   Altura mínima 48px para cumplir el área táctil.
+   ───────────────────────────────────────────────────────────── */
+.btn-base {
+  @apply inline-flex items-center justify-center gap-sm
+         min-h-[48px] px-lg rounded-base
+         font-body text-caption font-medium
+         transition-all ease-out
+         disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none;
+  transition-duration: 200ms;
+}
+
+/* Primario: relleno sólido. Como máximo uno visible por vista. */
 .btn-primary {
-  @apply px-8 py-3.5 bg-[var(--accent-color)] text-[var(--accent-inverse)]
-         font-medium rounded-2xl tracking-[0.1em] text-[10px] uppercase
-         hover:brightness-110 active:scale-[0.98] transition-all duration-500
-         shadow-sm hover:shadow-md;
+  @apply btn-base bg-[var(--accent-color)] text-[var(--accent-inverse)] shadow-sm;
 }
+.btn-primary:hover:not(:disabled) {
+  @apply shadow-md;
+  transform: scale(1.02);
+}
+.btn-primary:active:not(:disabled) { transform: scale(0.98); }
 
-/* ─── Inputs de Línea Fina ────────────────────────────────── */
+/* Secundario: contorno. */
+.btn-secondary {
+  @apply btn-base border border-[var(--border-color)] text-[var(--text-primary)] bg-transparent;
+}
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+.btn-secondary:active:not(:disabled) { transform: scale(0.98); }
+
+/* Terciario: texto. */
+.btn-tertiary {
+  @apply btn-base px-sm text-[var(--text-secondary)] bg-transparent;
+}
+.btn-tertiary:hover:not(:disabled) { color: var(--accent-color); }
+
+/* Botón solo icono: cuadrado y con el mismo área táctil. */
+.btn-icon {
+  @apply inline-flex items-center justify-center
+         min-h-[48px] min-w-[48px] rounded-base
+         text-[var(--accent-color)] transition-all ease-out;
+  transition-duration: 150ms;
+}
+.btn-icon:hover:not(:disabled) { background-color: color-mix(in srgb, var(--accent-color) 10%, transparent); }
+.btn-icon:active:not(:disabled) { transform: scale(0.96); }
+
+/* ─── Campos de formulario ───────────────────────────────── */
 .custom-input {
-  @apply w-full bg-transparent border-b border-[var(--border-color)] py-4
-         outline-none transition-all duration-500 font-light text-sm
+  @apply w-full bg-transparent border-b border-[var(--border-color)] py-md
+         outline-none transition-all font-body text-body
          text-[var(--text-primary)] placeholder:opacity-0;
+  min-height: 48px;
+  transition-duration: 200ms;
 }
 
-/* Forzar estilo en autocompletado del navegador */
 .custom-input:-webkit-autofill,
-.custom-input:-webkit-autofill:hover, 
-.custom-input:-webkit-autofill:focus, 
+.custom-input:-webkit-autofill:hover,
+.custom-input:-webkit-autofill:focus,
 .custom-input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px var(--bg-color) inset !important;
   -webkit-text-fill-color: var(--text-primary) !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 
-.custom-input:focus {
-  border-color: var(--accent-color);
-  @apply translate-x-1;
-}
+.custom-input:focus { border-color: var(--accent-color); }
 
 label {
-  @apply absolute left-0 top-4 text-[10px] font-medium tracking-[0.12em]
-         transition-all duration-500 pointer-events-none uppercase opacity-40;
+  @apply absolute left-0 top-4 text-caption font-medium tracking-[0.08em]
+         transition-all pointer-events-none uppercase;
+  color: var(--text-muted);
+  transition-duration: 200ms;
 }
 
 .custom-input:focus ~ label,
 .custom-input:not(:placeholder-shown) ~ label {
-  @apply -translate-y-8 translate-x-[-2px] opacity-100 scale-[0.95];
+  @apply -translate-y-8 scale-[0.9];
   color: var(--accent-color);
-  letter-spacing: 0.15em;
 }
 
-/* ─── Cards y Paneles ────────────────────────────────────── */
+/* ─── Superficies ────────────────────────────────────────── */
 .glass-card {
-  @apply rounded-[24px] border border-[var(--border-color)] bg-[var(--surface-color)] shadow-sm;
+  @apply rounded-base border border-[var(--border-color)] bg-[var(--surface-color)] shadow-sm;
 }
 
 .glass-panel {
-  @apply bg-[var(--glass-bg)] border border-[var(--border-color)] backdrop-blur-xl rounded-[20px];
+  @apply bg-[var(--glass-bg)] border border-[var(--border-color)] backdrop-blur-xl rounded-base;
 }
 
+/* ─── Distintivos de estado ──────────────────────────────
+   El color nunca comunica solo: cada variante lleva icono o texto
+   junto a él en el componente Badge.
+   ───────────────────────────────────────────────────────── */
+.badge-base {
+  @apply inline-flex items-center gap-xs px-sm py-xs rounded-base
+         font-body text-caption font-medium border;
+}
+
+/* ─── Animación de entrada ───────────────────────────────── */
 .animate-fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
+  animation: fadeIn 200ms ease-out forwards;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
