@@ -209,6 +209,13 @@
                 <label for="edit_requests">Peticiones Consumidas</label>
               </div>
 
+              <p
+                v-if="modalError"
+                class="rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-3 text-[10px] leading-relaxed tracking-wide text-red-400"
+              >
+                {{ modalError }}
+              </p>
+
               <div class="flex gap-4 pt-4">
                 <button 
                   type="button" 
@@ -247,6 +254,7 @@ const isSidebarOpen = ref(false);
 const users = ref<any[]>([]);
 const isLoading = ref(false);
 const showModal = ref(false);
+const modalError = ref('');
 const isSaving = ref(false);
 const isResetting = ref<string | null>(null);
 const loadError = ref('');
@@ -316,6 +324,7 @@ const openEditModal = (userItem: any) => {
   editForm.plan = userItem.id;
   // El consumo viene en el listado; ya no hace falta una peticion por usuario.
   editForm.number_requests = userItem.number_requests ?? 0;
+  modalError.value = '';
   showModal.value = true;
 };
 
@@ -338,16 +347,31 @@ const resetRequests = async (userItem: any) => {
 
 const saveUserChanges = async () => {
   isSaving.value = true;
+  modalError.value = '';
   try {
-    await authService.updateUser(editForm.userId, { 
-        username: editForm.userName,
-        number_requests: editForm.number_requests 
+    // Un unico PATCH con todos los campos. Antes eran dos llamadas seguidas al
+    // mismo endpoint, asi que si la segunda fallaba el usuario quedaba a medio
+    // actualizar sin que nadie se enterase.
+    await authService.updateUser(editForm.userId, {
+      username: editForm.userName,
+      number_requests: Number(editForm.number_requests),
+      plan: editForm.plan
     });
-    await authService.patchUser(editForm.userId, { plan: editForm.plan });
+
     showModal.value = false;
     fetchUsers();
-  } catch (error) {
-    alert('Error al actualizar usuario');
+  } catch (error: any) {
+    // El interceptor ya deja en `message` un texto presentable y, cuando el
+    // backend rechaza campos concretos, la lista en `invalidFields`.
+    const campos = error?.invalidFields?.length
+      ? ` Campos rechazados: ${error.invalidFields.join(', ')}.`
+      : '';
+    modalError.value = `${error?.message || 'No se pudo actualizar el usuario.'}${campos}`;
+    console.error('[admin] fallo al actualizar usuario:', {
+      userId: editForm.userId,
+      status: error?.response?.status,
+      body: error?.response?.data
+    });
   } finally {
     isSaving.value = false;
   }
