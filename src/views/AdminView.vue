@@ -199,14 +199,75 @@
                 <label for="edit_username">Nombre de Usuario (Ej: Juan_12)</label>
               </div>
 
-              <div class="relative group input-container">
-                <select v-model="editForm.plan" id="edit_plan" class="custom-input peer" required>
-                  <option value="" disabled>Selecciona un plan</option>
-                  <option v-for="pl in planes" :key="pl.id" :value="pl.id">
-                    {{ pl.description }}{{ pl.daily_limit ? ` — ${pl.daily_limit}/día` : '' }}
-                  </option>
-                </select>
-                <label for="edit_plan">Plan</label>
+              <!--
+                Selector propio en vez de <select>: el desplegable nativo lo
+                pinta el sistema operativo y no hay forma de que case con el
+                resto de la interfaz. Reutiliza el lenguaje de ProfileDropdown.
+              -->
+              <div class="space-y-2">
+                <p class="text-[8px] font-black opacity-40 uppercase tracking-widest">Plan asignado</p>
+
+                <div class="relative">
+                  <button
+                    type="button"
+                    @click="planAbierto = !planAbierto"
+                    class="w-full flex items-center justify-between gap-3 glass-panel py-3 px-4 rounded-2xl hover:bg-white/5 transition-all active:scale-[0.99] text-left"
+                  >
+                    <span class="flex flex-col min-w-0">
+                      <span
+                        class="text-[11px] font-bold tracking-widest uppercase truncate"
+                        :class="planSeleccionado ? 'text-[var(--text-primary)]' : 'opacity-40'"
+                      >
+                        {{ planSeleccionado?.description || 'Selecciona un plan' }}
+                      </span>
+                      <span v-if="planSeleccionado" class="text-[8px] font-black tracking-widest opacity-30 uppercase">
+                        {{ planSeleccionado.daily_limit ? `${planSeleccionado.daily_limit} consultas/día` : 'Sin límite' }}
+                      </span>
+                    </span>
+                    <svg
+                      class="w-4 h-4 shrink-0 opacity-50 transition-transform duration-300"
+                      :class="planAbierto ? 'rotate-180 text-[var(--accent-color)]' : ''"
+                      fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  <!-- Captura los clics fuera para cerrar el panel -->
+                  <div v-if="planAbierto" class="fixed inset-0 z-[105]" @click="planAbierto = false"></div>
+
+                  <transition
+                    enter-active-class="transition duration-200 ease-out"
+                    enter-from-class="transform scale-95 opacity-0 -translate-y-1"
+                    enter-to-class="transform scale-100 opacity-100 translate-y-0"
+                    leave-active-class="transition duration-150 ease-in"
+                    leave-from-class="transform scale-100 opacity-100 translate-y-0"
+                    leave-to-class="transform scale-95 opacity-0 -translate-y-1"
+                  >
+                    <div
+                      v-if="planAbierto"
+                      class="absolute left-0 right-0 top-full mt-2 z-[110] p-2 rounded-2xl border shadow-2xl bg-[var(--surface-color)] border-[var(--border-color)] max-h-56 overflow-y-auto custom-scrollbar"
+                    >
+                      <button
+                        v-for="pl in planes"
+                        :key="pl.id"
+                        type="button"
+                        @click="elegirPlan(pl)"
+                        class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl hover:bg-[var(--accent-color)]/10 hover:text-[var(--accent-color)] transition-all text-left"
+                        :class="pl.id === editForm.plan ? 'bg-[var(--accent-color)]/10 text-[var(--accent-color)]' : ''"
+                      >
+                        <span class="text-[10px] font-bold uppercase tracking-wider truncate">{{ pl.description }}</span>
+                        <span class="text-[8px] font-black tracking-widest opacity-40 shrink-0">
+                          {{ pl.daily_limit ? `${pl.daily_limit}/día` : 'SIN TOPE' }}
+                        </span>
+                      </button>
+
+                      <p v-if="!planes.length" class="px-4 py-3 text-[9px] tracking-wide text-amber-500">
+                        No se pudo cargar el catálogo de planes; revisa la consola.
+                      </p>
+                    </div>
+                  </transition>
+                </div>
               </div>
 
               <div class="relative group input-container">
@@ -246,7 +307,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue';
+import { ref, computed, onMounted, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuth } from '../composables/useAuth';
 import { authService } from '../api/authService';
@@ -261,6 +322,16 @@ const isLoading = ref(false);
 const showModal = ref(false);
 const modalError = ref('');
 const planes = ref<any[]>([]);
+const planAbierto = ref(false);
+
+const planSeleccionado = computed(() =>
+  planes.value.find((pl: any) => pl.id === editForm.plan) || null
+);
+
+const elegirPlan = (pl: any) => {
+  editForm.plan = pl.id;
+  planAbierto.value = false;
+};
 const isSaving = ref(false);
 const isResetting = ref<string | null>(null);
 const loadError = ref('');
@@ -352,6 +423,7 @@ const openEditModal = (userItem: any) => {
   // El consumo viene en el listado; ya no hace falta una peticion por usuario.
   editForm.number_requests = userItem.number_requests ?? 0;
   modalError.value = '';
+  planAbierto.value = false;
   showModal.value = true;
 };
 
@@ -373,6 +445,12 @@ const resetRequests = async (userItem: any) => {
 };
 
 const saveUserChanges = async () => {
+  if (!editForm.plan) {
+    // El selector propio no participa en la validacion nativa del formulario.
+    modalError.value = 'Selecciona un plan antes de guardar.';
+    return;
+  }
+
   isSaving.value = true;
   modalError.value = '';
   try {
