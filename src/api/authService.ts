@@ -89,10 +89,30 @@ export const authService = {
    * Ya no busca el plan de ADMIN por ID. El rol viaja como claim `role` firmado
    * en el JWT y se resuelve en el servidor.
    */
-  async getUserPlan(userId: string) {
+  /**
+   * Plan del usuario: descripción y límite diario.
+   *
+   * get_for_userid devuelve una LISTA paginada: un usuario puede tener varias
+   * filas de plan. Quedarse con items[0] a ciegas mostraba "FREE" a un admin,
+   * porque la fila de ADMIN venía después. Se elige la que casa con el rol
+   * firmado en el token; si ninguna casa, la primera.
+   *
+   * El rol lo decide el servidor: aquí solo se usa para escoger qué etiqueta
+   * pintar, nunca para conceder permisos.
+   */
+  async getUserPlan(userId: string, preferRole?: string) {
     const response = await apiClient.get('/api/plan/get_for_userid/', { params: { userid: userId } });
     const items = response.data?.items || [];
-    return items.length > 0 ? items[0] : null;
+
+    if (items.length === 0) return null;
+
+    if (preferRole) {
+      const rol = preferRole.toUpperCase();
+      const coincide = items.find((p: any) => p.planDescription?.toUpperCase().includes(rol));
+      if (coincide) return coincide;
+    }
+
+    return items[0];
   },
 
   /**

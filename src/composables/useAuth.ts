@@ -191,6 +191,7 @@ export function useAuth() {
     userRequests: computed(() => userRequests.value),
     tokenLimit: computed(() => tokenLimit.value),
     quotaResetAt: computed(() => quotaResetAt.value),
+    userRole: computed(() => readRoleClaim(token.value)),
     userId: computed(() => userId.value),
     userName: computed(() => userName.value),
     isDark: computed(() => isDark.value),
