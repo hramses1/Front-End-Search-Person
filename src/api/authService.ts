@@ -137,6 +137,18 @@ export const authService = {
     return response.data;
   },
 
+  /**
+   * Catalogo de planes. Requiere token de admin.
+   *
+   * Devuelve ResponsePlanUsersModel: { id, description, daily_limit }. Estos
+   * `id` son los unicos valores validos para el campo `plan` de un usuario; no
+   * confundir con el `id` de una fila de plan_users, que es otra cosa.
+   */
+  async getPlans() {
+    const response = await apiClient.get('/api/plan/get/');
+    return response.data;
+  },
+
   /** Métodos de autenticación disponibles (ej. Google OAuth2). */
   async getAuthMethods() {
     const response = await apiClient.get('/api/main/auth-methods/');

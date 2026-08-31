@@ -200,8 +200,13 @@
               </div>
 
               <div class="relative group input-container">
-                <input v-model="editForm.plan" type="text" id="edit_plan" placeholder=" " class="custom-input peer" required />
-                <label for="edit_plan">Plan ID (Código de 15 caracteres)</label>
+                <select v-model="editForm.plan" id="edit_plan" class="custom-input peer" required>
+                  <option value="" disabled>Selecciona un plan</option>
+                  <option v-for="pl in planes" :key="pl.id" :value="pl.id">
+                    {{ pl.description }}{{ pl.daily_limit ? ` — ${pl.daily_limit}/día` : '' }}
+                  </option>
+                </select>
+                <label for="edit_plan">Plan</label>
               </div>
 
               <div class="relative group input-container">
@@ -255,6 +260,7 @@ const users = ref<any[]>([]);
 const isLoading = ref(false);
 const showModal = ref(false);
 const modalError = ref('');
+const planes = ref<any[]>([]);
 const isSaving = ref(false);
 const isResetting = ref<string | null>(null);
 const loadError = ref('');
@@ -278,7 +284,23 @@ onMounted(() => {
     return;
   }
   fetchUsers();
+  fetchPlanes();
 });
+
+/**
+ * Catalogo de planes para el desplegable de edicion.
+ *
+ * El listado de usuarios solo trae `planDescription`, no el id del plan, asi
+ * que hace falta el catalogo para saber que valor enviar en el PATCH.
+ */
+const fetchPlanes = async () => {
+  try {
+    const data = await authService.getPlans();
+    planes.value = data.items || [];
+  } catch (error) {
+    console.error('[admin] no se pudo cargar el catalogo de planes:', error);
+  }
+};
 
 const fetchUsers = async () => {
   isLoading.value = true;
@@ -321,7 +343,12 @@ const handleLogout = () => {
 const openEditModal = (userItem: any) => {
   editForm.userId = userItem.userId;
   editForm.userName = userItem.userName;
-  editForm.plan = userItem.id;
+  // OJO: userItem.id es el id de la fila de plan_users, NO el del plan. Enviarlo
+  // como `plan` hacia que el backend rechazara el PATCH con invalid_input. Se
+  // resuelve el plan real casando la descripcion contra el catalogo.
+  editForm.plan = planes.value.find(
+    (pl: any) => pl.description === userItem.planDescription
+  )?.id || '';
   // El consumo viene en el listado; ya no hace falta una peticion por usuario.
   editForm.number_requests = userItem.number_requests ?? 0;
   modalError.value = '';
