@@ -23,6 +23,9 @@ export default {
        * El cuerpo nunca baja de 16px; 14 queda reservado a etiquetas y pies.
        */
       fontSize: {
+        // Paso inferior de la misma razon 1.25 (14 / 1.25). Reservado a
+        // rotulos en mayusculas y sobretitulos. Nunca para cuerpo de texto.
+        overline: ['0.75rem', { lineHeight: '1.4' }],   // 12
         caption: ['0.875rem', { lineHeight: '1.5' }],   // 14
         body:    ['1rem',     { lineHeight: '1.6' }],   // 16
         lead:    ['1.25rem',  { lineHeight: '1.5' }],   // 20

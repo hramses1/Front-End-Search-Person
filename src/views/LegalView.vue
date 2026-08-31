@@ -18,8 +18,8 @@
       </header>
 
       <article class="py-3xl">
-        <p class="text-caption font-black tracking-[0.35em] uppercase text-[var(--text-muted)] mb-md">{{ doc.rotulo || 'Legal' }}</p>
-        <h1 class="text-h2 sm:text-4xl font-light tracking-tight mb-md">{{ doc.titulo }}</h1>
+        <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">{{ doc.rotulo || 'Legal' }}</p>
+        <h1 class="text-h3 sm:text-4xl font-light tracking-tight mb-md">{{ doc.titulo }}</h1>
         <p class="text-caption uppercase tracking-[0.15em] text-[var(--text-muted)] mb-2xl">
           Última actualización: {{ doc.actualizado }}
         </p>
@@ -43,7 +43,7 @@
         </section>
 
         <div v-if="route.name !== 'contacto'" class="glass-card p-lg mt-2xl">
-          <p class="text-caption font-black tracking-[0.25em] uppercase text-[var(--text-muted)] mb-sm">Contacto</p>
+          <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-sm">Contacto</p>
           <p class="text-body leading-relaxed text-[var(--text-secondary)]">
             Para cualquier consulta sobre este documento, escribe a
             <a href="mailto:arismendiramses@gmail.com" class="text-[var(--accent-color)] hover:underline">arismendiramses@gmail.com</a>.

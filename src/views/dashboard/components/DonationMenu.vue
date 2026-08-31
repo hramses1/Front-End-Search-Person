@@ -2,7 +2,7 @@
   <div class="relative inline-block" ref="anchorRef">
     <button 
       @click="toggle"
-      class="flex items-center gap-sm px-md sm:px-md py-sm bg-amber-500/5 border border-amber-500/20 rounded-base text-amber-500 text-caption sm:text-body font-bold tracking-widest hover:bg-amber-500/10 transition-all active:scale-95 shadow-lg shadow-amber-500/5"
+      class="flex items-center gap-sm px-md sm:px-md py-sm bg-amber-500/5 border border-amber-500/20 rounded-base text-amber-500 text-caption sm:text-body font-bold tracking-[0.14em] hover:bg-amber-500/10 transition-all active:scale-95 shadow-lg shadow-amber-500/5"
     >
       <span class="animate-bounce">☕</span>
       <span class="hidden xs:inline">DONACIÓN</span>
@@ -32,7 +32,7 @@
           
           <div class="flex justify-between items-center mb-lg">
             <div class="flex flex-col">
-                <span class="text-caption font-black text-amber-500 tracking-[0.2em] uppercase">Apoyo Voluntario</span>
+                <span class="text-overline font-black text-amber-500 tracking-[0.14em] uppercase">Apoyo Voluntario</span>
                 <span class="text-body font-bold uppercase">Invítame un café</span>
             </div>
             <button @click="close" class="p-sm rounded-base hover:bg-black/10 dark:hover:bg-white/10 transition-colors">

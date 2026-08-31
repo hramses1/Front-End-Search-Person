@@ -6,8 +6,8 @@
         class="flex items-center gap-sm sm:gap-md cursor-pointer glass-panel py-sm sm:py-sm px-md sm:px-md rounded-base hover:bg-white/5 transition-all group active:scale-95"
     >
         <div class="flex flex-col items-end hidden xs:flex">
-            <span class="text-caption sm:text-body font-bold tracking-widest text-[var(--text-primary)] group-hover:text-[var(--accent-color)] transition-colors uppercase truncate max-w-[100px]">{{ userName }}</span>
-            <span class="text-caption sm:text-caption font-black tracking-widest text-[var(--text-muted)]">SYSTEM</span>
+            <span class="text-caption sm:text-body font-bold tracking-[0.14em] text-[var(--text-primary)] group-hover:text-[var(--accent-color)] transition-colors uppercase truncate max-w-[100px]">{{ userName }}</span>
+            <span class="text-caption sm:text-caption font-black tracking-[0.14em] text-[var(--text-muted)]">SYSTEM</span>
         </div>
         <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-base bg-gradient-to-br from-[var(--accent-color)] to-violet-400 flex items-center justify-center text-caption sm:text-body font-black text-white shadow-lg shadow-[var(--accent-color)]/20 rotate-3 group-hover:rotate-0 transition-transform">
             {{ userName.substring(0, 2).toUpperCase() }}
@@ -34,7 +34,7 @@
           :style="isMobile ? mobileStyle : desktopStyle"
         >
           <div class="p-md border-b border-[var(--border-color)]/50 mb-xs">
-              <p class="text-caption font-black text-[var(--text-muted)] uppercase tracking-widest">Cuenta Activa</p>
+              <p class="text-caption font-black text-[var(--text-muted)] uppercase tracking-[0.14em]">Cuenta Activa</p>
               <p class="text-caption font-bold truncate">{{ userName }}</p>
           </div>
 

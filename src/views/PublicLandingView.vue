@@ -26,8 +26,8 @@
 
       <!-- Portada -->
       <section class="py-3xl sm:py-3xl text-center">
-        <p class="text-caption font-black tracking-[0.35em] uppercase text-[var(--text-muted)] mb-lg">Datos públicos del Ecuador</p>
-        <h1 class="text-h2 sm:text-h1 font-light leading-[1.15] tracking-tight max-w-3xl mx-auto">
+        <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-lg">Datos públicos del Ecuador</p>
+        <h1 class="text-h3 sm:text-h2 font-light leading-[1.15] tracking-tight max-w-3xl mx-auto">
           Verifica identidad, RUC, licencias y vehículos
           <span class="font-black text-[var(--accent-color)]">en una sola consulta</span>
         </h1>
@@ -56,11 +56,11 @@
 
       <!-- Catálogo de consultas -->
       <section id="consultas" class="pb-3xl scroll-mt-xl">
-        <p class="text-caption font-black tracking-[0.3em] uppercase text-[var(--text-muted)] mb-sm">Consultas disponibles</p>
-        <h2 class="text-h3 font-light tracking-tight mb-xl">Qué puedes averiguar</h2>
+        <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-sm">Consultas disponibles</p>
+        <h2 class="text-h4 font-light tracking-tight mb-xl">Qué puedes averiguar</h2>
 
         <div v-for="grupo in catalogo" :key="grupo.label" class="mb-xl">
-          <p class="text-caption font-black tracking-[0.25em] uppercase text-[var(--text-muted)] mb-md">{{ grupo.label }}</p>
+          <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">{{ grupo.label }}</p>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
             <button
               v-for="item in grupo.items" :key="item.titulo"
@@ -81,8 +81,8 @@
 
       <!-- Guías -->
       <section id="guias" class="pb-3xl scroll-mt-xl">
-        <p class="text-caption font-black tracking-[0.3em] uppercase text-[var(--text-muted)] mb-sm">Guías</p>
-        <h2 class="text-h3 font-light tracking-tight mb-xl">Cómo se leen los documentos ecuatorianos</h2>
+        <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-sm">Guías</p>
+        <h2 class="text-h4 font-light tracking-tight mb-xl">Cómo se leen los documentos ecuatorianos</h2>
 
         <div class="space-y-md">
           <article v-for="(g, i) in guias" :key="g.titulo" class="glass-card overflow-hidden">
@@ -104,8 +104,8 @@
 
       <!-- Preguntas frecuentes -->
       <section id="faq" class="pb-3xl scroll-mt-xl">
-        <p class="text-caption font-black tracking-[0.3em] uppercase text-[var(--text-muted)] mb-sm">Preguntas frecuentes</p>
-        <h2 class="text-h3 font-light tracking-tight mb-xl">Dudas habituales</h2>
+        <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-sm">Preguntas frecuentes</p>
+        <h2 class="text-h4 font-light tracking-tight mb-xl">Dudas habituales</h2>
 
         <div class="glass-card divide-y divide-[var(--border-color)]">
           <div v-for="(f, i) in faq" :key="f.p">
@@ -121,7 +121,7 @@
       <!-- Cierre -->
       <section class="pb-3xl">
         <div class="glass-card p-2xl text-center">
-          <h2 class="text-h4 sm:text-h3 font-light tracking-tight mb-md">Crea tu cuenta y empieza a consultar</h2>
+          <h2 class="text-lead sm:text-h4 font-light tracking-tight mb-md">Crea tu cuenta y empieza a consultar</h2>
           <p class="text-body text-[var(--text-secondary)] max-w-md mx-auto mb-xl">
             El registro es gratuito y no pide tarjeta. Cada cuenta trae su cuota diaria de
             consultas, que se renueva sola cada veinticuatro horas.
@@ -143,7 +143,7 @@
             {{ l.texto }}
           </component>
         </div>
-        <p class="text-caption uppercase tracking-[0.2em] text-[var(--text-muted)]">Devzio · {{ anio }}</p>
+        <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">Devzio · {{ anio }}</p>
       </footer>
     </div>
 
@@ -158,7 +158,7 @@
           <p class="text-body leading-relaxed text-[var(--text-secondary)] mb-lg">{{ muro.texto }}</p>
 
           <!-- Respuesta de ejemplo: se ve que devuelve antes de pedir la cuenta -->
-          <p class="text-caption font-black tracking-[0.3em] uppercase text-[var(--text-muted)] mb-md">Ejemplo de respuesta</p>
+          <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">Ejemplo de respuesta</p>
           <div class="rounded-base border border-[var(--border-color)] bg-[var(--accent-color)]/[0.03] divide-y divide-[var(--border-color)] mb-md">
             <div v-for="([campo, valor]) in muro.ejemplo" :key="campo" class="flex items-baseline justify-between gap-md px-md py-sm">
               <span class="text-caption uppercase tracking-wider text-[var(--text-muted)] shrink-0">{{ campo }}</span>
@@ -169,7 +169,7 @@
             Datos ilustrativos. No corresponden a ninguna persona real.
           </p>
 
-          <p class="text-caption font-black tracking-[0.3em] uppercase text-[var(--text-muted)] mb-md">Requiere cuenta</p>
+          <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">Requiere cuenta</p>
           <ul class="space-y-sm mb-xl">
             <li v-for="b in beneficios" :key="b" class="flex items-start gap-sm text-body text-[var(--text-secondary)]">
               <svg class="w-3.5 h-3.5 shrink-0 mt-xs text-[var(--accent-color)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">

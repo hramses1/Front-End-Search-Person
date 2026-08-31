@@ -22,13 +22,13 @@
     >
       <div class="p-lg border-b border-[var(--border-color)]">
         <BrandMark prefijo="Portal de " titulo="Consulta Ciudadana" apilado />
-        <p class="text-caption uppercase tracking-[0.3em] text-[var(--text-muted)] mt-sm">Panel de Consultas</p>
+        <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mt-sm">Panel de Consultas</p>
       </div>
 
       <div class="flex-1 overflow-y-auto p-md space-y-md custom-scrollbar">
         <!-- Admin Section -->
         <div v-if="isAdmin" class="mb-md px-xs">
-          <p class="text-caption font-black tracking-[0.25em] mb-sm text-[var(--text-muted)] uppercase">Administración</p>
+          <p class="text-overline font-black tracking-[0.14em] mb-sm text-[var(--text-muted)] uppercase">Administración</p>
           <button @click="router.push('/admin')" class="w-full flex items-center gap-sm px-md py-sm rounded-base border border-amber-500/20 bg-amber-500/5 text-amber-500 hover:bg-amber-500/10 transition-all text-caption font-bold tracking-wider">
             <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
             Panel de control
@@ -37,7 +37,7 @@
 
         <div class="px-xs space-y-md">
           <div v-for="grupo in sectionGroups" :key="grupo.label">
-            <p class="text-caption font-black tracking-[0.25em] mb-sm text-[var(--text-muted)] uppercase">{{ grupo.label }}</p>
+            <p class="text-overline font-black tracking-[0.14em] mb-sm text-[var(--text-muted)] uppercase">{{ grupo.label }}</p>
             <nav class="space-y-xs">
               <button
                 v-for="item in grupo.items" :key="item.key"
@@ -55,12 +55,12 @@
       </div>
 
       <div class="p-md border-t border-[var(--border-color)]">
-        <button @click="handleLogout" class="w-full py-sm bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 hover:border-red-500/20 rounded-base text-red-500 text-caption font-bold tracking-[0.2em] transition-all duration-base flex items-center justify-center gap-sm uppercase">
+        <button @click="handleLogout" class="w-full py-sm bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 hover:border-red-500/20 rounded-base text-red-500 text-overline font-bold tracking-[0.14em] transition-all duration-base flex items-center justify-center gap-sm uppercase">
           DESCONECTAR
         </button>
 
         <!-- Sellos de Seguridad -->
-        <div class="mt-md flex flex-wrap justify-center gap-md text-caption uppercase tracking-widest text-[var(--text-muted)] font-mono">
+        <div class="mt-md flex flex-wrap justify-center gap-md text-caption uppercase tracking-[0.14em] text-[var(--text-muted)] font-mono">
             <span class="flex items-center gap-xs">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-width="2.5"></path></svg>
                 SSL
@@ -83,8 +83,8 @@
     <main class="flex-1 flex flex-col h-screen relative z-10 p-lg sm:p-xl overflow-y-auto custom-scrollbar animate-fade-in">
       <header class="mb-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
         <div>
-          <p class="text-caption font-black tracking-[0.3em] text-[var(--accent-color)] uppercase mb-xs">Sección Actual</p>
-          <h1 class="text-h2 font-light tracking-tight text-[var(--text-primary)]">
+          <p class="text-overline font-black tracking-[0.14em] text-[var(--accent-color)] uppercase mb-xs">Sección Actual</p>
+          <h1 class="text-h3 font-light tracking-tight text-[var(--text-primary)]">
             {{ sections[currentSection] }}
           </h1>
         </div>
@@ -96,14 +96,14 @@
             de controles de cuenta.
           -->
           <div class="flex items-center gap-sm glass-panel py-sm px-md rounded-base">
-            <span class="text-caption font-black tracking-[0.2em] uppercase px-sm py-xs rounded-full border border-[var(--accent-color)] text-[var(--accent-color)] bg-[var(--accent-color)]/5">
+            <span class="text-overline font-black tracking-[0.14em] uppercase px-sm py-xs rounded-full border border-[var(--accent-color)] text-[var(--accent-color)] bg-[var(--accent-color)]/5">
               {{ planMostrado }}
             </span>
             <div class="flex flex-col leading-none">
               <span class="text-caption font-bold tabular-nums text-[var(--text-primary)]">
                 {{ cuotaSinTope ? `${userRequests} consultas` : `${userRequests} / ${tokenLimit}` }}
               </span>
-              <span v-if="quotaCountdown" class="text-caption tracking-widest uppercase text-[var(--text-muted)] mt-xs hidden sm:block">
+              <span v-if="quotaCountdown" class="text-caption tracking-[0.14em] uppercase text-[var(--text-muted)] mt-xs hidden sm:block">
                 Renueva {{ quotaCountdown }}
               </span>
             </div>

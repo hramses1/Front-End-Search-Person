@@ -12,7 +12,7 @@
       />
       <label 
         for="identity" 
-        class="absolute left-0 top-0 text-caption tracking-[0.2em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
+        class="absolute left-0 top-0 text-caption tracking-[0.14em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
         style="color: var(--text-secondary);"
       >
         USUARIO O EMAIL
@@ -32,7 +32,7 @@
       />
       <label 
         for="login_password" 
-        class="absolute left-0 top-0 text-caption tracking-[0.2em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
+        class="absolute left-0 top-0 text-caption tracking-[0.14em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
         style="color: var(--text-secondary);"
       >
         CONTRASEÑA
@@ -43,7 +43,7 @@
     <div class="pt-sm mask-reveal delay-700">
       <button 
         type="submit" 
-        class="w-full py-md border rounded-base text-body tracking-[0.3em] uppercase transition-all duration-base overflow-hidden relative group hover-smoke-glass"
+        class="w-full py-md border rounded-base text-body tracking-[0.14em] uppercase transition-all duration-base overflow-hidden relative group hover-smoke-glass"
         style="background-color: var(--glass-bg); border-color: var(--border-color); color: var(--text-primary);"
         :disabled="isLoading"
       >

@@ -2,7 +2,7 @@
   <footer class="mt-auto pt-sm border-t border-[var(--border-color)] flex flex-col sm:flex-row items-center justify-between gap-md pb-md relative">
     <!-- Copyright & Legal -->
     <div class="flex items-center gap-md order-2 sm:order-1 flex-wrap justify-center">
-      <span class="text-caption font-black text-[var(--text-secondary)] tracking-widest uppercase">© {{ anio }} Devzio</span>
+      <span class="text-caption font-black text-[var(--text-secondary)] tracking-[0.14em] uppercase">© {{ anio }} Devzio</span>
       <div class="h-3 w-[1.5px] bg-[var(--border-color)] text-[var(--text-muted)]"></div>
 
       <!--

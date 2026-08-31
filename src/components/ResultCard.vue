@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col gap-xs py-md border-b last:border-0" style="border-color: var(--border-color);">
-    <span class="text-caption uppercase tracking-[0.2em] font-mono text-[var(--text-secondary)]" style="color: var(--text-secondary);">
+    <span class="text-overline uppercase tracking-[0.14em] font-mono text-[var(--text-secondary)]" style="color: var(--text-secondary);">
       {{ label }}
     </span>
 

@@ -10,8 +10,8 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
           </div>
           <div>
-            <h3 class="text-caption font-medium uppercase tracking-[0.25em] text-[var(--text-muted)] leading-none">Módulo de</h3>
-            <p class="text-body font-semibold tracking-widest text-[var(--accent-color)] mt-xs uppercase">Consulta Oficial</p>
+            <h3 class="text-overline font-medium uppercase tracking-[0.14em] text-[var(--text-muted)] leading-none">Módulo de</h3>
+            <p class="text-body font-semibold tracking-[0.14em] text-[var(--accent-color)] mt-xs uppercase">Consulta Oficial</p>
           </div>
         </div>
 
@@ -35,7 +35,7 @@
 
         <transition name="slide-up">
           <div v-if="errorMsg" class="mt-lg p-lg rounded-base border border-red-500/20 bg-red-500/5 text-red-500 animate-fade-in flex-shrink-0">
-            <h4 class="text-caption font-bold mb-sm uppercase tracking-widest">Aviso del Sistema</h4>
+            <h4 class="text-caption font-bold mb-sm uppercase tracking-[0.14em]">Aviso del Sistema</h4>
             <p class="text-body font-medium leading-relaxed opacity-80">{{ errorMsg }}</p>
           </div>
         </transition>
@@ -55,7 +55,7 @@
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                 </span>
-                <h3 class="text-caption font-medium tracking-[0.3em] uppercase text-[var(--text-secondary)]">Registros Encontrados</h3>
+                <h3 class="text-overline font-medium tracking-[0.14em] uppercase text-[var(--text-secondary)]">Registros Encontrados</h3>
               </div>
               <button 
                 @click="copyResults" 
@@ -76,7 +76,7 @@
             <div class="w-24 h-24 rounded-full bg-[var(--accent-color)]/5 flex items-center justify-center mb-lg">
                 <svg class="w-10 h-10 text-[var(--accent-color)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             </div>
-            <p class="text-body font-bold tracking-[0.3em] uppercase text-[var(--text-muted)] text-center px-2xl">
+            <p class="text-body font-bold tracking-[0.14em] uppercase text-[var(--text-muted)] text-center px-2xl">
                 Sistema listo para recibir consultas oficiales
             </p>
           </div>

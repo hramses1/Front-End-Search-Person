@@ -30,22 +30,22 @@
       </div>
 
       <div class="flex-1 overflow-y-auto p-md space-y-md custom-scrollbar">
-        <p class="text-caption font-bold tracking-[0.3em] mb-md text-[var(--text-muted)] uppercase px-sm">Navegación</p>
+        <p class="text-overline font-bold tracking-[0.14em] mb-md text-[var(--text-muted)] uppercase px-sm">Navegación</p>
         <button 
           @click="router.push('/dashboard')"
-          class="w-full flex items-center justify-between px-lg py-md rounded-base text-body font-bold tracking-widest text-[var(--text-secondary)] hover:bg-white/5 hover:translate-x-1 transition-all"
+          class="w-full flex items-center justify-between px-lg py-md rounded-base text-body font-bold tracking-[0.14em] text-[var(--text-secondary)] hover:bg-white/5 hover:translate-x-1 transition-all"
         >
           <span>← VOLVER AL PANEL</span>
         </button>
       </div>
 
       <div class="p-md border-t border-[var(--border-color)] bg-black/10">
-        <button @click="handleLogout" class="w-full py-sm text-red-400 hover:bg-red-500/5 text-caption font-bold tracking-[0.2em] rounded-base border border-red-500/10 hover:border-red-500/20 transition-all uppercase mb-md">
+        <button @click="handleLogout" class="w-full py-sm text-red-400 hover:bg-red-500/5 text-overline font-bold tracking-[0.14em] rounded-base border border-red-500/10 hover:border-red-500/20 transition-all uppercase mb-md">
           Cerrar Sesión Admin
         </button>
 
         <!-- Sellos de Seguridad -->
-        <div class="mt-md flex flex-wrap justify-center gap-md text-caption uppercase tracking-widest text-[var(--text-muted)] font-mono">
+        <div class="mt-md flex flex-wrap justify-center gap-md text-caption uppercase tracking-[0.14em] text-[var(--text-muted)] font-mono">
             <span class="flex items-center gap-xs">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-width="2.5"></path></svg>
                 SSL
@@ -68,14 +68,14 @@
     <main class="flex-1 flex flex-col h-screen relative z-10 p-lg sm:p-xl overflow-y-auto custom-scrollbar animate-fade-in">
       <header class="mb-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
         <div>
-          <p class="text-caption font-black tracking-[0.3em] text-[var(--accent-color)] uppercase mb-xs">Panel de Control</p>
-          <h1 class="text-h2 font-light tracking-tight text-[var(--text-primary)] uppercase">Gestión de Usuarios</h1>
+          <p class="text-overline font-black tracking-[0.14em] text-[var(--accent-color)] uppercase mb-xs">Panel de Control</p>
+          <h1 class="text-h3 font-light tracking-tight text-[var(--text-primary)] uppercase">Gestión de Usuarios</h1>
         </div>
         
         <div class="flex items-center gap-md">
             <div class="flex flex-col items-end">
-                <span class="text-body font-bold tracking-widest text-[var(--text-primary)]">{{ userName }}</span>
-                <span class="text-caption font-black tracking-widest text-[var(--accent-color)] opacity-80">ADMINISTRADOR</span>
+                <span class="text-body font-bold tracking-[0.14em] text-[var(--text-primary)]">{{ userName }}</span>
+                <span class="text-caption font-black tracking-[0.14em] text-[var(--accent-color)] opacity-80">ADMINISTRADOR</span>
             </div>
             <div class="w-9 h-9 rounded-base bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-body font-black text-white shadow-lg shadow-amber-500/20">
                 {{ userName.substring(0, 2).toUpperCase() }}
@@ -87,8 +87,8 @@
       <div class="flex-1">
           <div class="glass-card overflow-hidden">
             <div class="px-lg py-md border-b border-[var(--border-color)] flex justify-between items-center bg-[var(--surface-color)]/50">
-              <h3 class="text-caption font-black tracking-[0.2em] uppercase text-[var(--text-secondary)]">Usuarios del Sistema</h3>
-              <button @click="fetchUsers" :disabled="isLoading" class="flex items-center gap-sm text-caption font-bold tracking-widest uppercase hover:text-[var(--accent-color)] transition-all disabled:text-[var(--text-muted)]">
+              <h3 class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-secondary)]">Usuarios del Sistema</h3>
+              <button @click="fetchUsers" :disabled="isLoading" class="flex items-center gap-sm text-caption font-bold tracking-[0.14em] uppercase hover:text-[var(--accent-color)] transition-all disabled:text-[var(--text-muted)]">
                 <span v-if="isLoading" class="w-3 h-3 border-2 border-t-transparent rounded-full animate-spin border-[var(--accent-color)]"></span>
                 <span v-else>↻</span>
                 Refrescar
@@ -106,10 +106,10 @@
               <table class="w-full text-left border-collapse border-b border-[var(--border-color)]">
                 <thead>
                   <tr class="border-b border-[var(--border-color)] bg-black/5">
-                    <th class="px-lg py-md text-caption font-black uppercase tracking-widest text-[var(--text-muted)]">Usuario</th>
-                    <th class="px-lg py-md text-caption font-black uppercase tracking-widest text-[var(--text-muted)]">Plan</th>
-                    <th class="px-lg py-md text-caption font-black uppercase tracking-widest text-[var(--text-muted)]">Peticiones</th>
-                    <th class="px-lg py-md text-caption font-black uppercase tracking-widest text-[var(--text-muted)] text-right">Acciones</th>
+                    <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Usuario</th>
+                    <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Plan</th>
+                    <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Peticiones</th>
+                    <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)] text-right">Acciones</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-[var(--border-color)]">
@@ -121,7 +121,7 @@
                       </div>
                     </td>
                     <td class="px-lg py-md">
-                      <span class="inline-block text-caption font-black px-md py-xs rounded-base border border-[var(--border-color)] tracking-widest uppercase" :style="{ color: userItem.planDescription?.includes('ADMIN') ? 'var(--accent-color)' : 'var(--text-secondary)' }">
+                      <span class="inline-block text-caption font-black px-md py-xs rounded-base border border-[var(--border-color)] tracking-[0.14em] uppercase" :style="{ color: userItem.planDescription?.includes('ADMIN') ? 'var(--accent-color)' : 'var(--text-secondary)' }">
                         {{ userItem.planDescription || 'SIN PLAN' }}
                       </span>
                     </td>
@@ -135,7 +135,7 @@
                             >
                             {{ userItem.consumoDesconocido ? '—' : (userItem.number_requests ?? 0) }}
                             </span>
-                            <span class="text-caption font-bold text-[var(--text-muted)] tracking-widest">{{ userItem.consumoDesconocido ? 'SIN DATO' : (sinTope(userItem.limite) ? 'SIN LÍMITE' : `/ ${userItem.limite}`) }}</span>
+                            <span class="text-caption font-bold text-[var(--text-muted)] tracking-[0.14em]">{{ userItem.consumoDesconocido ? 'SIN DATO' : (sinTope(userItem.limite) ? 'SIN LÍMITE' : `/ ${userItem.limite}`) }}</span>
                         </div>
                         <div v-if="!sinTope(userItem.limite) && !userItem.consumoDesconocido" class="hidden sm:block flex-1 h-1 bg-black/20 rounded-full overflow-hidden max-w-[80px]">
                             <div class="h-full bg-[var(--accent-color)] text-[var(--text-secondary)]" :style="{ width: Math.min(((userItem.number_requests ?? 0) / userItem.limite * 100), 100) + '%' }"></div>
@@ -146,14 +146,14 @@
                       <div class="flex justify-end gap-sm">
                         <button 
                           @click="openEditModal(userItem)"
-                          class="px-md py-sm rounded-base text-caption font-black tracking-widest border border-[var(--border-color)] hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-all uppercase"
+                          class="px-md py-sm rounded-base text-caption font-black tracking-[0.14em] border border-[var(--border-color)] hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-all uppercase"
                         >
                           Editar
                         </button>
                         <button 
                           @click="resetRequests(userItem)"
                           :disabled="userItem.number_requests === 0 || isResetting === userItem.userId"
-                          class="px-md py-sm rounded-base text-caption font-black tracking-widest border border-red-500/20 text-red-500/60 hover:text-red-500 hover:border-red-500/50 transition-all uppercase disabled:text-[var(--text-muted)]"
+                          class="px-md py-sm rounded-base text-caption font-black tracking-[0.14em] border border-red-500/20 text-red-500/60 hover:text-red-500 hover:border-red-500/50 transition-all uppercase disabled:text-[var(--text-muted)]"
                         >
                           <span v-if="isResetting === userItem.userId">...</span>
                           <span v-else>Reset</span>
@@ -177,7 +177,7 @@
       >
         <div v-if="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md">
           <div class="w-full max-w-md glass-card p-xl relative animate-fade-in shadow-2xl">
-            <h3 class="text-h4 font-bold tracking-tight mb-xl flex items-center gap-md">
+            <h3 class="text-lead font-bold tracking-tight mb-xl flex items-center gap-md">
                 <span class="w-2 h-8 bg-[var(--accent-color)] rounded-full"></span>
                 EDITAR USUARIO
             </h3>
@@ -194,7 +194,7 @@
                 resto de la interfaz. Reutiliza el lenguaje de ProfileDropdown.
               -->
               <div class="space-y-sm">
-                <p class="text-caption font-black text-[var(--text-muted)] uppercase tracking-widest">Plan asignado</p>
+                <p class="text-caption font-black text-[var(--text-muted)] uppercase tracking-[0.14em]">Plan asignado</p>
 
                 <div class="relative">
                   <button
@@ -204,12 +204,12 @@
                   >
                     <span class="flex flex-col min-w-0">
                       <span
-                        class="text-body font-bold tracking-widest uppercase truncate"
+                        class="text-body font-bold tracking-[0.14em] uppercase truncate"
                         :class="planSeleccionado ? 'text-[var(--text-primary)]' : 'text-[var(--text-muted)]'"
                       >
                         {{ planSeleccionado?.description || 'Selecciona un plan' }}
                       </span>
-                      <span v-if="planSeleccionado" class="text-caption font-black tracking-widest text-[var(--text-muted)] uppercase">
+                      <span v-if="planSeleccionado" class="text-caption font-black tracking-[0.14em] text-[var(--text-muted)] uppercase">
                         {{ planSeleccionado.daily_limit ? `${planSeleccionado.daily_limit} consultas/día` : 'Sin límite' }}
                       </span>
                     </span>
@@ -246,7 +246,7 @@
                         :class="pl.id === editForm.plan ? 'bg-[var(--accent-color)]/10 text-[var(--accent-color)]' : ''"
                       >
                         <span class="text-caption font-bold uppercase tracking-wider truncate">{{ pl.description }}</span>
-                        <span class="text-caption font-black tracking-widest text-[var(--text-muted)] shrink-0">
+                        <span class="text-caption font-black tracking-[0.14em] text-[var(--text-muted)] shrink-0">
                           {{ pl.daily_limit ? `${pl.daily_limit}/día` : 'SIN TOPE' }}
                         </span>
                       </button>
@@ -275,13 +275,13 @@
                 <button 
                   type="button" 
                   @click="showModal = false"
-                  class="flex-1 py-md rounded-base text-caption font-black tracking-widest border border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-white/5 transition-all uppercase"
+                  class="flex-1 py-md rounded-base text-caption font-black tracking-[0.14em] border border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-white/5 transition-all uppercase"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit" 
-                  class="flex-1 py-md btn-primary text-caption font-black tracking-widest uppercase"
+                  class="flex-1 py-md btn-primary text-caption font-black tracking-[0.14em] uppercase"
                   :disabled="isSaving"
                 >
                   {{ isSaving ? 'Guardando...' : 'Confirmar Cambios' }}

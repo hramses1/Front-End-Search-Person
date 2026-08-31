@@ -2,7 +2,7 @@
   <div class="group flex flex-col gap-sm py-md border-b last:border-0 border-[var(--border-color)] transition-all hover:translate-x-1">
     
     <div class="flex items-center gap-md">
-        <span class="text-body font-black uppercase tracking-[0.2em] text-[var(--accent-color)]">
+        <span class="text-body font-black uppercase tracking-[0.14em] text-[var(--accent-color)]">
             {{ label }}
         </span>
         <div class="h-[1.5px] flex-1 bg-[var(--border-color)] text-[var(--text-muted)]"></div>
@@ -12,7 +12,7 @@
     <div class="pl-0 sm:pl-sm">
       <slot>
         <!-- Valor null / vacío -->
-        <span v-if="isEmpty" class="text-body font-black text-red-500 italic tracking-widest uppercase">No registra información</span>
+        <span v-if="isEmpty" class="text-body font-black text-red-500 italic tracking-[0.14em] uppercase">No registra información</span>
 
         <!-- Objeto / Array Complejo -->
         <div v-else-if="typeof value === 'object'" class="mt-sm pl-md border-l-2 border-[var(--accent-color)]/30 space-y-md">
@@ -34,14 +34,14 @@
 
         <!-- Badges para estados -->
         <span v-else-if="type === 'badge'"
-          class="inline-flex items-center gap-sm text-caption font-black px-lg py-sm rounded-full border-2 shadow-sm transition-all uppercase tracking-widest"
+          class="inline-flex items-center gap-sm text-caption font-black px-lg py-sm rounded-full border-2 shadow-sm transition-all uppercase tracking-[0.14em]"
           :class="badgeClass"
         >
           {{ value }}
         </span>
 
         <!-- Moneda / Dinero -->
-        <span v-else-if="type === 'currency'" class="text-h3 font-black tabular-nums tracking-tighter text-green-600 dark:text-green-400">
+        <span v-else-if="type === 'currency'" class="text-h4 font-black tabular-nums tracking-tighter text-green-600 dark:text-green-400">
           $ {{ Number(value).toLocaleString('es-EC', { minimumFractionDigits: 2 }) }}
         </span>
 
