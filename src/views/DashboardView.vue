@@ -258,7 +258,16 @@ const refreshUserData = async () => {
     // La cuota manda: el servidor es la autoridad sobre used/limit/reset_at.
     // El contador local es solo indicativo y no debe bloquear consultas.
     try {
-        setQuota(await authService.getQuota());
+        const cuota = await authService.getQuota();
+
+        // El limite y la renovacion salen de la cuota, pero el consumo se toma
+        // de number_requests: es el contador que el backend valida y reinicia,
+        // y el mismo que se ve en la base y en el panel de administracion.
+        const datos = await authService.getUserData(userId.value).catch(() => null);
+        setQuota({
+            ...cuota,
+            used: datos?.number_requests ?? cuota.used
+        });
     } catch (e) {
         console.error('No se pudo recuperar la cuota:', e);
     }
