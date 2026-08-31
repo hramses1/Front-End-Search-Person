@@ -86,52 +86,37 @@
               {{ loadError }}
             </p>
 
-            <!-- Filtros. Se aplican en cliente: el listado llega entero. -->
-            <div class="px-lg pb-lg space-y-md border-b border-[var(--border-color)]">
-              <div class="flex flex-col lg:flex-row lg:items-end gap-md">
-                <div class="relative input-container flex-1 min-w-0">
+            <!--
+              Filtros. Se aplican en cliente: el listado llega entero.
+
+              Etiquetas fijas encima de cada campo, NO el patron flotante de
+              .custom-input: ese depende de :placeholder-shown, pseudoclase que
+              un input de tipo date nunca cumple porque siempre muestra valor,
+              de modo que el rotulo se quedaria montado sobre el dato. Con
+              etiquetas fijas los cuatro campos alinean ademas por arriba.
+            -->
+            <div class="px-lg pb-lg space-y-lg border-b border-[var(--border-color)]">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
+                <div v-for="f in campos" :key="f.id" class="space-y-xs">
+                  <label
+                    :for="f.id"
+                    class="!static !translate-y-0 !scale-100 block text-overline font-bold uppercase tracking-[0.14em] text-[var(--text-muted)]"
+                  >
+                    {{ f.etiqueta }}
+                  </label>
                   <input
-                    v-model="buscaUsuario"
-                    id="busca_usuario" type="search" placeholder=" "
-                    class="custom-input peer"
+                    :id="f.id"
+                    :type="f.tipo"
+                    :min="f.min"
+                    :value="f.valor.value"
+                    class="w-full min-h-[48px] bg-transparent border-b border-[var(--border-color)] py-sm outline-none font-body text-body text-[var(--text-primary)] transition-colors focus:border-[var(--accent-color)]"
+                    @input="f.actualiza(($event.target as HTMLInputElement).value)"
                   />
-                  <label for="busca_usuario">Buscar usuario o ID</label>
-                </div>
-
-                <div class="relative input-container w-full lg:w-48">
-                  <input
-                    v-model.number="minPeticiones"
-                    id="min_peticiones" type="number" min="0" placeholder=" "
-                    class="custom-input peer"
-                  />
-                  <label for="min_peticiones">Peticiones desde</label>
-                </div>
-
-                <div class="relative input-container w-full lg:w-40">
-                  <input v-model="desde" id="f_desde" type="date" placeholder=" " class="custom-input peer" />
-                  <label for="f_desde">Registrado desde</label>
-                </div>
-
-                <div class="relative input-container w-full lg:w-40">
-                  <input v-model="hasta" id="f_hasta" type="date" placeholder=" " class="custom-input peer" />
-                  <label for="f_hasta">Hasta</label>
-                </div>
-              </div>
-
-              <div class="flex flex-wrap items-center gap-xs">
-                <span class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mr-sm">Orden</span>
-                <div class="flex flex-wrap gap-xs">
-                  <button
-                    v-for="o in ordenes" :key="o.valor"
-                    type="button" class="chip"
-                    :aria-pressed="orden === o.valor"
-                    @click="orden = o.valor"
-                  >{{ o.texto }}</button>
                 </div>
               </div>
 
               <div v-if="planesEnUso.length > 1" class="flex flex-wrap items-center gap-xs">
-                <span class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mr-sm">Plan</span>
+                <span class="text-overline font-bold uppercase tracking-[0.14em] text-[var(--text-muted)] w-16 shrink-0">Plan</span>
                 <button
                   v-for="pl in planesEnUso" :key="pl"
                   type="button" class="chip"
@@ -140,7 +125,17 @@
                 >{{ pl }}</button>
               </div>
 
-              <div class="flex items-center justify-between gap-md">
+              <div class="flex flex-wrap items-center gap-xs">
+                <span class="text-overline font-bold uppercase tracking-[0.14em] text-[var(--text-muted)] w-16 shrink-0">Orden</span>
+                <button
+                  v-for="o in ordenes" :key="o.valor"
+                  type="button" class="chip"
+                  :aria-pressed="orden === o.valor"
+                  @click="orden = o.valor"
+                >{{ o.texto }}</button>
+              </div>
+
+              <div class="flex items-center justify-between gap-md pt-xs">
                 <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
                   {{ usuariosFiltrados.length }} de {{ users.length }} usuarios
                 </p>
@@ -414,6 +409,21 @@ const soloFecha = (v: any) => {
   const d = new Date(String(v ?? '').replace(' ', 'T'));
   return Number.isNaN(d.getTime()) ? '' : d.toISOString().slice(0, 10);
 };
+
+/**
+ * Los cuatro campos comparten plantilla: asi es imposible que uno acabe con
+ * distinto alto, borde o interlineado que los demas.
+ */
+const campos = [
+  { id: 'f_busca', etiqueta: 'Usuario o ID', tipo: 'search', min: undefined,
+    valor: buscaUsuario, actualiza: (v: string) => { buscaUsuario.value = v; } },
+  { id: 'f_min', etiqueta: 'Peticiones desde', tipo: 'number', min: '0',
+    valor: minPeticiones, actualiza: (v: string) => { minPeticiones.value = v === '' ? null : Number(v); } },
+  { id: 'f_desde', etiqueta: 'Registrado desde', tipo: 'date', min: undefined,
+    valor: desde, actualiza: (v: string) => { desde.value = v; } },
+  { id: 'f_hasta', etiqueta: 'Registrado hasta', tipo: 'date', min: undefined,
+    valor: hasta, actualiza: (v: string) => { hasta.value = v; } }
+];
 
 const ordenes = [
   { valor: 'nombre' as const, texto: 'A-Z' },
