@@ -566,7 +566,11 @@ const guardandoPlan = ref(false);
 const errorPlan = ref('');
 
 const abrirPlan = (pl: any | null) => {
-  planEditando.value = pl;
+  // El alta usa un objeto vacio, NO null: el modal se muestra con
+  // v-if="planEditando !== null", asi que pasarle null lo dejaba cerrado y el
+  // boton de crear parecia no hacer nada. La distincion entre alta y edicion
+  // la marca la presencia de id, no la de objeto.
+  planEditando.value = pl ?? {};
   planForm.description = pl?.description ?? '';
   planForm.daily_limit = pl?.daily_limit ?? 0;
   errorPlan.value = '';
