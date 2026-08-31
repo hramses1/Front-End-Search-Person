@@ -193,6 +193,23 @@ export const authService = {
     return (response.data?.items || []) as any[];
   },
 
+  /**
+   * Alta de un plan. Requiere token de admin.
+   * PlanCreateModel exige descripcion (1-100 caracteres) y cupo diario.
+   */
+  async createPlan(datos: { description: string; daily_limit: number }) {
+    const response = await apiClient.post('/api/plan/create', datos);
+    return response.data;
+  },
+
+  /**
+   * Edicion parcial de un plan: solo viaja lo que cambia.
+   */
+  async updatePlan(id: string, datos: { description?: string; daily_limit?: number }) {
+    const response = await apiClient.patch('/api/plan/patch/', datos, { params: { id } });
+    return response.data;
+  },
+
   /** Métodos de autenticación disponibles (ej. Google OAuth2). */
   async getAuthMethods() {
     const response = await apiClient.get('/api/main/auth-methods/');

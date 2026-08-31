@@ -70,15 +70,28 @@
       <!-- Users Table -->
       <div class="flex-1">
           <div class="glass-card overflow-hidden">
-            <div class="px-lg py-md border-b border-[var(--border-color)] flex justify-between items-center bg-[var(--surface-color)]/50">
-              <h3 class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-secondary)]">Usuarios del Sistema</h3>
-              <button @click="fetchUsers" :disabled="isLoading" class="flex items-center gap-sm text-caption font-bold tracking-[0.14em] uppercase hover:text-[var(--accent-color)] transition-all disabled:text-[var(--text-muted)]">
+            <div class="px-lg py-md border-b border-[var(--border-color)] flex flex-wrap justify-between items-center gap-md bg-[var(--surface-color)]/50">
+              <div class="flex items-center gap-sm">
+                <button
+                  v-for="t in pestanas" :key="t.valor"
+                  type="button" class="chip"
+                  :aria-pressed="pestana === t.valor"
+                  @click="pestana = t.valor"
+                >{{ t.texto }}</button>
+              </div>
+
+              <button
+                @click="pestana === 'usuarios' ? fetchUsers() : fetchPlanes()"
+                :disabled="isLoading"
+                class="flex items-center gap-sm text-caption font-bold tracking-[0.14em] uppercase hover:text-[var(--accent-color)] transition-all disabled:text-[var(--text-muted)]"
+              >
                 <span v-if="isLoading" class="w-3 h-3 border-2 border-t-transparent rounded-full animate-spin border-[var(--accent-color)]"></span>
                 <span v-else>↻</span>
                 Refrescar
               </button>
             </div>
 
+            <template v-if="pestana === 'usuarios'">
             <p
               v-if="loadError"
               class="mb-md rounded-base border border-amber-500/20 bg-amber-500/5 px-md py-md text-caption leading-relaxed tracking-wide text-amber-500"
@@ -238,11 +251,109 @@
                 </button>
               </div>
             </div>
+            </template>
+
+            <!-- ══ Planes ══ -->
+            <template v-else>
+              <div class="p-lg space-y-md">
+                <div class="flex items-center justify-between gap-md">
+                  <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                    {{ planes.length }} {{ planes.length === 1 ? 'plan' : 'planes' }}
+                  </p>
+                  <button type="button" class="btn-primary" @click="abrirPlan(null)">Crear plan</button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
+                  <div v-for="pl in planes" :key="pl.id" class="glass-card p-lg space-y-md">
+                    <div>
+                      <p class="text-body font-semibold">{{ pl.description }}</p>
+                      <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mt-xs">
+                        {{ pl.daily_limit != null ? `${pl.daily_limit} consultas al día` : 'Sin cupo definido' }}
+                      </p>
+                    </div>
+
+                    <div class="flex items-center justify-between gap-md">
+                      <span class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                        {{ usuariosPorPlan[pl.description] ?? 0 }} usuarios
+                      </span>
+                      <button type="button" class="btn-secondary" @click="abrirPlan(pl)">Editar</button>
+                    </div>
+                  </div>
+                </div>
+
+                <p v-if="planes.length === 0" class="py-2xl text-center text-body text-[var(--text-muted)]">
+                  No se pudo cargar el catálogo de planes.
+                </p>
+              </div>
+            </template>
           </div>
       </div>
 
       <!-- Footer en Admin -->
       <MainFooter />
+
+      <!-- Alta y edicion de planes -->
+      <transition
+        enter-active-class="duration-base ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100"
+        leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
+      >
+        <div v-if="planEditando !== null" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md" @click.self="cerrarPlan">
+          <div class="w-full max-w-md glass-card p-xl animate-fade-in shadow-2xl">
+            <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-xs">
+              {{ planEditando?.id ? 'Editar plan' : 'Nuevo plan' }}
+            </p>
+            <h3 class="text-h4 font-light tracking-tight mb-lg">
+              {{ planEditando?.id ? planEditando.description : 'Crear un plan' }}
+            </h3>
+
+            <form @submit.prevent="guardarPlan" class="space-y-lg">
+              <!--
+                Etiquetas fijas, no el patron flotante: aqui conviven un texto y
+                un numero, y mantenerlos identicos evita que uno se descuadre.
+              -->
+              <div class="space-y-sm">
+                <label for="plan_desc" class="!static !translate-y-0 !scale-100 block text-overline font-bold uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                  Nombre del plan
+                </label>
+                <input
+                  id="plan_desc" v-model="planForm.description" type="text" maxlength="100" required
+                  class="w-full min-h-[48px] bg-transparent border-b border-[var(--border-color)] py-sm outline-none font-body text-body text-[var(--text-primary)] transition-colors focus:border-[var(--accent-color)]"
+                />
+                <p class="text-overline text-[var(--text-muted)]">{{ planForm.description.length }} de 100 caracteres</p>
+              </div>
+
+              <div class="space-y-sm">
+                <label for="plan_limit" class="!static !translate-y-0 !scale-100 block text-overline font-bold uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                  Consultas al día
+                </label>
+                <input
+                  id="plan_limit" v-model.number="planForm.daily_limit" type="number" min="0" step="1" required
+                  class="w-full min-h-[48px] bg-transparent border-b border-[var(--border-color)] py-sm outline-none font-body text-body text-[var(--text-primary)] transition-colors focus:border-[var(--accent-color)]"
+                />
+                <p class="text-overline text-[var(--text-muted)]">Cero deja el plan sin consultas disponibles.</p>
+              </div>
+
+              <p
+                v-if="planEditando?.id && (usuariosPorPlan[planEditando.description] ?? 0) > 0"
+                class="rounded-base border border-amber-500/20 bg-amber-500/5 px-md py-md text-caption leading-relaxed text-amber-500"
+              >
+                Este plan lo usan {{ usuariosPorPlan[planEditando.description] }} usuarios. El cambio les afecta a todos.
+              </p>
+
+              <p v-if="errorPlan" class="rounded-base border border-red-500/20 bg-red-500/5 px-md py-md text-caption leading-relaxed text-red-400">
+                {{ errorPlan }}
+              </p>
+
+              <div class="flex gap-md pt-sm">
+                <button type="button" class="flex-1 btn-secondary" @click="cerrarPlan">Cancelar</button>
+                <button type="submit" class="flex-1 btn-primary" :disabled="guardandoPlan">
+                  {{ guardandoPlan ? 'Guardando…' : (planEditando?.id ? 'Guardar cambios' : 'Crear plan') }}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </transition>
 
       <!-- Edit Modal -->
       <transition 
@@ -390,6 +501,73 @@ const isLoading = ref(false);
 const showModal = ref(false);
 const modalError = ref('');
 const planes = ref<any[]>([]);
+
+/* ─── Gestion de planes ───────────────────────────────────────
+   Hasta ahora el catalogo solo servia para el desplegable del modal
+   de usuario. Con el CRUD publicado se puede administrar desde aqui
+   en vez de entrar a PocketBase.
+   ───────────────────────────────────────────────────────────── */
+const pestana = ref<'usuarios' | 'planes'>('usuarios');
+const pestanas = [
+  { valor: 'usuarios' as const, texto: 'Usuarios' },
+  { valor: 'planes' as const, texto: 'Planes' }
+];
+const planEditando = ref<any | null>(null);
+const planForm = reactive({ description: '', daily_limit: 0 });
+const guardandoPlan = ref(false);
+const errorPlan = ref('');
+
+const abrirPlan = (pl: any | null) => {
+  planEditando.value = pl;
+  planForm.description = pl?.description ?? '';
+  planForm.daily_limit = pl?.daily_limit ?? 0;
+  errorPlan.value = '';
+};
+
+const cerrarPlan = () => { planEditando.value = null; errorPlan.value = ''; };
+
+const guardarPlan = async () => {
+  const descripcion = planForm.description.trim();
+  if (!descripcion) { errorPlan.value = 'La descripción no puede quedar vacía.'; return; }
+  if (descripcion.length > 100) { errorPlan.value = 'La descripción admite como máximo 100 caracteres.'; return; }
+  if (!Number.isInteger(planForm.daily_limit) || planForm.daily_limit < 0) {
+    errorPlan.value = 'El cupo diario debe ser un entero igual o mayor que cero.';
+    return;
+  }
+
+  guardandoPlan.value = true;
+  errorPlan.value = '';
+  try {
+    // planEditando con id es edicion; sin el, alta.
+    if (planEditando.value?.id) {
+      await authService.updatePlan(planEditando.value.id, {
+        description: descripcion,
+        daily_limit: planForm.daily_limit
+      });
+    } else {
+      await authService.createPlan({ description: descripcion, daily_limit: planForm.daily_limit });
+    }
+    await fetchPlanes();
+    cerrarPlan();
+  } catch (error: any) {
+    errorPlan.value = error?.message || 'No se pudo guardar el plan.';
+    console.error('[admin] fallo al guardar el plan:', {
+      status: error?.response?.status, body: error?.response?.data
+    });
+  } finally {
+    guardandoPlan.value = false;
+  }
+};
+
+/** Cuantos usuarios tiene asignado cada plan, para avisar antes de tocarlo. */
+const usuariosPorPlan = computed(() => {
+  const cuenta: Record<string, number> = {};
+  for (const u of users.value) {
+    const d = u.planDescription;
+    if (d) cuenta[d] = (cuenta[d] ?? 0) + 1;
+  }
+  return cuenta;
+});
 const planAbierto = ref(false);
 
 const planSeleccionado = computed(() =>
