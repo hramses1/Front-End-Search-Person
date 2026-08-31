@@ -49,9 +49,18 @@ export const authService = {
     return response.data;
   },
 
-  /** Datos del usuario autenticado. */
-  async getUserData(userId: string) {
-    const response = await apiClient.get('/api/users/get/', { params: { codigo: userId } });
+  /**
+   * Datos de un usuario.
+   *
+   * `silencioso` se usa en las lecturas en lote del panel de administracion:
+   * evita que un 401 suelto entre decenas de peticiones secundarias cierre la
+   * sesion del administrador y lo expulse de la pantalla.
+   */
+  async getUserData(userId: string, silencioso = false) {
+    const response = await apiClient.get('/api/users/get/', {
+      params: { codigo: userId },
+      ...(silencioso ? { noCerrarSesionEn401: true } : {})
+    } as Parameters<typeof apiClient.get>[1]);
     return response.data;
   },
 

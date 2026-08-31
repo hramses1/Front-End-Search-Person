@@ -327,7 +327,7 @@ const fetchUsers = async () => {
     // El listado no incluye number_requests: hay que pedirlo usuario a usuario.
     // Con concurrencia limitada para no chocar con el limite por IP.
     const results = await mapConLimite(
-      users.value, 4, (u: any) => authService.getUserData(u.userId)
+      users.value, 4, (u: any) => authService.getUserData(u.userId, true)
     );
 
     // Si esas lecturas fallan la columna mostraria 0 para todos, que se lee
@@ -371,7 +371,9 @@ const openEditModal = async (userItem: any) => {
   showModal.value = true;
   isLoadingRequests.value = true;
   try {
-    const userData = await authService.getUserData(userItem.userId);
+    // Tambien silenciosa: sigue siendo la lectura del registro de OTRO usuario,
+    // y que abrir un modal pueda cerrar la sesion del admin no tiene sentido.
+    const userData = await authService.getUserData(userItem.userId, true);
     editForm.number_requests = userData?.number_requests ?? 0;
     const idx = users.value.findIndex(u => u.userId === userItem.userId);
     if (idx !== -1) users.value[idx].number_requests = editForm.number_requests;
