@@ -1,10 +1,15 @@
 <template>
   <div class="space-y-xl animate-fade-in">
-    <!-- Ajustado: altura máxima en pantallas grandes para scroll interno -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-lg items-stretch lg:max-h-[85vh]">
+    <!--
+      Sin tope de altura: antes el grid iba limitado a 85vh y los resultados
+      scrolleaban dentro de su propia caja, asi que por muchos que hubiera
+      nunca empujaban la pagina y el pie se quedaba clavado bajo el bloque.
+      Ahora los resultados fluyen y el formulario queda fijo en su sitio.
+    -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-lg items-start">
       
       <!-- FORMULARIO DE CONSULTA (Sidebar) -->
-      <div class="lg:col-span-5 xl:col-span-4 glass-panel p-xl flex flex-col overflow-hidden">
+      <div class="lg:col-span-5 xl:col-span-4 glass-panel p-xl flex flex-col overflow-hidden lg:sticky lg:top-0 lg:max-h-[85vh]">
         <div class="flex items-center gap-md mb-2xl pb-md border-b border-[var(--border-color)] flex-shrink-0">
           <div class="w-10 h-10 rounded-base bg-[var(--accent-color)] text-[var(--accent-inverse)] flex items-center justify-center shadow-lg shadow-[var(--accent-color)]/10">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -42,14 +47,14 @@
       </div>
 
       <!-- PANEL DE RESULTADOS -->
-      <div class="lg:col-span-7 xl:col-span-8 flex flex-col overflow-hidden">
+      <div class="lg:col-span-7 xl:col-span-8 flex flex-col">
         <transition name="fade" mode="out-in">
           <!-- LOADING STATE -->
           <SkeletonResult v-if="isLoading" class="h-full" />
 
           <!-- RESULTS STATE -->
-          <div v-else-if="results" class="glass-card overflow-hidden h-full flex flex-col">
-            <div class="px-2xl py-lg border-b border-[var(--border-color)] flex justify-between items-center bg-[var(--surface-color)]/30 backdrop-blur-sm flex-shrink-0">
+          <div v-else-if="results" class="glass-card overflow-hidden flex flex-col">
+            <div class="px-2xl py-lg border-b border-[var(--border-color)] flex justify-between items-center bg-[var(--surface-color)]/80 backdrop-blur-sm flex-shrink-0 sticky top-0 z-10">
               <div class="flex items-center gap-md">
                 <span class="flex h-2 w-2 relative">
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -65,8 +70,8 @@
               </button>
             </div>
             
-            <!-- Contenedor scrollable que ocupa el alto restante -->
-            <div class="p-2xl flex-grow overflow-y-auto custom-scrollbar">
+            <!-- Sin scroll propio: la pagina entera es la que se desplaza -->
+            <div class="p-2xl">
               <slot name="results" :data="results"></slot>
             </div>
           </div>
