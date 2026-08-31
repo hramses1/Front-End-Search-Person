@@ -255,29 +255,34 @@ const activeComponent = computed(() => {
 const refreshUserData = async () => {
     if (!userId.value) return;
 
-    // La cuota manda: el servidor es la autoridad sobre used/limit/reset_at.
-    // El contador local es solo indicativo y no debe bloquear consultas.
+    // Una sola fuente para el consumo: get_for_userid devuelve el mismo modelo
+    // que usa el panel de administracion, y desde el ultimo despliegue del
+    // backend incluye number_requests y quota_reset_at. Antes se pedia a
+    // users/get/, cuya forma de respuesta no esta declarada en el spec: si no
+    // venia plana, el valor caia en silencio al de la ventana de 24 h.
+    let plan: any = null;
     try {
-        const cuota = await authService.getQuota();
-
-        // El limite y la renovacion salen de la cuota, pero el consumo se toma
-        // de number_requests: es el contador que el backend valida y reinicia,
-        // y el mismo que se ve en la base y en el panel de administracion.
-        const datos = await authService.getUserData(userId.value).catch(() => null);
-        setQuota({
-            ...cuota,
-            used: datos?.number_requests ?? cuota.used
-        });
-    } catch (e) {
-        console.error('No se pudo recuperar la cuota:', e);
-    }
-
-    // El plan solo aporta la descripción que se pinta en la barra lateral.
-    try {
-        const plan = await authService.getUserPlan(userId.value, userRole.value);
+        plan = await authService.getUserPlan(userId.value, userRole.value);
         if (plan) setPlanData(plan.planDescription, plan.id);
     } catch (e) {
-        console.error('No se pudo recuperar el plan:', e);
+        console.error('[cuota] no se pudo recuperar el plan:', e);
+    }
+
+    try {
+        const cuota = await authService.getQuota();
+        const consumo = plan?.number_requests;
+
+        if (consumo === undefined || consumo === null) {
+            console.warn('[cuota] el plan no trae number_requests; se usa el de la ventana', { plan, cuota });
+        }
+
+        setQuota({
+            ...cuota,
+            used: consumo ?? cuota.used,
+            reset_at: plan?.quota_reset_at ?? cuota.reset_at
+        });
+    } catch (e) {
+        console.error('[cuota] no se pudo recuperar la cuota:', e);
     }
 };
 
