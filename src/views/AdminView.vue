@@ -132,8 +132,8 @@
                       </div>
                     </td>
                     <td class="px-6 py-4">
-                      <span class="inline-block text-[9px] font-black px-3 py-1 rounded-lg border border-[var(--border-color)] tracking-widest uppercase" :style="{ color: userItem.planDescription.includes('ADMIN') ? 'var(--accent-color)' : 'var(--text-secondary)' }">
-                        {{ userItem.planDescription }}
+                      <span class="inline-block text-[9px] font-black px-3 py-1 rounded-lg border border-[var(--border-color)] tracking-widest uppercase" :style="{ color: userItem.planDescription?.includes('ADMIN') ? 'var(--accent-color)' : 'var(--text-secondary)' }">
+                        {{ userItem.planDescription || 'SIN PLAN' }}
                       </span>
                     </td>
                     <td class="px-6 py-4">
