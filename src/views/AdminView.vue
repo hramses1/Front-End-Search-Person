@@ -95,9 +95,9 @@
               de modo que el rotulo se quedaria montado sobre el dato. Con
               etiquetas fijas los cuatro campos alinean ademas por arriba.
             -->
-            <div class="px-lg pb-lg space-y-lg border-b border-[var(--border-color)]">
+            <div class="px-lg pt-lg pb-lg space-y-lg border-b border-[var(--border-color)]">
               <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
-                <div v-for="f in campos" :key="f.id" class="space-y-xs">
+                <div v-for="f in campos" :key="f.id" class="space-y-sm">
                   <label
                     :for="f.id"
                     class="!static !translate-y-0 !scale-100 block text-overline font-bold uppercase tracking-[0.14em] text-[var(--text-muted)]"
@@ -115,7 +115,7 @@
                 </div>
               </div>
 
-              <div v-if="planesEnUso.length > 1" class="flex flex-wrap items-center gap-xs">
+              <div v-if="planesEnUso.length > 1" class="flex flex-wrap items-center gap-sm">
                 <span class="text-overline font-bold uppercase tracking-[0.14em] text-[var(--text-muted)] w-16 shrink-0">Plan</span>
                 <button
                   v-for="pl in planesEnUso" :key="pl"
@@ -125,7 +125,7 @@
                 >{{ pl }}</button>
               </div>
 
-              <div class="flex flex-wrap items-center gap-xs">
+              <div class="flex flex-wrap items-center gap-sm">
                 <span class="text-overline font-bold uppercase tracking-[0.14em] text-[var(--text-muted)] w-16 shrink-0">Orden</span>
                 <button
                   v-for="o in ordenes" :key="o.valor"
@@ -135,7 +135,7 @@
                 >{{ o.texto }}</button>
               </div>
 
-              <div class="flex items-center justify-between gap-md pt-xs">
+              <div class="flex items-center justify-between gap-md">
                 <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
                   {{ usuariosFiltrados.length }} de {{ users.length }} usuarios
                 </p>
