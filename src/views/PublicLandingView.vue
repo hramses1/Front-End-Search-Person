@@ -163,11 +163,23 @@
       leave-active-class="transition duration-150 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
     >
       <div v-if="muro" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-md" @click.self="muro = null">
-        <div class="w-full max-w-sm glass-card p-8 animate-fade-in shadow-2xl">
-          <p class="text-[9px] font-black tracking-[0.3em] uppercase opacity-40 mb-2">Requiere cuenta</p>
-          <h3 class="text-lg font-light tracking-tight mb-3">{{ muro.titulo }}</h3>
+        <div class="w-full max-w-md glass-card p-8 animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
+          <h3 class="text-lg font-light tracking-tight mb-2">{{ muro.titulo }}</h3>
           <p class="text-[12px] leading-relaxed opacity-60 mb-6">{{ muro.texto }}</p>
 
+          <!-- Respuesta de ejemplo: se ve que devuelve antes de pedir la cuenta -->
+          <p class="text-[9px] font-black tracking-[0.3em] uppercase opacity-40 mb-3">Ejemplo de respuesta</p>
+          <div class="rounded-2xl border border-[var(--border-color)] bg-[var(--accent-color)]/[0.03] divide-y divide-[var(--border-color)] mb-3">
+            <div v-for="([campo, valor]) in muro.ejemplo" :key="campo" class="flex items-baseline justify-between gap-4 px-4 py-2.5">
+              <span class="text-[9px] uppercase tracking-wider opacity-40 shrink-0">{{ campo }}</span>
+              <span class="text-[11px] font-medium text-right break-words">{{ valor }}</span>
+            </div>
+          </div>
+          <p class="text-[9px] leading-relaxed opacity-30 mb-8">
+            Datos ilustrativos. No corresponden a ninguna persona real.
+          </p>
+
+          <p class="text-[9px] font-black tracking-[0.3em] uppercase opacity-40 mb-3">Requiere cuenta</p>
           <ul class="space-y-2 mb-8">
             <li v-for="b in beneficios" :key="b" class="flex items-start gap-2.5 text-[11px] opacity-70">
               <svg class="w-3.5 h-3.5 shrink-0 mt-0.5 text-[var(--accent-color)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -200,10 +212,10 @@ const { isAuthenticated, isDark, toggleTheme } = useAuth();
 const anio = new Date().getFullYear();
 const guiaAbierta = ref(-1);
 const faqAbierta = ref(-1);
-const muro = ref<{ titulo: string; texto: string } | null>(null);
+const muro = ref<{ titulo: string; texto: string; ejemplo: string[][] } | null>(null);
 
 /** Cualquier consulta desde la portada exige cuenta: no hay modo demo. */
-const pedirRegistro = (item: { titulo: string; texto: string }) => {
+const pedirRegistro = (item: { titulo: string; texto: string; ejemplo: string[][] }) => {
   muro.value = item;
 };
 
@@ -240,29 +252,128 @@ const catalogo = [
   {
     label: 'Identidad',
     items: [
-      { titulo: 'Buscar por cédula', texto: 'Nombres, apellidos, fecha de nacimiento, estado civil y lugar de nacimiento.' },
-      { titulo: 'Buscar por nombre', texto: 'Localiza a una persona a partir de sus nombres y apellidos completos.' }
+      {
+        titulo: 'Buscar por cédula',
+        texto: 'Nombres, apellidos, fecha de nacimiento, estado civil y lugar de nacimiento.',
+        ejemplo: [
+          ['Cédula', '0912345678'],
+          ['Nombres', 'MARIA FERNANDA'],
+          ['Apellidos', 'LOPEZ TORRES'],
+          ['Fecha de nacimiento', '14/03/1991'],
+          ['Edad', '35'],
+          ['Género', 'FEMENINO'],
+          ['Estado civil', 'CASADA'],
+          ['Nacionalidad', 'ECUATORIANA'],
+          ['Lugar de nacimiento', 'GUAYAS / GUAYAQUIL']
+        ]
+      },
+      {
+        titulo: 'Buscar por nombre',
+        texto: 'Localiza a una persona a partir de sus nombres y apellidos completos.',
+        ejemplo: [
+          ['Coincidencias', '3'],
+          ['Cédula', '0912345678'],
+          ['Nombres', 'MARIA FERNANDA'],
+          ['Apellidos', 'LOPEZ TORRES'],
+          ['Ciudad', 'GUAYAQUIL'],
+          ['Tipo de identificación', 'CEDULA']
+        ]
+      }
     ]
   },
   {
     label: 'Judicial',
     items: [
-      { titulo: 'Denuncias', texto: 'Causas en las que la cédula figura como demandado, con materia y judicatura.' },
-      { titulo: 'Juicios como demandante', texto: 'Procesos en los que la persona actúa como actor, no como demandado.' }
+      {
+        titulo: 'Denuncias',
+        texto: 'Causas en las que la cédula figura como demandado, con materia y judicatura.',
+        ejemplo: [
+          ['N.º de juicio', '09332-2024-01875'],
+          ['Delito', 'INCUMPLIMIENTO DE CONTRATO'],
+          ['Fecha', '22/07/2024'],
+          ['Materia', 'CIVIL'],
+          ['Tipo de acción', 'PROCEDIMIENTO ORDINARIO'],
+          ['Judicatura', 'UNIDAD JUDICIAL CIVIL DE GUAYAQUIL'],
+          ['Ciudad', 'GUAYAQUIL']
+        ]
+      },
+      {
+        titulo: 'Juicios como demandante',
+        texto: 'Procesos en los que la persona actúa como actor, no como demandado.',
+        ejemplo: [
+          ['N.º de juicio', '17203-2023-00941'],
+          ['Delito', 'COBRO DE DINERO'],
+          ['Fecha', '09/11/2023'],
+          ['Materia', 'CIVIL'],
+          ['Tipo de acción', 'PROCEDIMIENTO MONITORIO'],
+          ['Demandante', 'LOPEZ TORRES MARIA FERNANDA'],
+          ['Judicatura', 'UNIDAD JUDICIAL CIVIL DE QUITO']
+        ]
+      }
     ]
   },
   {
     label: 'Tránsito',
     items: [
-      { titulo: 'Licencia', texto: 'Tipos de licencia, vigencia, puntos disponibles y bloqueos según la ANT.' },
-      { titulo: 'Multas e infracciones', texto: 'Citaciones con entidad, artículo infringido, puntos y total a pagar.' },
-      { titulo: 'Datos del vehículo', texto: 'Marca, modelo, año, clase y servicio a partir del número de placa.' }
+      {
+        titulo: 'Licencia',
+        texto: 'Tipos de licencia, vigencia, puntos disponibles y bloqueos según la ANT.',
+        ejemplo: [
+          ['Cédula', '0912345678'],
+          ['Nombre', 'LOPEZ TORRES MARIA FERNANDA'],
+          ['Puntos', '30 de 30'],
+          ['Tipo de licencia', 'B'],
+          ['Validez', 'VIGENTE HASTA 2029'],
+          ['Citaciones pendientes', '0']
+        ]
+      },
+      {
+        titulo: 'Multas e infracciones',
+        texto: 'Citaciones con entidad, artículo infringido, puntos y total a pagar.',
+        ejemplo: [
+          ['Citación', 'GYE-0091823'],
+          ['Entidad', 'ATM GUAYAQUIL'],
+          ['Placa', 'GSN1234'],
+          ['Fecha de emisión', '03/05/2026'],
+          ['Artículo', 'ART. 386 COIP'],
+          ['Puntos', '-6'],
+          ['Multa', '235,00'],
+          ['Total a pagar', '247,50']
+        ]
+      },
+      {
+        titulo: 'Datos del vehículo',
+        texto: 'Marca, modelo, año, clase y servicio a partir del número de placa.',
+        ejemplo: [
+          ['Placa', 'GSN1234'],
+          ['Marca', 'CHEVROLET'],
+          ['Modelo', 'SAIL 1.5'],
+          ['Año', '2019'],
+          ['Clase', 'AUTOMOVIL'],
+          ['Servicio', 'PARTICULAR'],
+          ['País de fabricación', 'ECUADOR'],
+          ['Propietario', 'LOPEZ TORRES MARIA FERNANDA']
+        ]
+      }
     ]
   },
   {
     label: 'Tributario',
     items: [
-      { titulo: 'Estado del RUC', texto: 'Razón social, estado del contribuyente, actividad económica y establecimientos.' }
+      {
+        titulo: 'Estado del RUC',
+        texto: 'Razón social, estado del contribuyente, actividad económica y establecimientos.',
+        ejemplo: [
+          ['RUC', '0912345678001'],
+          ['Razón social', 'LOPEZ TORRES MARIA FERNANDA'],
+          ['Estado', 'ACTIVO'],
+          ['Tipo de contribuyente', 'PERSONA NATURAL'],
+          ['Obligado a contabilidad', 'NO'],
+          ['Actividad principal', 'VENTA AL POR MENOR DE PRENDAS DE VESTIR'],
+          ['Inicio de actividades', '18/02/2016'],
+          ['Establecimientos', '1 ABIERTO']
+        ]
+      }
     ]
   }
 ];
