@@ -30,7 +30,7 @@
         <div v-if="isAdmin" class="mb-md px-xs">
           <p class="text-overline font-black tracking-[0.14em] mb-sm text-[var(--text-muted)] uppercase">Administración</p>
           <button @click="router.push('/admin')" class="w-full flex items-center gap-sm px-md py-sm rounded-base border border-amber-500/20 bg-amber-500/5 text-amber-500 hover:bg-amber-500/10 transition-all text-caption font-bold tracking-wider">
-            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+            <svg class="w-3.5 h-3.5 shrink-0" style="color: var(--estado-aviso);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
             Panel de control
           </button>
         </div>
@@ -44,7 +44,11 @@
                 @click="currentSection = item.key; isSidebarOpen = false"
                 :class="['w-full flex items-center gap-sm text-left px-md py-sm rounded-base text-caption font-bold tracking-wide transition-all duration-base border', currentSection === item.key ? 'bg-[var(--accent-color)] text-[var(--accent-inverse)] border-[var(--border-color)] shadow-sm' : 'text-[var(--text-secondary)] border-transparent hover:bg-[var(--accent-color)]/5 hover:text-[var(--text-primary)]']"
               >
-                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  class="w-3.5 h-3.5 shrink-0"
+                  :style="currentSection === item.key ? undefined : { color: COLOR_GRUPO[grupo.label] }"
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                >
                   <path v-for="d in item.icon" :key="d" :d="d" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
                 </svg>
                 <span class="truncate">{{ item.label }}</span>
@@ -167,6 +171,19 @@ const isSidebarOpen = ref(false);
  * vista. Antes era una lista plana de nueve entradas en mayusculas, sin
  * jerarquia: costaba encontrar nada.
  */
+/**
+ * Color por grupo. Sale de los tokens de estado, ya verificados, y sirve para
+ * distinguir dominios de un vistazo. El icono del elemento activo hereda el
+ * color del texto para no perder contraste sobre el fondo relleno.
+ */
+const COLOR_GRUPO: Record<string, string> = {
+  Identidad: 'var(--accent-color)',
+  Judicial: 'var(--estado-aviso)',
+  'Tránsito': 'var(--estado-exito)',
+  Tributario: 'var(--estado-error)',
+  Cuenta: 'var(--text-secondary)'
+};
+
 const sectionGroups = [
   {
     label: 'Identidad',
