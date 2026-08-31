@@ -172,6 +172,24 @@ label {
   @apply bg-[var(--glass-bg)] border border-[var(--border-color)] backdrop-blur-xl rounded-base;
 }
 
+/* ─── Chip de filtro ─────────────────────────────────────
+   Boton de alternancia. Area tactil de 48px como el resto y
+   colores por token, para que funcione en ambos temas.
+   ───────────────────────────────────────────────────────── */
+.chip {
+  @apply inline-flex items-center justify-center min-h-[48px] px-md rounded-full
+         border border-[var(--border-color)] bg-transparent
+         font-body text-overline font-bold uppercase tracking-[0.14em]
+         text-[var(--text-secondary)] transition-all ease-out;
+  transition-duration: 150ms;
+}
+.chip:hover { border-color: var(--accent-color); color: var(--accent-color); }
+.chip[aria-pressed="true"] {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: var(--accent-inverse);
+}
+
 /* ─── Distintivos de estado ──────────────────────────────
    El color nunca comunica solo: cada variante lleva icono o texto
    junto a él en el componente Badge.

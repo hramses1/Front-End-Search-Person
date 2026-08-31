@@ -99,7 +99,7 @@
                    <span v-if="filterGender" class="text-caption bg-[var(--accent-color)] text-[var(--bg-color)] px-sm py-xs rounded-full font-bold">1 SELECCIONADO</span>
                 </div>
                 <div class="flex flex-wrap gap-sm">
-                  <button v-for="g in availableGenders" :key="g" @click="filterGender = filterGender === g ? '' : g" :class="['px-md py-sm rounded-full text-caption tracking-wider transition-all duration-base uppercase font-bold border-2', filterGender === g ? 'bg-[var(--accent-color)] text-[var(--accent-inverse)] border-[var(--accent-color)] shadow-md' : 'bg-white border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--accent-color)]']">{{ g }}</button>
+                  <button v-for="g in availableGenders" :key="g" @click="filterGender = filterGender === g ? '' : g" class="chip" :aria-pressed="filterGender === g">{{ g }}</button>
                 </div>
               </div>
 
@@ -109,7 +109,7 @@
                    <span v-if="filterNationalities.length > 0" class="text-caption bg-[var(--accent-color)] text-[var(--accent-inverse)] px-sm py-xs rounded-full font-bold">{{ filterNationalities.length }} SELECCIONADOS</span>
                 </div>
                 <div class="flex flex-wrap gap-sm">
-                  <button v-for="nat in availableNationalities" :key="nat" @click="toggleNationality(nat)" :class="['px-md py-sm rounded-full text-caption tracking-wider transition-all duration-base uppercase font-bold border-2', filterNationalities.includes(nat) ? 'bg-[var(--accent-color)] text-[var(--accent-inverse)] border-[var(--accent-color)] shadow-md' : 'bg-white border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--accent-color)]']">{{ nat }}</button>
+                  <button v-for="nat in availableNationalities" :key="nat" @click="toggleNationality(nat)" class="chip" :aria-pressed="filterNationalities.includes(nat)">{{ nat }}</button>
                 </div>
               </div>
 
@@ -119,7 +119,7 @@
                    <span v-if="filterMaritalStatus" class="text-caption bg-[var(--accent-color)] text-[var(--accent-inverse)] px-sm py-xs rounded-full font-bold">1 SELECCIONADO</span>
                 </div>
                 <div class="flex flex-wrap gap-sm">
-                  <button v-for="ms in availableMaritalStatuses" :key="ms" @click="filterMaritalStatus = filterMaritalStatus === ms ? '' : ms" :class="['px-md py-sm rounded-full text-caption tracking-wider transition-all duration-base uppercase font-bold border-2', filterMaritalStatus === ms ? 'bg-[var(--accent-color)] text-[var(--accent-inverse)] border-[var(--accent-color)] shadow-md' : 'bg-white border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--accent-color)]']">{{ ms }}</button>
+                  <button v-for="ms in availableMaritalStatuses" :key="ms" @click="filterMaritalStatus = filterMaritalStatus === ms ? '' : ms" class="chip" :aria-pressed="filterMaritalStatus === ms">{{ ms }}</button>
                 </div>
               </div>
             </div>
@@ -138,14 +138,65 @@
     </template>
 
     <template #results="{ data }">
-      <div v-if="Array.isArray(data)" class="grid grid-cols-1 gap-lg animate-fade-in-up">
-        <div v-for="(item, idx) in data" :key="idx" class="group relative bg-[var(--input-bg)]/40 p-lg rounded-base border border-[var(--border-color)]/60 hover:border-[var(--accent-color)]/20 transition-all duration-base hover:shadow-xl hover:shadow-[var(--accent-color)]/5 overflow-hidden">
-          <div class="absolute -right-4 -top-4 w-24 h-24 bg-[var(--accent-color)]/5 rounded-full blur-2xl group-hover:bg-[var(--accent-color)]/10 transition-colors"></div>
-          <div class="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-12">
+      <!--
+        Con muchas coincidencias, volcar todos los campos de cada persona
+        producia un muro imposible de recorrer. Ahora cada resultado es una
+        fila con lo justo para identificarla, y se despliega para ver el resto.
+      -->
+      <div v-if="Array.isArray(data)" class="space-y-sm animate-fade-in-up">
+        <div class="flex items-center justify-between gap-md pb-sm">
+          <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
+            {{ data.length }} {{ data.length === 1 ? 'coincidencia' : 'coincidencias' }}
+          </p>
+          <button
+            v-if="data.length > 1"
+            type="button"
+            class="btn-tertiary"
+            @click="expandido = expandido === -2 ? -1 : -2"
+          >
+            {{ expandido === -2 ? 'Contraer todo' : 'Expandir todo' }}
+          </button>
+        </div>
+
+        <div
+          v-for="(item, idx) in data" :key="idx"
+          class="glass-card overflow-hidden"
+        >
+          <button
+            type="button"
+            class="w-full flex items-center gap-md p-md text-left transition-colors"
+            :aria-expanded="estaAbierto(idx)"
+            @click="alternar(idx)"
+          >
+            <span class="flex-1 min-w-0">
+              <span class="block text-body font-semibold truncate">{{ nombreCompleto(item) }}</span>
+              <span class="block text-overline font-mono text-[var(--text-muted)] mt-xs">
+                {{ getValue(item, 'Ci') || 'Sin cédula' }}
+              </span>
+            </span>
+
+            <span class="hidden md:flex items-center gap-xs shrink-0">
+              <span v-for="c in resumen(item)" :key="c" class="badge-base text-overline">{{ c }}</span>
+            </span>
+
+            <svg
+              class="w-4 h-4 shrink-0 text-[var(--text-muted)] transition-transform duration-base"
+              :class="estaAbierto(idx) ? 'rotate-180' : ''"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <div
+            v-if="estaAbierto(idx)"
+            class="border-t border-[var(--border-color)] px-md pb-md pt-md grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-xl gap-y-sm"
+          >
             <ResultCard v-for="(v, k) in item" :key="k" :label="mapKey(String(k))" :value="v" :type="detectType(String(k), v)" />
           </div>
         </div>
       </div>
+
       <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-x-10">
         <ResultCard v-for="(v, k) in data" :key="k" :label="mapKey(String(k))" :value="v" :type="detectType(String(k), v)" />
       </div>
@@ -191,6 +242,31 @@ const normalize = (text: any): string => {
 };
 
 // Devuelve el valor exacto del JSON según la clave
+/**
+ * Indice de la fila desplegada. -1 ninguna, -2 todas.
+ */
+const expandido = ref(-1);
+const estaAbierto = (idx: number) => expandido.value === -2 || expandido.value === idx;
+const alternar = (idx: number) => {
+  expandido.value = estaAbierto(idx) && expandido.value !== -2 ? -1 : idx;
+};
+
+/** Nombre y apellidos en una linea, para la cabecera de la fila. */
+const nombreCompleto = (item: any): string => {
+  const n = [getValue(item, 'Nombre'), getValue(item, 'Apellido')].filter(Boolean).join(' ');
+  return n || 'Sin nombre registrado';
+};
+
+/** Tres datos que distinguen a una persona de otra de un vistazo. */
+const resumen = (item: any): string[] => {
+  const edad = getValue(item, 'Edad');
+  return [
+    edad ? `${edad} años` : '',
+    getValue(item, 'Ciudad'),
+    getValue(item, 'EstadoCivil')
+  ].filter(Boolean).slice(0, 3);
+};
+
 const getValue = (item: any, key: string): string => {
   if (!item) return '';
   const val = item[key];

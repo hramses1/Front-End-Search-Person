@@ -1,5 +1,7 @@
 <template>
-  <footer class="mt-auto pt-sm border-t border-[var(--border-color)] flex flex-col sm:flex-row items-center justify-between gap-md pb-md relative">
+  <!-- shrink-0: sin esto, en un flex-col con altura fija el pie se
+       comprime cuando el contenido desborda, en vez de acompanarlo. -->
+  <footer class="mt-auto shrink-0 pt-sm border-t border-[var(--border-color)] flex flex-col sm:flex-row items-center justify-between gap-md pb-md relative">
     <!-- Copyright & Legal -->
     <div class="flex items-center gap-md order-2 sm:order-1 flex-wrap justify-center">
       <span class="text-caption font-black text-[var(--text-secondary)] tracking-[0.14em] uppercase">© {{ anio }} Devzio</span>
