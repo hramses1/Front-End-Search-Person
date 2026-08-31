@@ -354,6 +354,51 @@
                 </button>
               </div>
             </form>
+
+            <!--
+              Eliminar va aparte del formulario y en dos pasos: es la unica
+              accion irreversible de la pantalla. Solo se ofrece si el plan no
+              tiene usuarios, que es ademas lo que el backend exige.
+            -->
+            <div v-if="planEditando?.id" class="mt-lg pt-lg border-t border-[var(--border-color)]">
+              <template v-if="(usuariosPorPlan[planEditando.description] ?? 0) > 0">
+                <p class="text-caption leading-relaxed text-[var(--text-muted)]">
+                  Para eliminar este plan, antes hay que mover sus
+                  {{ usuariosPorPlan[planEditando.description] }} usuarios a otro.
+                </p>
+              </template>
+
+              <template v-else-if="!confirmandoBorrado">
+                <button
+                  type="button"
+                  class="text-caption font-bold tracking-[0.14em] uppercase transition-colors"
+                  style="color: var(--estado-error);"
+                  @click="confirmandoBorrado = true"
+                >
+                  Eliminar plan
+                </button>
+              </template>
+
+              <template v-else>
+                <p class="text-caption leading-relaxed mb-md" style="color: var(--estado-error);">
+                  Se eliminará «{{ planEditando.description }}» de forma permanente.
+                </p>
+                <div class="flex gap-md">
+                  <button type="button" class="flex-1 btn-secondary" @click="confirmandoBorrado = false">
+                    Conservar
+                  </button>
+                  <button
+                    type="button"
+                    class="flex-1 btn-base border"
+                    style="color: var(--estado-error); border-color: var(--estado-error);"
+                    :disabled="borrandoPlan"
+                    @click="borrarPlan"
+                  >
+                    {{ borrandoPlan ? 'Eliminando…' : 'Sí, eliminar' }}
+                  </button>
+                </div>
+              </template>
+            </div>
           </div>
         </div>
       </transition>
@@ -527,7 +572,41 @@ const abrirPlan = (pl: any | null) => {
   errorPlan.value = '';
 };
 
-const cerrarPlan = () => { planEditando.value = null; errorPlan.value = ''; };
+const confirmandoBorrado = ref(false);
+const borrandoPlan = ref(false);
+
+const cerrarPlan = () => {
+  planEditando.value = null;
+  errorPlan.value = '';
+  confirmandoBorrado.value = false;
+};
+
+/**
+ * Borrado en dos pasos, sin confirm() del navegador: el aviso vive en el
+ * propio modal y dice cuantos usuarios lo usan antes de decidir.
+ */
+const borrarPlan = async () => {
+  if (!planEditando.value?.id) return;
+
+  borrandoPlan.value = true;
+  errorPlan.value = '';
+  try {
+    await authService.deletePlan(planEditando.value.id);
+    await fetchPlanes();
+    cerrarPlan();
+  } catch (error: any) {
+    // 409 es el caso previsto: el plan sigue en uso.
+    errorPlan.value = error?.response?.status === 409
+      ? 'No se puede eliminar: el plan todavía tiene usuarios asignados. Muévelos a otro plan primero.'
+      : (error?.message || 'No se pudo eliminar el plan.');
+    confirmandoBorrado.value = false;
+    console.error('[admin] fallo al eliminar el plan:', {
+      status: error?.response?.status, body: error?.response?.data
+    });
+  } finally {
+    borrandoPlan.value = false;
+  }
+};
 
 const guardarPlan = async () => {
   const descripcion = planForm.description.trim();

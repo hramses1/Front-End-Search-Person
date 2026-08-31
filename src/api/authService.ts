@@ -210,6 +210,16 @@ export const authService = {
     return response.data;
   },
 
+  /**
+   * Elimina un plan. Requiere token de admin.
+   * El backend responde 409 si quedan usuarios asignados, de modo que no se
+   * puede dejar a nadie huerfano por accidente.
+   */
+  async deletePlan(id: string) {
+    const response = await apiClient.delete('/api/plan/delete/', { params: { id } });
+    return response.data;
+  },
+
   /** Métodos de autenticación disponibles (ej. Google OAuth2). */
   async getAuthMethods() {
     const response = await apiClient.get('/api/main/auth-methods/');
