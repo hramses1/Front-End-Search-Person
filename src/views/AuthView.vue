@@ -384,7 +384,7 @@ const registerErrors = reactive({
 });
 
 const router = useRouter();
-const { setToken, setupActivityListeners, setUserRecord, setPlanData, setQuota, toggleTheme, isDark } = useAuth();
+const { setToken, setupActivityListeners, setUserRecord, setPlanData, setQuota, userRole, toggleTheme, isDark } = useAuth();
 
 /**
  * Carga plan y cuota una vez fijado el token.
@@ -395,7 +395,7 @@ const { setToken, setupActivityListeners, setUserRecord, setPlanData, setQuota, 
  */
 const loadAccountState = async (recordId: string) => {
   try {
-    const planData = await authService.getUserPlan(recordId);
+    const planData = await authService.getUserPlan(recordId, userRole.value);
     if (planData) {
       setPlanData(planData.planDescription || 'FREE', planData.id);
     }

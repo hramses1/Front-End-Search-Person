@@ -67,16 +67,18 @@
             <div class="flex items-center justify-between mb-3">
                 <span class="text-[9px] font-black tracking-[0.25em] opacity-40 uppercase">Plan Actual</span>
                 <span class="text-[9px] font-mono px-2 py-0.5 rounded-full border border-[var(--accent-color)] text-[var(--accent-color)] bg-[var(--accent-color)]/5 font-black tracking-widest uppercase">
-                    {{ userPlan }}
+                    {{ planMostrado }}
                 </span>
             </div>
             
             <div class="space-y-2">
                 <div class="flex justify-between text-[9px] font-bold">
                     <span class="opacity-40 uppercase">Peticiones usadas</span>
-                    <span class="text-[var(--accent-color)]">{{ userRequests }} / {{ tokenLimit }}</span>
+                    <span class="text-[var(--accent-color)]">
+                        {{ cuotaSinTope ? `${userRequests} · sin límite` : `${userRequests} / ${tokenLimit}` }}
+                    </span>
                 </div>
-                <div class="h-1 w-full bg-black/40 rounded-full overflow-hidden">
+                <div v-if="!cuotaSinTope" class="h-1 w-full bg-black/40 rounded-full overflow-hidden">
                     <div class="h-full bg-[var(--accent-color)] transition-all duration-1000" :style="{ width: Math.min((userRequests / tokenLimit * 100), 100) + '%' }"></div>
                 </div>
                 <p v-if="quotaCountdown" class="text-[8px] tracking-widest uppercase opacity-40 pt-1">
@@ -183,7 +185,7 @@ import JudgementSection from './dashboard/sections/JudgementSection.vue';
 import ProfileSection from './dashboard/sections/ProfileSection.vue';
 
 const router = useRouter();
-const { logout, userName, isDark, toggleTheme, userPlan, userRequests, tokenLimit, quotaResetAt, isAdmin, userId, setPlanData, setQuota } = useAuth();
+const { logout, userName, isDark, toggleTheme, userPlan, userRole, userRequests, tokenLimit, quotaResetAt, isAdmin, userId, setPlanData, setQuota } = useAuth();
 
 const isSidebarOpen = ref(false);
 
@@ -229,7 +231,7 @@ const refreshUserData = async () => {
 
     // El plan solo aporta la descripción que se pinta en la barra lateral.
     try {
-        const plan = await authService.getUserPlan(userId.value);
+        const plan = await authService.getUserPlan(userId.value, userRole.value);
         if (plan) setPlanData(plan.planDescription, plan.id);
     } catch (e) {
         console.error('No se pudo recuperar el plan:', e);
@@ -239,6 +241,20 @@ const refreshUserData = async () => {
 // Reloj de baja frecuencia para que la cuenta atrás de la cuota no se congele.
 const ahora = ref(Date.now());
 let relojCuota: ReturnType<typeof setInterval> | undefined;
+
+// El backend usa un limite centinela enorme para los planes sin tope. Pintarlo
+// literal daba "9 / 9999999999" y una barra al 0,00000009 %.
+const LIMITE_SIN_TOPE = 1_000_000;
+const cuotaSinTope = computed(() => tokenLimit.value >= LIMITE_SIN_TOPE);
+
+// La insignia muestra el plan; si el rol firmado dice ADMIN y la descripcion
+// del plan no lo refleja, se anaden ambos en vez de mentir con "FREE".
+const planMostrado = computed(() => {
+  const plan = userPlan.value || 'FREE';
+  const rol = userRole.value?.toUpperCase();
+  if (rol && !plan.toUpperCase().includes(rol)) return `${plan} · ${rol}`;
+  return plan;
+});
 
 const quotaCountdown = computed(() => {
     ahora.value; // dependencia explícita: obliga a recalcular en cada tick
