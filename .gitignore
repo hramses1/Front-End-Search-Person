@@ -47,3 +47,5 @@ tmp_openapi.json
 # Skills lock
 skills-lock.json
 git_log.txt
+.claude
+CLAUDE.md
