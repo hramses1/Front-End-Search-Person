@@ -236,15 +236,15 @@ export const authService = {
       code,
       codeVerifier,
       redirectUrl,
-      // createData acaba pasando por el mismo modelo, así que lleva los
-      // campos obligatorios aunque el servidor imponga sus propios valores.
-      createData: {
-        emailVisibility: true,
-        disable: false,
-        plan: 'free',
-        number_requests: 0,
-        token: ''
-      }
+      /*
+       * createData va tipado como objeto libre, no como UserCreate, asi que
+       * llega intacto a PocketBase. Por eso NO se mandan aqui plan,
+       * number_requests, token ni disable: `plan` es un campo de relacion que
+       * espera el id de un registro, y enviarle una cadena como 'free' hace
+       * que PocketBase rechace la creacion del usuario. Esos valores los
+       * impone el servidor igualmente.
+       */
+      createData: { emailVisibility: true }
     });
     return response.data;
   }

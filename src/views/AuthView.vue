@@ -453,7 +453,22 @@ const handleOAuthCallback = async () => {
           throw new Error('Fallo la autenticación con el proveedor.');
         }
       } catch (err: any) {
-        errorMsg.value = err.response?.data?.message || err.message || 'Error autenticando con Google.';
+        // El detalle del servidor se conserva: sin el, un fallo de creacion de
+        // usuario y uno de credenciales se leen igual y no hay por donde
+        // empezar a mirar.
+        const detalle = err.response?.data?.detail;
+        const textoDetalle = typeof detalle === 'string'
+          ? ` ${detalle}`
+          : (detalle ? ` ${JSON.stringify(detalle)}` : '');
+
+        errorMsg.value = (err.response?.data?.message || err.message || 'No se pudo completar el acceso con Google.')
+          + textoDetalle
+          + (err.response?.status ? ` (HTTP ${err.response.status})` : '');
+
+        console.error('[oauth] fallo al autenticar con Google:', {
+          status: err.response?.status,
+          body: err.response?.data
+        });
       } finally {
         isGoogleLoading.value = false;
         isLoading.value = false;
