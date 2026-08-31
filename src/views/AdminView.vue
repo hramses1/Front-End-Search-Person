@@ -386,7 +386,25 @@ const saveUserChanges = async () => {
     });
 
     showModal.value = false;
-    fetchUsers();
+
+    // Se espera de verdad al refresco: antes se lanzaba sin await, asi que el
+    // modal se cerraba y no habia forma de saber si el listado llegaba a
+    // actualizarse ni si fallaba.
+    await fetchUsers();
+
+    // El listado y el registro de usuario son colecciones distintas. Si tras
+    // recargar sigue apareciendo el valor anterior, el dato se guardo pero el
+    // listado no lo refleja: se avisa en vez de dejar una pantalla que
+    // contradice a la base.
+    const fila = users.value.find((u: any) => u.userId === editForm.userId);
+    if (fila && fila.userName !== editForm.userName) {
+      console.warn('[admin] el listado no refleja el cambio recien guardado', {
+        userId: editForm.userId,
+        enviado: editForm.userName,
+        devuelto: fila.userName
+      });
+      loadError.value = 'El cambio se guardó correctamente, pero el listado sigue devolviendo los datos anteriores. Vuelve a cargar en unos segundos.';
+    }
   } catch (error: any) {
     // El interceptor ya deja en `message` un texto presentable y, cuando el
     // backend rechaza campos concretos, la lista en `invalidFields`.
