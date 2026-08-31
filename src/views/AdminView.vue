@@ -281,9 +281,12 @@
                   </div>
                 </div>
 
-                <p v-if="planes.length === 0" class="py-2xl text-center text-body text-[var(--text-muted)]">
-                  No se pudo cargar el catálogo de planes.
-                </p>
+                <div v-if="errorPlanes" class="rounded-base border border-amber-500/20 bg-amber-500/5 px-md py-md space-y-sm">
+                  <p class="text-caption leading-relaxed text-amber-500">{{ errorPlanes }}</p>
+                  <button type="button" class="btn-secondary" @click="fetchPlanes" :disabled="cargandoPlanes">
+                    {{ cargandoPlanes ? 'Reintentando…' : 'Reintentar' }}
+                  </button>
+                </div>
               </div>
             </template>
           </div>
@@ -437,7 +440,7 @@
                       </button>
 
                       <p v-if="!planes.length" class="px-md py-md text-caption tracking-wide text-amber-500">
-                        No se pudo cargar el catálogo de planes; revisa la consola.
+                        {{ errorPlanes || 'No se pudo cargar el catálogo de planes.' }}
                       </p>
                     </div>
                   </transition>
@@ -756,12 +759,34 @@ onMounted(() => {
  * El listado de usuarios solo trae `planDescription`, no el id del plan, asi
  * que hace falta el catalogo para saber que valor enviar en el PATCH.
  */
+const errorPlanes = ref('');
+const cargandoPlanes = ref(false);
+
 const fetchPlanes = async () => {
+  cargandoPlanes.value = true;
+  errorPlanes.value = '';
   try {
     const data = await authService.getPlans();
-    planes.value = data.items || [];
-  } catch (error) {
-    console.error('[admin] no se pudo cargar el catalogo de planes:', error);
+
+    // La respuesta puede venir paginada o como lista suelta: se aceptan ambas
+    // en vez de dar por hecho una forma que no esta garantizada.
+    const items = Array.isArray(data) ? data : (data?.items ?? []);
+    planes.value = items;
+
+    if (items.length === 0) {
+      errorPlanes.value = 'El servidor respondió sin planes. Comprueba que la colección no esté vacía.';
+    }
+    console.info('[admin] respuesta de /api/plan/get/:', data);
+  } catch (error: any) {
+    planes.value = [];
+    // El interceptor ya deja en message un texto presentable.
+    errorPlanes.value = `${error?.message || 'No se pudo cargar el catálogo de planes.'}`
+      + (error?.response?.status ? ` (HTTP ${error.response.status})` : '');
+    console.error('[admin] fallo al cargar planes:', {
+      status: error?.response?.status, body: error?.response?.data
+    });
+  } finally {
+    cargandoPlanes.value = false;
   }
 };
 
