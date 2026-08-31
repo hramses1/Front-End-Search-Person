@@ -52,17 +52,15 @@ export const authService = {
   /**
    * Datos de un usuario.
    *
-   * `silencioso` se usa en las lecturas en lote del panel de administracion:
-   * evita que un 401 suelto entre decenas de peticiones secundarias cierre la
-   * sesion del administrador y lo expulse de la pantalla.
+   * Actualmente sin uso: el panel de administracion dejo de necesitarlo cuando
+   * get_all_users_plans empezo a devolver la cuota de cada usuario. Se mantiene
+   * por ser el mapeo directo de un endpoint publicado.
    */
-  async getUserData(userId: string, silencioso = false) {
-    const response = await apiClient.get('/api/users/get/', {
-      params: { codigo: userId },
-      ...(silencioso ? { noCerrarSesionEn401: true } : {})
-    } as Parameters<typeof apiClient.get>[1]);
+  async getUserData(userId: string) {
+    const response = await apiClient.get('/api/users/get/', { params: { codigo: userId } });
     return response.data;
   },
+
 
   /** Cuota diaria del usuario autenticado. Consultarla no la consume. */
   async getQuota(): Promise<Quota> {

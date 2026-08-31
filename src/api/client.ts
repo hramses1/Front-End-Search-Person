@@ -32,19 +32,6 @@ const PUBLIC_AUTH_PATHS = [
 const isPublicAuthPath = (url?: string): boolean =>
   !!url && PUBLIC_AUTH_PATHS.some((path) => url.startsWith(path));
 
-/**
- * Marca para peticiones que NO deben cerrar la sesion si vuelven con 401.
- *
- * Pensada para lecturas de fondo en lote: un 401 aislado entre decenas de
- * peticiones secundarias no demuestra que la sesion haya muerto, y expulsar al
- * usuario por ello hace imposible usar la pantalla. La peticion principal de
- * cada vista si conserva el comportamiento normal, asi que una sesion caducada
- * de verdad sigue mandando al login.
- */
-export interface OpcionesSilenciosas {
-  noCerrarSesionEn401?: boolean;
-}
-
 export const apiClient = axios.create({
   // SECURITY: la URL vive en .env, nunca en el código fuente.
   baseURL: import.meta.env.VITE_API_BASE_URL as string,
@@ -242,9 +229,7 @@ apiClient.interceptors.response.use(
     // Solo el 401 implica sesión inválida (token caducado o corrupto). Un 403
     // es "sin permiso sobre este recurso" y cerrar la sesión ahí expulsaba al
     // usuario sin motivo.
-    const silenciosa = (err.config as OpcionesSilenciosas | undefined)?.noCerrarSesionEn401 === true;
-
-    if (status === 401 && !isPublicAuthPath(err.config?.url) && !silenciosa) {
+    if (status === 401 && !isPublicAuthPath(err.config?.url)) {
       const { logout, isAuthenticated } = useAuth();
 
       if (isAuthenticated.value) {

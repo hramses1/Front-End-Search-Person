@@ -141,15 +141,15 @@
                         <div class="flex flex-col min-w-[60px]">
                             <span
                               class="text-[12px] font-black tabular-nums"
-                              :style="{ color: userItem.consumoDesconocido ? 'var(--text-secondary)' : (!sinTope(userItem.token_duration) && (userItem.number_requests ?? 0) >= userItem.token_duration ? '#ef4444' : 'var(--text-primary)') }"
+                              :style="{ color: userItem.consumoDesconocido ? 'var(--text-secondary)' : (!sinTope(userItem.limite) && (userItem.number_requests ?? 0) >= userItem.limite ? '#ef4444' : 'var(--text-primary)') }"
                               :title="userItem.consumoDesconocido ? 'No se pudo leer el consumo de este usuario' : ''"
                             >
                             {{ userItem.consumoDesconocido ? '—' : (userItem.number_requests ?? 0) }}
                             </span>
-                            <span class="text-[8px] font-bold opacity-30 tracking-widest">{{ userItem.consumoDesconocido ? 'SIN DATO' : (sinTope(userItem.token_duration) ? 'SIN LÍMITE' : `/ ${userItem.token_duration}`) }}</span>
+                            <span class="text-[8px] font-bold opacity-30 tracking-widest">{{ userItem.consumoDesconocido ? 'SIN DATO' : (sinTope(userItem.limite) ? 'SIN LÍMITE' : `/ ${userItem.limite}`) }}</span>
                         </div>
-                        <div v-if="!sinTope(userItem.token_duration) && !userItem.consumoDesconocido" class="hidden sm:block flex-1 h-1 bg-black/20 rounded-full overflow-hidden max-w-[80px]">
-                            <div class="h-full bg-[var(--accent-color)] opacity-50" :style="{ width: Math.min(((userItem.number_requests ?? 0) / userItem.token_duration * 100), 100) + '%' }"></div>
+                        <div v-if="!sinTope(userItem.limite) && !userItem.consumoDesconocido" class="hidden sm:block flex-1 h-1 bg-black/20 rounded-full overflow-hidden max-w-[80px]">
+                            <div class="h-full bg-[var(--accent-color)] opacity-50" :style="{ width: Math.min(((userItem.number_requests ?? 0) / userItem.limite * 100), 100) + '%' }"></div>
                         </div>
                       </div>
                     </td>
@@ -249,7 +249,6 @@ const isLoading = ref(false);
 const showModal = ref(false);
 const isSaving = ref(false);
 const isResetting = ref<string | null>(null);
-const isLoadingRequests = ref(false);
 const loadError = ref('');
 
 // Los planes sin tope usan un limite centinela enorme; pintarlo literal daba
@@ -257,38 +256,6 @@ const loadError = ref('');
 const LIMITE_SIN_TOPE = 1_000_000;
 const sinTope = (limite?: number) => (limite ?? 0) >= LIMITE_SIN_TOPE;
 
-/**
- * Como Promise.allSettled pero con un maximo de peticiones en vuelo.
- *
- * Lanzar una por usuario de golpe hacia users/get/ dispara el limite por IP
- * del backend: las primeras pasan y el resto vuelve con rate_limited. Mantiene
- * el orden del array de entrada.
- */
-const mapConLimite = async <T, R>(
-  items: T[],
-  limite: number,
-  fn: (item: T) => Promise<R>
-): Promise<PromiseSettledResult<R>[]> => {
-  const salida = new Array(items.length) as PromiseSettledResult<R>[];
-  let siguiente = 0;
-
-  const trabajador = async () => {
-    while (siguiente < items.length) {
-      const i = siguiente++;
-      try {
-        salida[i] = { status: 'fulfilled', value: await fn(items[i]) };
-      } catch (reason) {
-        salida[i] = { status: 'rejected', reason };
-      }
-    }
-  };
-
-  await Promise.all(
-    Array.from({ length: Math.min(limite, items.length) }, trabajador)
-  );
-
-  return salida;
-};
 
 const editForm = reactive({
   userId: '',
@@ -310,7 +277,17 @@ const fetchUsers = async () => {
   loadError.value = '';
   try {
     const data = await authService.getAllUsersPlans();
-    users.value = data.items || [];
+
+    // El listado ya trae la cuota de cada usuario, asi que basta una peticion.
+    // Antes habia que pedir el consumo uno a uno contra users/get/: 36 llamadas
+    // para 35 usuarios, con fallos por limite por IP y por permisos.
+    users.value = (data.items || []).map((u: any) => ({
+      ...u,
+      number_requests: u.quota?.used ?? 0,
+      limite: u.quota?.limit ?? u.token_duration,
+      // quota es nullable: si no viene, no inventamos un cero.
+      consumoDesconocido: !u.quota
+    }));
 
     // El panel no pagina: si el backend reporta mas de una pagina, se avisa
     // en vez de dejar creer que estan todos los usuarios.
@@ -326,67 +303,6 @@ const fetchUsers = async () => {
   } finally {
     isLoading.value = false;
   }
-
-  if (users.value.length > 0) {
-    // El listado no incluye number_requests: hay que pedirlo usuario a usuario.
-    // Con concurrencia limitada para no chocar con el limite por IP.
-    const results = await mapConLimite(
-      users.value, 4, (u: any) => authService.getUserData(u.userId, true)
-    );
-
-    // Si esas lecturas fallan la columna mostraria 0 para todos, que se lee
-    // como "nadie ha consultado nada". Se agrupa por codigo de error para
-    // distinguir un problema de permisos de uno de limite de peticiones.
-    const motivos = new Map<string, number>();
-    const ejemplos = new Map<string, { userId: string; status?: number; message?: string }>();
-
-    results.forEach((r, idx) => {
-      if (r.status !== 'rejected') return;
-      const err: any = r.reason;
-      const codigo = err?.apiCode || `http_${err?.response?.status ?? 'sin_respuesta'}`;
-      motivos.set(codigo, (motivos.get(codigo) ?? 0) + 1);
-
-      // Un ejemplo por codigo, con el mensaje crudo del backend: es lo que hace
-      // falta para diagnosticar sin tener que reproducirlo a mano.
-      if (!ejemplos.has(codigo)) {
-        ejemplos.set(codigo, {
-          userId: users.value[idx]?.userId,
-          status: err?.response?.status,
-          message: err?.response?.data?.message
-        });
-      }
-    });
-
-    if (ejemplos.size > 0) {
-      console.warn('[admin] fallos al leer el consumo por usuario:',
-        Object.fromEntries([...ejemplos].map(([c, e]) => [c, e])));
-    }
-
-    const fallidas = results.filter(r => r.status === 'rejected').length;
-    if (fallidas > 0 && !loadError.value) {
-      const detalle = [...motivos].map(([c, n]) => `${c}: ${n}`).join(', ');
-      const muestra = [...ejemplos.values()].find(e => e.message);
-      const textoMuestra = muestra ? ` Ejemplo: HTTP ${muestra.status} "${muestra.message}".` : '';
-      loadError.value = `No se pudo leer el consumo de ${fallidas} de ${results.length} usuarios (${detalle}).${textoMuestra} Detalle completo en la consola.`;
-    }
-
-    // Marca las filas cuyo consumo no se pudo leer. Sin esto se quedaban en
-    // "0", indistinguible de un usuario que de verdad no ha consultado nada.
-    results.forEach((result, idx) => {
-      if (result.status === 'rejected') {
-        users.value[idx] = { ...users.value[idx], consumoDesconocido: true };
-      }
-    });
-
-    results.forEach((result, idx) => {
-      if (result.status === 'fulfilled' && result.value) {
-        users.value[idx] = {
-          ...users.value[idx],
-          number_requests: result.value.number_requests ?? 0
-        };
-      }
-    });
-  }
 };
 
 const handleLogout = () => {
@@ -394,25 +310,13 @@ const handleLogout = () => {
   router.push('/auth');
 };
 
-const openEditModal = async (userItem: any) => {
+const openEditModal = (userItem: any) => {
   editForm.userId = userItem.userId;
   editForm.userName = userItem.userName;
   editForm.plan = userItem.id;
-  editForm.number_requests = 0;
+  // El consumo viene en el listado; ya no hace falta una peticion por usuario.
+  editForm.number_requests = userItem.number_requests ?? 0;
   showModal.value = true;
-  isLoadingRequests.value = true;
-  try {
-    // Tambien silenciosa: sigue siendo la lectura del registro de OTRO usuario,
-    // y que abrir un modal pueda cerrar la sesion del admin no tiene sentido.
-    const userData = await authService.getUserData(userItem.userId, true);
-    editForm.number_requests = userData?.number_requests ?? 0;
-    const idx = users.value.findIndex(u => u.userId === userItem.userId);
-    if (idx !== -1) users.value[idx].number_requests = editForm.number_requests;
-  } catch {
-    editForm.number_requests = userItem.number_requests ?? 0;
-  } finally {
-    isLoadingRequests.value = false;
-  }
 };
 
 const resetRequests = async (userItem: any) => {
@@ -421,7 +325,10 @@ const resetRequests = async (userItem: any) => {
   try {
     await authService.patchUser(userItem.userId, { number_requests: 0 });
     const idx = users.value.findIndex(u => u.userId === userItem.userId);
-    if (idx !== -1) users.value[idx].number_requests = 0;
+    if (idx !== -1) {
+      // Tras reiniciar, el consumo pasa a ser conocido: cero de verdad.
+      users.value[idx] = { ...users.value[idx], number_requests: 0, consumoDesconocido: false };
+    }
   } catch (error) {
     console.error('Error al resetear peticiones:', error);
   } finally {
