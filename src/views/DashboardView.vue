@@ -247,13 +247,14 @@ let relojCuota: ReturnType<typeof setInterval> | undefined;
 const LIMITE_SIN_TOPE = 1_000_000;
 const cuotaSinTope = computed(() => tokenLimit.value >= LIMITE_SIN_TOPE);
 
-// La insignia muestra el plan; si el rol firmado dice ADMIN y la descripcion
-// del plan no lo refleja, se anaden ambos en vez de mentir con "FREE".
+// Un administrador puede no tener fila de plan propia: su condicion vive en el
+// claim `role` del token y el servidor le da cuota sin tope. En ese caso la
+// fila FREE que devuelve get_for_userid no se le esta aplicando, asi que
+// mostrarla enganaba. Solo se especializa el caso admin; el resto de usuarios
+// siguen viendo la descripcion de su plan.
 const planMostrado = computed(() => {
-  const plan = userPlan.value || 'FREE';
-  const rol = userRole.value?.toUpperCase();
-  if (rol && !plan.toUpperCase().includes(rol)) return `${plan} · ${rol}`;
-  return plan;
+  if (isAdmin.value) return 'ADMIN';
+  return userPlan.value || 'FREE';
 });
 
 const quotaCountdown = computed(() => {
