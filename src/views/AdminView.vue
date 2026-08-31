@@ -164,9 +164,19 @@
                   </tr>
                   <tr v-for="userItem in usuariosFiltrados" :key="userItem.userId" class="hover:bg-white/[0.02] transition-colors group">
                     <td class="px-lg py-md">
-                      <div class="flex flex-col">
-                        <span class="text-body font-bold text-[var(--text-primary)]">{{ userItem.userName }}</span>
-                        <span class="text-caption font-mono text-[var(--text-muted)] tracking-tighter">{{ userItem.userId }}</span>
+                      <div class="flex flex-col min-w-0" :title="`ID: ${userItem.userId}`">
+                        <span class="text-body font-bold text-[var(--text-primary)] truncate">{{ userItem.userName }}</span>
+                        <!--
+                          El correo sustituye al ID cuando llega: identifica
+                          mejor a una persona. El ID queda en el title, que es
+                          donde hace falta para soporte.
+                        -->
+                        <span v-if="userItem.email" class="text-caption text-[var(--text-secondary)] truncate">
+                          {{ userItem.email }}
+                        </span>
+                        <span v-else class="text-caption font-mono text-[var(--text-muted)] tracking-tighter truncate">
+                          {{ userItem.userId }}
+                        </span>
                       </div>
                     </td>
                     <td class="px-lg py-md">
@@ -415,7 +425,7 @@ const soloFecha = (v: any) => {
  * distinto alto, borde o interlineado que los demas.
  */
 const campos = [
-  { id: 'f_busca', etiqueta: 'Usuario o ID', tipo: 'search', min: undefined,
+  { id: 'f_busca', etiqueta: 'Usuario, correo o ID', tipo: 'search', min: undefined,
     valor: buscaUsuario, actualiza: (v: string) => { buscaUsuario.value = v; } },
   { id: 'f_min', etiqueta: 'Peticiones desde', tipo: 'number', min: '0',
     valor: minPeticiones, actualiza: (v: string) => { minPeticiones.value = v === '' ? null : Number(v); } },
@@ -449,7 +459,9 @@ const usuariosFiltrados = computed(() => {
   const q = normaliza(buscaUsuario.value);
   if (q) {
     lista = lista.filter(u =>
-      normaliza(u.userName).includes(q) || normaliza(u.userId).includes(q)
+      normaliza(u.userName).includes(q) ||
+      normaliza(u.email).includes(q) ||
+      normaliza(u.userId).includes(q)
     );
   }
 
