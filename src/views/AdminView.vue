@@ -139,12 +139,16 @@
                     <td class="px-6 py-4">
                       <div class="flex items-center gap-3">
                         <div class="flex flex-col min-w-[60px]">
-                            <span class="text-[12px] font-black tabular-nums" :style="{ color: !sinTope(userItem.token_duration) && (userItem.number_requests ?? 0) >= userItem.token_duration ? '#ef4444' : 'var(--text-primary)' }">
-                            {{ userItem.number_requests ?? 0 }}
+                            <span
+                              class="text-[12px] font-black tabular-nums"
+                              :style="{ color: userItem.consumoDesconocido ? 'var(--text-secondary)' : (!sinTope(userItem.token_duration) && (userItem.number_requests ?? 0) >= userItem.token_duration ? '#ef4444' : 'var(--text-primary)') }"
+                              :title="userItem.consumoDesconocido ? 'No se pudo leer el consumo de este usuario' : ''"
+                            >
+                            {{ userItem.consumoDesconocido ? '—' : (userItem.number_requests ?? 0) }}
                             </span>
-                            <span class="text-[8px] font-bold opacity-30 tracking-widest">{{ sinTope(userItem.token_duration) ? 'SIN LÍMITE' : `/ ${userItem.token_duration}` }}</span>
+                            <span class="text-[8px] font-bold opacity-30 tracking-widest">{{ userItem.consumoDesconocido ? 'SIN DATO' : (sinTope(userItem.token_duration) ? 'SIN LÍMITE' : `/ ${userItem.token_duration}`) }}</span>
                         </div>
-                        <div v-if="!sinTope(userItem.token_duration)" class="hidden sm:block flex-1 h-1 bg-black/20 rounded-full overflow-hidden max-w-[80px]">
+                        <div v-if="!sinTope(userItem.token_duration) && !userItem.consumoDesconocido" class="hidden sm:block flex-1 h-1 bg-black/20 rounded-full overflow-hidden max-w-[80px]">
                             <div class="h-full bg-[var(--accent-color)] opacity-50" :style="{ width: Math.min(((userItem.number_requests ?? 0) / userItem.token_duration * 100), 100) + '%' }"></div>
                         </div>
                       </div>
@@ -346,6 +350,14 @@ const fetchUsers = async () => {
       const detalle = [...motivos].map(([c, n]) => `${c}: ${n}`).join(', ');
       loadError.value = `No se pudo leer el consumo de ${fallidas} de ${results.length} usuarios (${detalle}); esa columna puede estar incompleta.`;
     }
+
+    // Marca las filas cuyo consumo no se pudo leer. Sin esto se quedaban en
+    // "0", indistinguible de un usuario que de verdad no ha consultado nada.
+    results.forEach((result, idx) => {
+      if (result.status === 'rejected') {
+        users.value[idx] = { ...users.value[idx], consumoDesconocido: true };
+      }
+    });
 
     results.forEach((result, idx) => {
       if (result.status === 'fulfilled' && result.value) {
