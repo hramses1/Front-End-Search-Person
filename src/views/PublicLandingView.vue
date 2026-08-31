@@ -143,9 +143,15 @@
       <!-- Pie -->
       <footer class="border-t border-[var(--border-color)] py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
         <div class="flex flex-wrap gap-6 justify-center">
-          <a v-for="l in enlacesLegales" :key="l.texto" :href="l.href" class="text-[10px] uppercase tracking-[0.15em] opacity-40 hover:opacity-100 hover:text-[var(--accent-color)] transition-all">
+          <component
+            v-for="l in enlacesLegales" :key="l.texto"
+            :is="l.ruta ? 'button' : 'a'"
+            :href="l.ruta ? undefined : l.href"
+            @click="l.ruta && router.push(l.ruta)"
+            class="text-[10px] uppercase tracking-[0.15em] opacity-40 hover:opacity-100 hover:text-[var(--accent-color)] transition-all"
+          >
             {{ l.texto }}
-          </a>
+          </component>
         </div>
         <p class="text-[9px] uppercase tracking-[0.2em] opacity-30">Devzio · {{ anio }}</p>
       </footer>
@@ -318,11 +324,11 @@ const faq = [
   }
 ];
 
-const enlacesLegales = [
+const enlacesLegales: { texto: string; href?: string; ruta?: string }[] = [
   { texto: 'Guías', href: '#guias' },
   { texto: 'Preguntas frecuentes', href: '#faq' },
   { texto: 'Contacto', href: 'mailto:arismendiramses@gmail.com' },
-  { texto: 'Términos', href: '#terminos' },
-  { texto: 'Privacidad', href: '#privacidad' }
+  { texto: 'Términos', ruta: '/terminos' },
+  { texto: 'Privacidad', ruta: '/privacidad' }
 ];
 </script>

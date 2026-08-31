@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
 import PublicLandingView from '../views/PublicLandingView.vue'
+import LegalView from '../views/LegalView.vue'
 import AuthView from '../views/AuthView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import AdminView from '../views/AdminView.vue'
@@ -14,6 +15,18 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: PublicLandingView
+    },
+    {
+      // Documentos legales: mismo componente, distinto contenido segun el
+      // nombre de ruta. Publicos, sin sesion.
+      path: '/terminos',
+      name: 'terminos',
+      component: LegalView
+    },
+    {
+      path: '/privacidad',
+      name: 'privacidad',
+      component: LegalView
     },
     {
       path: '/auth',
