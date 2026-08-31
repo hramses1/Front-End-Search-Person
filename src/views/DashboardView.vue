@@ -274,10 +274,12 @@ const refreshUserData = async () => {
 
     try {
         const cuota = await authService.getQuota();
+        // reset_at sale SIEMPRE de /api/users/quota/, que es el momento en que
+        // se renueva. El quota_reset_at de la fila de plan marca el INICIO de
+        // la ventana, que ya paso: usarlo dejaba la cuenta atras en "en breve".
         setQuota({
             ...cuota,
-            used: consumo ?? cuota.used,
-            reset_at: fila?.quota_reset_at ?? cuota.reset_at
+            used: consumo ?? cuota.used
         });
     } catch (e) {
         console.error('[cuota] no se pudo recuperar la cuota:', e);
