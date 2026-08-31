@@ -253,6 +253,39 @@ const loadError = ref('');
 const LIMITE_SIN_TOPE = 1_000_000;
 const sinTope = (limite?: number) => (limite ?? 0) >= LIMITE_SIN_TOPE;
 
+/**
+ * Como Promise.allSettled pero con un maximo de peticiones en vuelo.
+ *
+ * Lanzar una por usuario de golpe hacia users/get/ dispara el limite por IP
+ * del backend: las primeras pasan y el resto vuelve con rate_limited. Mantiene
+ * el orden del array de entrada.
+ */
+const mapConLimite = async <T, R>(
+  items: T[],
+  limite: number,
+  fn: (item: T) => Promise<R>
+): Promise<PromiseSettledResult<R>[]> => {
+  const salida = new Array(items.length) as PromiseSettledResult<R>[];
+  let siguiente = 0;
+
+  const trabajador = async () => {
+    while (siguiente < items.length) {
+      const i = siguiente++;
+      try {
+        salida[i] = { status: 'fulfilled', value: await fn(items[i]) };
+      } catch (reason) {
+        salida[i] = { status: 'rejected', reason };
+      }
+    }
+  };
+
+  await Promise.all(
+    Array.from({ length: Math.min(limite, items.length) }, trabajador)
+  );
+
+  return salida;
+};
+
 const editForm = reactive({
   userId: '',
   userName: '',
@@ -291,16 +324,27 @@ const fetchUsers = async () => {
   }
 
   if (users.value.length > 0) {
-    const results = await Promise.allSettled(
-      users.value.map((u: any) => authService.getUserData(u.userId))
+    // El listado no incluye number_requests: hay que pedirlo usuario a usuario.
+    // Con concurrencia limitada para no chocar con el limite por IP.
+    const results = await mapConLimite(
+      users.value, 4, (u: any) => authService.getUserData(u.userId)
     );
 
-    // El listado no incluye number_requests: hay que pedirlo usuario a usuario.
-    // Si esas lecturas fallan (users/get/ es "propio"), la columna mostraria 0
-    // para todos, que se lee como "nadie ha consultado nada". Mejor decirlo.
+    // Si esas lecturas fallan la columna mostraria 0 para todos, que se lee
+    // como "nadie ha consultado nada". Se agrupa por codigo de error para
+    // distinguir un problema de permisos de uno de limite de peticiones.
+    const motivos = new Map<string, number>();
+    for (const r of results) {
+      if (r.status !== 'rejected') continue;
+      const err: any = r.reason;
+      const codigo = err?.apiCode || `http_${err?.response?.status ?? 'sin_respuesta'}`;
+      motivos.set(codigo, (motivos.get(codigo) ?? 0) + 1);
+    }
+
     const fallidas = results.filter(r => r.status === 'rejected').length;
     if (fallidas > 0 && !loadError.value) {
-      loadError.value = `No se pudo leer el consumo de ${fallidas} de ${results.length} usuarios; esa columna puede estar incompleta.`;
+      const detalle = [...motivos].map(([c, n]) => `${c}: ${n}`).join(', ');
+      loadError.value = `No se pudo leer el consumo de ${fallidas} de ${results.length} usuarios (${detalle}); esa columna puede estar incompleta.`;
     }
 
     results.forEach((result, idx) => {
