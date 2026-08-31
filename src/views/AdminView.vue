@@ -86,6 +86,57 @@
               {{ loadError }}
             </p>
 
+            <!-- Filtros. Se aplican en cliente: el listado llega entero. -->
+            <div class="px-lg pb-lg space-y-md border-b border-[var(--border-color)]">
+              <div class="flex flex-col lg:flex-row lg:items-end gap-md">
+                <div class="relative input-container flex-1 min-w-0">
+                  <input
+                    v-model="buscaUsuario"
+                    id="busca_usuario" type="search" placeholder=" "
+                    class="custom-input peer"
+                  />
+                  <label for="busca_usuario">Buscar usuario o ID</label>
+                </div>
+
+                <div class="relative input-container w-full lg:w-48">
+                  <input
+                    v-model.number="minPeticiones"
+                    id="min_peticiones" type="number" min="0" placeholder=" "
+                    class="custom-input peer"
+                  />
+                  <label for="min_peticiones">Peticiones desde</label>
+                </div>
+
+                <div class="flex flex-wrap gap-xs">
+                  <button
+                    v-for="o in ordenes" :key="o.valor"
+                    type="button" class="chip"
+                    :aria-pressed="orden === o.valor"
+                    @click="orden = o.valor"
+                  >{{ o.texto }}</button>
+                </div>
+              </div>
+
+              <div v-if="planesEnUso.length > 1" class="flex flex-wrap items-center gap-xs">
+                <span class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mr-sm">Plan</span>
+                <button
+                  v-for="pl in planesEnUso" :key="pl"
+                  type="button" class="chip"
+                  :aria-pressed="filtroPlan === pl"
+                  @click="filtroPlan = filtroPlan === pl ? '' : pl"
+                >{{ pl }}</button>
+              </div>
+
+              <div class="flex items-center justify-between gap-md">
+                <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                  {{ usuariosFiltrados.length }} de {{ users.length }} usuarios
+                </p>
+                <button v-if="hayFiltros" type="button" class="btn-tertiary" @click="limpiarFiltros">
+                  Quitar filtros
+                </button>
+              </div>
+            </div>
+
             <div class="overflow-x-auto custom-scrollbar">
               <table class="w-full text-left border-collapse border-b border-[var(--border-color)]">
                 <thead>
@@ -97,7 +148,12 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-[var(--border-color)]">
-                  <tr v-for="userItem in users" :key="userItem.userId" class="hover:bg-white/[0.02] transition-colors group">
+                  <tr v-if="!isLoading && usuariosFiltrados.length === 0">
+                    <td colspan="4" class="px-lg py-2xl text-center text-body text-[var(--text-muted)]">
+                      {{ users.length === 0 ? 'No hay usuarios que mostrar.' : 'Ningún usuario coincide con los filtros.' }}
+                    </td>
+                  </tr>
+                  <tr v-for="userItem in usuariosFiltrados" :key="userItem.userId" class="hover:bg-white/[0.02] transition-colors group">
                     <td class="px-lg py-md">
                       <div class="flex flex-col">
                         <span class="text-body font-bold text-[var(--text-primary)]">{{ userItem.userName }}</span>
@@ -313,6 +369,70 @@ const elegirPlan = (pl: any) => {
 const isSaving = ref(false);
 const isResetting = ref<string | null>(null);
 const loadError = ref('');
+
+/* ─── Filtros de la tabla ─────────────────────────────────────
+   Se aplican en el cliente: el listado ya viene entero en una sola
+   peticion, asi que filtrar en servidor no ahorraria nada.
+   ───────────────────────────────────────────────────────────── */
+const buscaUsuario = ref('');
+const filtroPlan = ref('');
+const minPeticiones = ref<number | null>(null);
+const orden = ref<'nombre' | 'mas' | 'menos'>('nombre');
+
+const ordenes = [
+  { valor: 'nombre' as const, texto: 'A-Z' },
+  { valor: 'mas' as const, texto: 'Más peticiones' },
+  { valor: 'menos' as const, texto: 'Menos peticiones' }
+];
+
+const normaliza = (t: any) => String(t ?? '')
+  .toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+
+/** Planes presentes en el listado, para ofrecer solo los que existen. */
+const planesEnUso = computed(() => {
+  const vistos = new Set<string>();
+  for (const u of users.value) if (u.planDescription) vistos.add(u.planDescription);
+  return [...vistos].sort();
+});
+
+const usuariosFiltrados = computed(() => {
+  let lista = [...users.value];
+
+  const q = normaliza(buscaUsuario.value);
+  if (q) {
+    lista = lista.filter(u =>
+      normaliza(u.userName).includes(q) || normaliza(u.userId).includes(q)
+    );
+  }
+
+  if (filtroPlan.value) {
+    lista = lista.filter(u => u.planDescription === filtroPlan.value);
+  }
+
+  if (minPeticiones.value !== null && minPeticiones.value >= 0) {
+    lista = lista.filter(u => (u.number_requests ?? 0) >= minPeticiones.value!);
+  }
+
+  if (orden.value === 'mas') {
+    lista.sort((a, b) => (b.number_requests ?? 0) - (a.number_requests ?? 0));
+  } else if (orden.value === 'menos') {
+    lista.sort((a, b) => (a.number_requests ?? 0) - (b.number_requests ?? 0));
+  } else {
+    lista.sort((a, b) => normaliza(a.userName).localeCompare(normaliza(b.userName)));
+  }
+
+  return lista;
+});
+
+const hayFiltros = computed(() =>
+  !!buscaUsuario.value || !!filtroPlan.value || minPeticiones.value !== null
+);
+
+const limpiarFiltros = () => {
+  buscaUsuario.value = '';
+  filtroPlan.value = '';
+  minPeticiones.value = null;
+};
 
 // Los planes sin tope usan un limite centinela enorme; pintarlo literal daba
 // "9 / 9999999999" con la barra al 0,00000009 %.
