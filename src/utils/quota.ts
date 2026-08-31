@@ -13,6 +13,25 @@ export interface Quota {
   reset_at: string;
 }
 
+/**
+ * Próxima medianoche en Ecuador, que es cuando el backend pone a cero la
+ * cuota de los planes gratuitos.
+ *
+ * Ecuador es UTC−5 todo el año y no aplica horario de verano, así que las
+ * 00:00 locales son siempre las 05:00 UTC. Se calcula sobre la fecha del país
+ * y no la del navegador, para que un usuario fuera de Ecuador vea la cuenta
+ * atrás real y no la de su propio huso.
+ */
+export const proximaRenovacion = (): string => {
+  const hoyEc = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Guayaquil',
+    year: 'numeric', month: '2-digit', day: '2-digit'
+  }).format(new Date());
+
+  const [anio, mes, dia] = hoyEc.split('-').map(Number);
+  return new Date(Date.UTC(anio, mes - 1, dia + 1, 5, 0, 0)).toISOString();
+};
+
 /** Texto relativo hasta la renovación: "en 4 h 12 min". */
 export const formatCountdown = (resetAt?: string | null): string => {
   if (!resetAt) return '';

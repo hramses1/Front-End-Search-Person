@@ -124,7 +124,7 @@
           <h2 class="text-lead sm:text-h4 font-light tracking-tight mb-md">Crea tu cuenta y empieza a consultar</h2>
           <p class="text-body text-[var(--text-secondary)] max-w-md mx-auto mb-xl">
             El registro es gratuito y no pide tarjeta. Cada cuenta trae su cuota diaria de
-            consultas, que se renueva sola cada veinticuatro horas.
+            consultas, que vuelve a cero cada medianoche.
           </p>
           <button @click="router.push('/auth')" class="btn-primary">Crear cuenta gratis</button>
         </div>
@@ -211,7 +211,7 @@ const pedirRegistro = (item: { titulo: string; texto: string; ejemplo: string[][
 };
 
 const beneficios = [
-  'Cuota diaria que se renueva sola cada 24 horas',
+  'Cuota diaria que vuelve a cero cada medianoche',
   'Acceso a las nueve consultas del catálogo',
   'Sin tarjeta de crédito ni permanencia'
 ];
@@ -418,7 +418,7 @@ const faq = [
   },
   {
     p: '¿Cuántas consultas incluye la cuenta gratuita?',
-    r: 'La cuota depende de tu plan y se ve siempre en la cabecera del panel, junto al tiempo que falta para que se renueve. La ventana es de veinticuatro horas y arranca con tu primera consulta.'
+    r: 'La cuota depende de tu plan y se ve siempre en la cabecera del panel, junto al tiempo que falta para que se renueve. El contador vuelve a cero cada medianoche, hora de Ecuador.'
   },
   {
     p: '¿De dónde salen los datos y es legal consultarlos?',

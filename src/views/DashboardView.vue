@@ -141,7 +141,7 @@ import BrandMark from '../ui/components/BrandMark.vue';
 import SecuritySeals from '../ui/components/SecuritySeals.vue';
 import { useAuth } from '../composables/useAuth';
 import { authService } from '../api/authService';
-import { formatCountdown } from '../utils/quota';
+import { formatCountdown, proximaRenovacion } from '../utils/quota';
 
 // Componentes
 import DonationMenu from './dashboard/components/DonationMenu.vue';
@@ -305,9 +305,13 @@ const planMostrado = computed(() => {
   return userPlan.value || 'FREE';
 });
 
+// La cuota se reinicia a medianoche, no 24 h despues de la primera consulta,
+// y solo la de los planes con tope. Un plan sin limite no renueva nada, asi
+// que no tiene sentido mostrarle una cuenta atras.
 const quotaCountdown = computed(() => {
     ahora.value; // dependencia explícita: obliga a recalcular en cada tick
-    return formatCountdown(quotaResetAt.value);
+    if (cuotaSinTope.value) return '';
+    return formatCountdown(proximaRenovacion());
 });
 
 /**

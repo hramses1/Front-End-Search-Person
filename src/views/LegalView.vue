@@ -117,7 +117,7 @@ const canales = [
  * Documentos legales.
  *
  * Estan redactados sobre el comportamiento real del sistema, no sobre
- * plantillas genericas: la cuota diaria, la ventana de 24 horas, el cache de
+ * plantillas genericas: la cuota diaria, el reinicio a medianoche, el cache de
  * cinco minutos en memoria y la ausencia de cookies y analitica son hechos
  * verificados en el codigo.
  */
@@ -144,7 +144,7 @@ const documentos: Record<string, any> = {
       {
         h: 'Cuota de consultas',
         p: [
-          'Cada cuenta tiene una cuota diaria de consultas determinada por su plan. La ventana es de veinticuatro horas y empieza a contar con tu primera consulta, no a medianoche.',
+          'Cada cuenta tiene una cuota diaria de consultas determinada por su plan. El contador se pone a cero cada día a medianoche, hora de Ecuador.',
           'Al agotarla, el servicio deja de responder hasta que se renueve, y verás en pantalla cuánto falta. Si una consulta falla por un problema de la fuente oficial, no se te descuenta.',
           'Existe además un límite por dirección IP, independiente de la cuota de tu cuenta, para proteger el servicio de un uso automatizado excesivo.'
         ]
@@ -209,7 +209,7 @@ const documentos: Record<string, any> = {
       {
         h: 'Problemas con tu cuota',
         p: [
-          'La cuota se renueva veinticuatro horas después de tu primera consulta, no a medianoche. En la cabecera del panel ves cuánto falta.',
+          'La cuota se renueva cada medianoche, hora de Ecuador. En la cabecera del panel ves cuánto falta.',
           'Si el contador no cuadra con lo que recuerdas haber consultado, escríbenos con tu nombre de usuario y lo revisamos.'
         ]
       },
