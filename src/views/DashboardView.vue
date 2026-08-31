@@ -262,22 +262,15 @@ const refreshUserData = async () => {
         console.error('[cuota] no se pudieron recuperar las filas de plan:', e);
     }
 
-    // La descripcion sale de la fila que casa con el rol firmado; el consumo,
-    // del mayor number_requests de todas. Es una propiedad del usuario, no de
-    // la fila, asi que si dos filas discrepan la buena es la mas alta: la baja
-    // es una copia que se quedo atras. Quedarse con items[0] mostraba un
-    // numero distinto al del panel de administracion.
+    // La descripcion y el consumo salen de la misma fila: la que casa con el
+    // rol firmado, o la primera. number_requests es del usuario, no de la
+    // fila, asi que no hay nada que agregar entre filas.
     const rol = userRole.value?.toUpperCase();
     const filaRol = rol ? items.find(i => i.planDescription?.toUpperCase().includes(rol)) : undefined;
     const fila = filaRol || items[0];
     if (fila) setPlanData(fila.planDescription, fila.id);
 
-    const consumos = items.map(i => i.number_requests).filter(n => typeof n === 'number');
-    const consumo = consumos.length ? Math.max(...consumos) : undefined;
-
-    if (items.length > 1 && new Set(consumos).size > 1) {
-        console.warn('[cuota] las filas de plan discrepan en number_requests:', consumos, items);
-    }
+    const consumo = typeof fila?.number_requests === 'number' ? fila.number_requests : undefined;
 
     try {
         const cuota = await authService.getQuota();
