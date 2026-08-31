@@ -92,7 +92,7 @@
                   <tr class="border-b border-[var(--border-color)] bg-black/5">
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Usuario</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Plan</th>
-                    <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Peticiones</th>
+                    <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Consumo (24 h)</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)] text-right">Acciones</th>
                   </tr>
                 </thead>
@@ -245,7 +245,11 @@
 
               <div class="relative group input-container">
                 <input v-model="editForm.number_requests" type="number" id="edit_requests" placeholder=" " class="custom-input peer" required min="0" />
-                <label for="edit_requests">Peticiones Consumidas</label>
+                <label for="edit_requests">Acumulado histórico</label>
+                <p class="text-overline text-[var(--text-muted)] mt-xs leading-relaxed">
+                  Es el total histórico del usuario, no su consumo de las últimas 24 h.
+                  Cambiarlo no libera cuota.
+                </p>
               </div>
 
               <p
@@ -359,6 +363,9 @@ const fetchUsers = async () => {
     // para 35 usuarios, con fallos por limite por IP y por permisos.
     users.value = (data.items || []).map((u: any) => ({
       ...u,
+      // OJO: es quota.used, el consumo de la ventana de 24 h. NO es
+      // number_requests, que en la base es el acumulado historico y no se
+      // reinicia. Son dos contadores distintos.
       number_requests: u.quota?.used ?? 0,
       limite: u.quota?.limit ?? u.token_duration,
       // quota es nullable: si no viene, no inventamos un cero.
