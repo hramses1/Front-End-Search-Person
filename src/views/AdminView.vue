@@ -338,17 +338,36 @@ const fetchUsers = async () => {
     // como "nadie ha consultado nada". Se agrupa por codigo de error para
     // distinguir un problema de permisos de uno de limite de peticiones.
     const motivos = new Map<string, number>();
-    for (const r of results) {
-      if (r.status !== 'rejected') continue;
+    const ejemplos = new Map<string, { userId: string; status?: number; message?: string }>();
+
+    results.forEach((r, idx) => {
+      if (r.status !== 'rejected') return;
       const err: any = r.reason;
       const codigo = err?.apiCode || `http_${err?.response?.status ?? 'sin_respuesta'}`;
       motivos.set(codigo, (motivos.get(codigo) ?? 0) + 1);
+
+      // Un ejemplo por codigo, con el mensaje crudo del backend: es lo que hace
+      // falta para diagnosticar sin tener que reproducirlo a mano.
+      if (!ejemplos.has(codigo)) {
+        ejemplos.set(codigo, {
+          userId: users.value[idx]?.userId,
+          status: err?.response?.status,
+          message: err?.response?.data?.message
+        });
+      }
+    });
+
+    if (ejemplos.size > 0) {
+      console.warn('[admin] fallos al leer el consumo por usuario:',
+        Object.fromEntries([...ejemplos].map(([c, e]) => [c, e])));
     }
 
     const fallidas = results.filter(r => r.status === 'rejected').length;
     if (fallidas > 0 && !loadError.value) {
       const detalle = [...motivos].map(([c, n]) => `${c}: ${n}`).join(', ');
-      loadError.value = `No se pudo leer el consumo de ${fallidas} de ${results.length} usuarios (${detalle}); esa columna puede estar incompleta.`;
+      const muestra = [...ejemplos.values()].find(e => e.message);
+      const textoMuestra = muestra ? ` Ejemplo: HTTP ${muestra.status} "${muestra.message}".` : '';
+      loadError.value = `No se pudo leer el consumo de ${fallidas} de ${results.length} usuarios (${detalle}).${textoMuestra} Detalle completo en la consola.`;
     }
 
     // Marca las filas cuyo consumo no se pudo leer. Sin esto se quedaban en
