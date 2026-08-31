@@ -29,6 +29,11 @@ const router = createRouter({
       component: LegalView
     },
     {
+      path: '/contacto',
+      name: 'contacto',
+      component: LegalView
+    },
+    {
       path: '/auth',
       name: 'auth',
       component: AuthView,

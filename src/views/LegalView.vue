@@ -18,7 +18,7 @@
       </header>
 
       <article class="py-16">
-        <p class="text-[9px] font-black tracking-[0.35em] uppercase opacity-40 mb-4">Legal</p>
+        <p class="text-[9px] font-black tracking-[0.35em] uppercase opacity-40 mb-4">{{ doc.rotulo || 'Legal' }}</p>
         <h1 class="text-3xl sm:text-4xl font-light tracking-tight mb-4">{{ doc.titulo }}</h1>
         <p class="text-[10px] uppercase tracking-[0.15em] opacity-40 mb-10">
           Última actualización: {{ doc.actualizado }}
@@ -42,7 +42,7 @@
           </div>
         </section>
 
-        <div class="glass-card p-6 mt-12">
+        <div v-if="route.name !== 'contacto'" class="glass-card p-6 mt-12">
           <p class="text-[9px] font-black tracking-[0.25em] uppercase opacity-40 mb-2">Contacto</p>
           <p class="text-[12px] leading-relaxed opacity-70">
             Para cualquier consulta sobre este documento, escribe a
@@ -152,6 +152,53 @@ const documentos: Record<string, any> = {
     ]
   },
 
+  contacto: {
+    rotulo: 'Ayuda',
+    titulo: 'Contacto',
+    actualizado: ACTUALIZADO,
+    intro: 'Escríbenos y te respondemos. Para que la respuesta sea útil a la primera, conviene que incluyas algunos datos según el motivo.',
+    secciones: [
+      {
+        h: 'Soporte de uso',
+        p: ['Si una consulta falla o devuelve algo que no esperabas, indícanos:'],
+        lista: [
+          'Qué consulta hiciste, sin incluir el número consultado en el cuerpo del correo si prefieres no compartirlo.',
+          'Qué esperabas ver y qué viste en su lugar.',
+          'El mensaje de error exacto, si apareció alguno en pantalla.',
+          'La hora aproximada, que nos ayuda a localizarlo.'
+        ]
+      },
+      {
+        h: 'Problemas con tu cuota',
+        p: [
+          'La cuota se renueva veinticuatro horas después de tu primera consulta, no a medianoche. En la cabecera del panel ves cuánto falta.',
+          'Si el contador no cuadra con lo que recuerdas haber consultado, escríbenos con tu nombre de usuario y lo revisamos.'
+        ]
+      },
+      {
+        h: 'Datos personales',
+        p: [
+          'Para acceder a tus datos, rectificarlos o eliminar tu cuenta, escríbenos desde el correo con el que te registraste. Necesitamos esa coincidencia para confirmar que la solicitud es tuya.',
+          'El nombre de usuario puedes cambiarlo tú mismo desde la sección de perfil, sin escribirnos.'
+        ]
+      },
+      {
+        h: 'Vulnerabilidades de seguridad',
+        p: [
+          'Si encuentras un fallo de seguridad, te agradecemos que nos lo comuniques en privado antes de hacerlo público, y que nos des un margen razonable para corregirlo.',
+          'Incluye los pasos para reproducirlo. No hace falta que demuestres el impacto accediendo a datos de terceros: con la descripción del fallo es suficiente.'
+        ]
+      },
+      {
+        h: 'Qué no podemos hacer',
+        p: [
+          'No podemos corregir un dato incorrecto en un registro oficial. Los datos se muestran tal como los devuelve la fuente, y la corrección debe solicitarse a la institución que la mantiene: Registro Civil, SRI, ANT o Función Judicial según el caso.',
+          'Tampoco emitimos certificados ni documentos con validez legal.'
+        ]
+      }
+    ]
+  },
+
   privacidad: {
     titulo: 'Política de privacidad',
     actualizado: ACTUALIZADO,
@@ -236,8 +283,8 @@ const otros = computed(() =>
   [
     { texto: 'Términos de servicio', ruta: '/terminos' },
     { texto: 'Política de privacidad', ruta: '/privacidad' },
-    { texto: 'Guías', ruta: '/#guias' },
-    { texto: 'Preguntas frecuentes', ruta: '/#faq' }
+    { texto: 'Contacto', ruta: '/contacto' },
+    { texto: 'Guías', ruta: '/#guias' }
   ].filter(l => l.ruta !== route.path)
 );
 </script>

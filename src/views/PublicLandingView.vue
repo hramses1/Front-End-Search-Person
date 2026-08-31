@@ -320,14 +320,14 @@ const faq = [
   },
   {
     p: '¿De dónde salen los datos y es legal consultarlos?',
-    r: 'De registros públicos del Estado ecuatoriano: Registro Civil, SRI, ANT y Función Judicial. Son consultas que cualquier persona puede hacer en los portales oficiales; aquí se agrupan en un solo sitio. No almacenamos ni revendemos los resultados.'
+    r: 'De registros públicos del Estado ecuatoriano: Registro Civil, SRI, ANT y Función Judicial. Son consultas que cualquier persona puede hacer en los portales oficiales; aquí se agrupan en un solo sitio para ahorrarte el recorrido. El uso que des a la información obtenida es responsabilidad tuya.'
   }
 ];
 
 const enlacesLegales: { texto: string; href?: string; ruta?: string }[] = [
   { texto: 'Guías', href: '#guias' },
   { texto: 'Preguntas frecuentes', href: '#faq' },
-  { texto: 'Contacto', href: 'mailto:arismendiramses@gmail.com' },
+  { texto: 'Contacto', ruta: '/contacto' },
   { texto: 'Términos', ruta: '/terminos' },
   { texto: 'Privacidad', ruta: '/privacidad' }
 ];
