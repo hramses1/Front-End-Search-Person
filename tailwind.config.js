@@ -7,15 +7,14 @@ export default {
   theme: {
     extend: {
       /**
-       * Dos familias y solo dos: Jost para titulos, que es la voz de marca ya
-       * establecida, e Inter para cuerpo, que aguanta mucho mejor los tamanos
-       * de lectura.
+       * Una sola familia. La jerarquia la marcan tamano y peso, no un cambio
+       * de tipografia. Los tres alias existen por compatibilidad con las
+       * clases que ya estaban repartidas por las vistas.
        */
       fontFamily: {
-        display: ['Jost', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        display: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
         body: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
-        // Alias historico: varias vistas todavia usan font-primary.
-        primary: ['Jost', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        primary: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
       },
 
       /**
