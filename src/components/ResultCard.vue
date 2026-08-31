@@ -1,30 +1,30 @@
 <template>
-  <div class="flex flex-col gap-1 py-3 border-b last:border-0" style="border-color: var(--border-color);">
-    <span class="text-[9px] uppercase tracking-[0.2em] font-mono opacity-60" style="color: var(--text-secondary);">
+  <div class="flex flex-col gap-xs py-md border-b last:border-0" style="border-color: var(--border-color);">
+    <span class="text-caption uppercase tracking-[0.2em] font-mono text-[var(--text-secondary)]" style="color: var(--text-secondary);">
       {{ label }}
     </span>
 
     <!-- Slot para contenido personalizado -->
     <slot>
       <!-- Valor null / vacío -->
-      <span v-if="isEmpty" class="text-[12px] opacity-30 italic" style="color: var(--text-secondary);">NO REGISTRA</span>
+      <span v-if="isEmpty" class="text-body text-[var(--text-muted)] italic" style="color: var(--text-secondary);">NO REGISTRA</span>
 
       <!-- Array de objetos – muestra sub-tarjetas compactas -->
-      <div v-else-if="isArrayOfObjects" class="mt-2 space-y-2">
+      <div v-else-if="isArrayOfObjects" class="mt-sm space-y-sm">
         <div
           v-for="(item, i) in (value as any[])"
           :key="i"
-          class="rounded-xl border p-4 shadow-sm"
+          class="rounded-base border p-md shadow-sm"
           style="background-color: var(--card-bg); border-color: var(--border-color);"
         >
-          <div v-for="(v, k) in item" :key="k" class="py-2 border-b last:border-0" style="border-color: var(--border-color);">
+          <div v-for="(v, k) in item" :key="k" class="py-sm border-b last:border-0" style="border-color: var(--border-color);">
             
             <!-- Contenido HTML o Textos muy largos (bloque completo) -->
             <template v-if="isHtmlContent(v)">
-              <div class="flex flex-col gap-2">
-                <span class="opacity-50 uppercase tracking-wider text-[9px]" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
+              <div class="flex flex-col gap-sm">
+                <span class="text-[var(--text-secondary)] uppercase tracking-wider text-caption" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
                 <div 
-                  class="prose prose-sm prose-invert max-w-none w-full opacity-90 p-4 rounded-lg bg-black/20 border border-white/10 overflow-x-auto"
+                  class="prose prose-sm prose-invert max-w-none w-full opacity-90 p-md rounded-base bg-black/20 border border-white/10 overflow-x-auto"
                   v-html="sanitizeHTML(String(v))"
                 ></div>
               </div>
@@ -37,16 +37,16 @@
 
             <!-- Textos puros de longitud mediana/larga (bloque completo) -->
             <template v-else-if="typeof v === 'string' && v.length > 50">
-              <div class="flex flex-col gap-1">
-                <span class="opacity-50 uppercase tracking-wider text-[9px]" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
-                <span class="font-medium text-[11px] whitespace-pre-line leading-relaxed pb-1" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v }}</span>
+              <div class="flex flex-col gap-xs">
+                <span class="text-[var(--text-secondary)] uppercase tracking-wider text-caption" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
+                <span class="font-medium text-body whitespace-pre-line leading-relaxed pb-xs" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v }}</span>
               </div>
             </template>
 
             <!-- Datos cortos (en línea) -->
             <template v-else>
-              <div class="flex justify-between items-start gap-4 text-[11px]">
-                <span class="opacity-50 uppercase tracking-wider text-[9px]" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
+              <div class="flex justify-between items-start gap-md text-body">
+                <span class="text-[var(--text-secondary)] uppercase tracking-wider text-caption" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
                 <span class="font-medium text-right break-words max-w-[60%]" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v ?? '—' }}</span>
               </div>
             </template>
@@ -56,21 +56,21 @@
       </div>
 
       <!-- Array de primitivos -->
-      <div v-else-if="Array.isArray(value)" class="flex flex-wrap gap-1.5 mt-1">
+      <div v-else-if="Array.isArray(value)" class="flex flex-wrap gap-sm mt-xs">
         <span
           v-for="(item, i) in (value as any[])" :key="i"
-          class="px-2 py-0.5 rounded-full text-[10px] border font-mono"
+          class="px-sm py-xs rounded-full text-caption border font-mono"
           style="border-color: var(--border-color); color: var(--text-primary);"
         >{{ item }}</span>
       </div>
 
       <!-- Objeto simple – pares clave/valor -->
-      <div v-else-if="isPlainObject" class="mt-2 space-y-1">
-        <div v-for="(v, k) in (value as any)" :key="k" class="py-1 border-b last:border-0" style="border-color: var(--border-color);">
+      <div v-else-if="isPlainObject" class="mt-sm space-y-xs">
+        <div v-for="(v, k) in (value as any)" :key="k" class="py-xs border-b last:border-0" style="border-color: var(--border-color);">
           <template v-if="isHtmlContent(v)">
-            <div class="flex flex-col gap-2">
-              <span class="opacity-50 uppercase tracking-wider text-[9px]" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
-              <div class="prose prose-sm prose-invert max-w-none w-full opacity-90 p-4 rounded-lg bg-black/20 border border-white/10 overflow-x-auto" v-html="sanitizeHTML(String(v))"></div>
+            <div class="flex flex-col gap-sm">
+              <span class="text-[var(--text-secondary)] uppercase tracking-wider text-caption" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
+              <div class="prose prose-sm prose-invert max-w-none w-full opacity-90 p-md rounded-base bg-black/20 border border-white/10 overflow-x-auto" v-html="sanitizeHTML(String(v))"></div>
             </div>
           </template>
           <!-- Si el sub-valor es a su vez un objeto o array, llamamos a ResultCard recursivamente -->
@@ -78,14 +78,14 @@
             <ResultCard :label="formatKey(String(k))" :value="v" />
           </template>
           <template v-else-if="typeof v === 'string' && v.length > 50">
-            <div class="flex flex-col gap-1">
-              <span class="opacity-50 uppercase tracking-wider text-[9px]" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
-              <span class="font-medium text-[11px] whitespace-pre-line leading-relaxed" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v }}</span>
+            <div class="flex flex-col gap-xs">
+              <span class="text-[var(--text-secondary)] uppercase tracking-wider text-caption" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
+              <span class="font-medium text-body whitespace-pre-line leading-relaxed" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v }}</span>
             </div>
           </template>
           <template v-else>
-            <div class="flex justify-between text-[11px]">
-              <span class="opacity-50 uppercase tracking-wider text-[9px]" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
+            <div class="flex justify-between text-body">
+              <span class="text-[var(--text-secondary)] uppercase tracking-wider text-caption" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
               <span class="font-medium text-right break-words max-w-[60%]" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v ?? '—' }}</span>
             </div>
           </template>
@@ -94,7 +94,7 @@
 
       <!-- Badge de estado -->
       <span v-else-if="type === 'badge'"
-        class="inline-flex items-center gap-1.5 text-[10px] font-medium px-2.5 py-0.5 rounded-full w-fit tracking-wider mt-1"
+        class="inline-flex items-center gap-sm text-caption font-medium px-sm py-xs rounded-full w-fit tracking-wider mt-xs"
         :class="badgeClass"
       >
         <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
@@ -102,26 +102,26 @@
       </span>
 
       <!-- Fecha -->
-      <span v-else-if="type === 'date'" class="text-[13px] font-medium mt-1" style="color: var(--text-primary);">
+      <span v-else-if="type === 'date'" class="text-body font-medium mt-xs" style="color: var(--text-primary);">
         📅 {{ displayValue }}
       </span>
 
       <!-- Moneda -->
-      <span v-else-if="type === 'currency'" class="text-[13px] font-medium font-mono mt-1" style="color: #22c55e;">
+      <span v-else-if="type === 'currency'" class="text-body font-medium font-mono mt-xs" style="color: #22c55e;">
         $ {{ displayValue }}
       </span>
 
       <!-- Contenido HTML de primer nivel -->
-      <div v-else-if="isHtmlContent(value)" class="prose prose-sm prose-invert max-w-none w-full opacity-90 mt-2 p-4 rounded-lg bg-black/20 border border-white/10 overflow-x-auto" v-html="sanitizeHTML(String(value))">
+      <div v-else-if="isHtmlContent(value)" class="prose prose-sm prose-invert max-w-none w-full opacity-90 mt-sm p-md rounded-base bg-black/20 border border-white/10 overflow-x-auto" v-html="sanitizeHTML(String(value))">
       </div>
 
       <!-- Texto largo normal de primer nivel -->
-      <span v-else-if="typeof value === 'string' && value.length > 80" class="text-[12px] font-medium tracking-wide break-words leading-relaxed whitespace-pre-line mt-1 opacity-90" style="color: var(--text-primary);">
+      <span v-else-if="typeof value === 'string' && value.length > 80" class="text-body font-medium tracking-wide break-words leading-relaxed whitespace-pre-line mt-xs opacity-90" style="color: var(--text-primary);">
         {{ displayValue }}
       </span>
 
       <!-- Texto por defecto -->
-      <span v-else class="text-[13px] font-medium tracking-wide break-words leading-relaxed mt-1" style="color: var(--text-primary);">
+      <span v-else class="text-body font-medium tracking-wide break-words leading-relaxed mt-xs" style="color: var(--text-primary);">
         {{ displayValue }}
       </span>
     </slot>

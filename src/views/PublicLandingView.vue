@@ -1,138 +1,128 @@
 <template>
   <div class="font-primary min-h-screen relative selection:bg-[var(--accent-color)]/30" style="background-color: var(--bg-color); color: var(--text-primary);">
-    <div class="absolute inset-0 pointer-events-none noise-overlay z-0 opacity-20"></div>
+    <div class="absolute inset-0 pointer-events-none noise-overlay z-0 text-[var(--text-muted)]"></div>
     <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
       <div class="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-[var(--accent-color)]/5 blur-[120px] rounded-full"></div>
       <div class="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-[var(--accent-color)]/3 blur-[100px] rounded-full"></div>
     </div>
 
-    <div class="relative z-10 max-w-5xl mx-auto px-6 sm:px-8">
+    <div class="relative z-10 max-w-5xl mx-auto px-lg sm:px-xl">
 
       <!-- Barra superior -->
-      <header class="flex items-center justify-between py-6">
+      <header class="flex items-center justify-between py-lg">
         <div>
-          <p class="text-[13px] leading-tight tracking-[0.15em] font-light uppercase">
-            Portal de
-            <span class="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FFDD00] via-[#0033A0] to-[#ED1C24]">
-              Consulta Ciudadana
-            </span>
-          </p>
-          <div class="mt-2 flex gap-1">
-            <div class="h-1 w-6 rounded-full bg-[#FFDD00]"></div>
-            <div class="h-1 w-3 rounded-full bg-[#0033A0]"></div>
-            <div class="h-1 w-2 rounded-full bg-[#ED1C24]"></div>
-          </div>
+          <BrandMark />
         </div>
 
-        <div class="flex items-center gap-2">
-          <button @click="toggleTheme" class="p-2.5 glass-panel rounded-2xl text-[var(--accent-color)] active:scale-90 transition-transform">
+        <div class="flex items-center gap-sm">
+          <button @click="toggleTheme" class="btn-icon glass-panel">
             <svg v-if="isDark" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.8" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
             <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.8" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
           </button>
-          <button v-if="isAuthenticated" @click="router.push('/dashboard')" class="btn-primary">Ir al panel</button>
-          <button v-else @click="router.push('/auth')" class="btn-primary">Acceder</button>
+          <button v-if="isAuthenticated" @click="router.push('/dashboard')" class="btn-secondary">Ir al panel</button>
+          <button v-else @click="router.push('/auth')" class="btn-secondary">Acceder</button>
         </div>
       </header>
 
       <!-- Portada -->
-      <section class="py-16 sm:py-24 text-center">
-        <p class="text-[9px] font-black tracking-[0.35em] uppercase opacity-40 mb-6">Datos públicos del Ecuador</p>
-        <h1 class="text-3xl sm:text-5xl font-light leading-[1.15] tracking-tight max-w-3xl mx-auto">
+      <section class="py-3xl sm:py-3xl text-center">
+        <p class="text-caption font-black tracking-[0.35em] uppercase text-[var(--text-muted)] mb-lg">Datos públicos del Ecuador</p>
+        <h1 class="text-h2 sm:text-h1 font-light leading-[1.15] tracking-tight max-w-3xl mx-auto">
           Verifica identidad, RUC, licencias y vehículos
           <span class="font-black text-[var(--accent-color)]">en una sola consulta</span>
         </h1>
-        <p class="mt-6 text-[13px] sm:text-sm leading-relaxed opacity-60 max-w-xl mx-auto">
+        <p class="mt-lg text-body sm:text-body leading-relaxed text-[var(--text-secondary)] max-w-xl mx-auto">
           Registro Civil, SRI y ANT desde una misma pantalla. Escribes una cédula y recibes
           la ficha completa, sin saltar entre portales ni repetir captchas.
         </p>
-        <div class="mt-10 flex flex-wrap gap-3 justify-center">
+        <div class="mt-2xl flex flex-wrap gap-md justify-center">
           <button @click="router.push('/auth')" class="btn-primary">Crear cuenta gratis</button>
-          <a href="#consultas" class="px-8 py-3.5 rounded-2xl border border-[var(--border-color)] text-[10px] uppercase tracking-[0.1em] font-medium hover:bg-[var(--accent-color)]/5 transition-all">
+          <a href="#consultas" class="btn-secondary">
             Ver consultas
           </a>
         </div>
       </section>
 
       <!-- Ventajas -->
-      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-20">
-        <div v-for="v in ventajas" :key="v.titulo" class="glass-card p-6">
-          <svg class="w-5 h-5 text-[var(--accent-color)] mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md pb-3xl">
+        <div v-for="v in ventajas" :key="v.titulo" class="glass-card p-lg">
+          <svg class="w-5 h-5 text-[var(--accent-color)] mb-md" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path v-for="d in v.icon" :key="d" :d="d" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
           </svg>
-          <h3 class="text-[12px] font-bold tracking-wide mb-2">{{ v.titulo }}</h3>
-          <p class="text-[11px] leading-relaxed opacity-50">{{ v.texto }}</p>
+          <h3 class="text-body font-bold tracking-wide mb-sm">{{ v.titulo }}</h3>
+          <p class="text-body leading-relaxed text-[var(--text-secondary)]">{{ v.texto }}</p>
         </div>
       </section>
 
       <!-- Catálogo de consultas -->
-      <section id="consultas" class="pb-20 scroll-mt-8">
-        <p class="text-[9px] font-black tracking-[0.3em] uppercase opacity-40 mb-2">Consultas disponibles</p>
-        <h2 class="text-2xl font-light tracking-tight mb-8">Qué puedes averiguar</h2>
+      <section id="consultas" class="pb-3xl scroll-mt-xl">
+        <p class="text-caption font-black tracking-[0.3em] uppercase text-[var(--text-muted)] mb-sm">Consultas disponibles</p>
+        <h2 class="text-h3 font-light tracking-tight mb-xl">Qué puedes averiguar</h2>
 
-        <div v-for="grupo in catalogo" :key="grupo.label" class="mb-8">
-          <p class="text-[9px] font-black tracking-[0.25em] uppercase opacity-40 mb-3">{{ grupo.label }}</p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div v-for="grupo in catalogo" :key="grupo.label" class="mb-xl">
+          <p class="text-caption font-black tracking-[0.25em] uppercase text-[var(--text-muted)] mb-md">{{ grupo.label }}</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
             <button
               v-for="item in grupo.items" :key="item.titulo"
               @click="pedirRegistro(item)"
-              class="glass-card p-5 text-left hover:border-[var(--accent-color)]/40 hover:-translate-y-0.5 transition-all duration-300 group"
+              class="glass-card p-lg text-left hover:border-[var(--accent-color)]/40 hover:-translate-y-0.5 transition-all duration-base group"
             >
-              <div class="flex items-start justify-between gap-3 mb-2">
-                <h3 class="text-[12px] font-bold tracking-wide">{{ item.titulo }}</h3>
-                <svg class="w-3.5 h-3.5 shrink-0 opacity-20 group-hover:opacity-60 group-hover:text-[var(--accent-color)] transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="flex items-start justify-between gap-md mb-sm">
+                <h3 class="text-body font-bold tracking-wide">{{ item.titulo }}</h3>
+                <svg class="w-3.5 h-3.5 shrink-0 text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] group-hover:text-[var(--accent-color)] transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
               </div>
-              <p class="text-[11px] leading-relaxed opacity-50">{{ item.texto }}</p>
+              <p class="text-body leading-relaxed text-[var(--text-secondary)]">{{ item.texto }}</p>
             </button>
           </div>
         </div>
       </section>
 
       <!-- Guías -->
-      <section id="guias" class="pb-20 scroll-mt-8">
-        <p class="text-[9px] font-black tracking-[0.3em] uppercase opacity-40 mb-2">Guías</p>
-        <h2 class="text-2xl font-light tracking-tight mb-8">Cómo se leen los documentos ecuatorianos</h2>
+      <section id="guias" class="pb-3xl scroll-mt-xl">
+        <p class="text-caption font-black tracking-[0.3em] uppercase text-[var(--text-muted)] mb-sm">Guías</p>
+        <h2 class="text-h3 font-light tracking-tight mb-xl">Cómo se leen los documentos ecuatorianos</h2>
 
-        <div class="space-y-3">
+        <div class="space-y-md">
           <article v-for="(g, i) in guias" :key="g.titulo" class="glass-card overflow-hidden">
-            <button @click="guiaAbierta = guiaAbierta === i ? -1 : i" class="w-full flex items-start justify-between gap-4 p-6 text-left">
+            <button @click="guiaAbierta = guiaAbierta === i ? -1 : i" class="w-full flex items-start justify-between gap-md p-lg text-left">
               <div>
-                <h3 class="text-[13px] font-bold tracking-wide mb-1">{{ g.titulo }}</h3>
-                <p class="text-[11px] opacity-50">{{ g.resumen }}</p>
+                <h3 class="text-body font-bold tracking-wide mb-xs">{{ g.titulo }}</h3>
+                <p class="text-body text-[var(--text-secondary)]">{{ g.resumen }}</p>
               </div>
-              <svg class="w-4 h-4 shrink-0 mt-1 opacity-40 transition-transform duration-300" :class="guiaAbierta === i ? 'rotate-180 text-[var(--accent-color)]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 shrink-0 mt-xs text-[var(--text-muted)] transition-transform duration-base" :class="guiaAbierta === i ? 'rotate-180 text-[var(--accent-color)]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
               </svg>
             </button>
-            <div v-if="guiaAbierta === i" class="px-6 pb-6 space-y-3 border-t border-[var(--border-color)] pt-4">
-              <p v-for="(par, j) in g.cuerpo" :key="j" class="text-[12px] leading-relaxed opacity-70">{{ par }}</p>
+            <div v-if="guiaAbierta === i" class="px-lg pb-lg space-y-md border-t border-[var(--border-color)] pt-md">
+              <p v-for="(par, j) in g.cuerpo" :key="j" class="text-body leading-relaxed text-[var(--text-secondary)]">{{ par }}</p>
             </div>
           </article>
         </div>
       </section>
 
       <!-- Preguntas frecuentes -->
-      <section id="faq" class="pb-20 scroll-mt-8">
-        <p class="text-[9px] font-black tracking-[0.3em] uppercase opacity-40 mb-2">Preguntas frecuentes</p>
-        <h2 class="text-2xl font-light tracking-tight mb-8">Dudas habituales</h2>
+      <section id="faq" class="pb-3xl scroll-mt-xl">
+        <p class="text-caption font-black tracking-[0.3em] uppercase text-[var(--text-muted)] mb-sm">Preguntas frecuentes</p>
+        <h2 class="text-h3 font-light tracking-tight mb-xl">Dudas habituales</h2>
 
         <div class="glass-card divide-y divide-[var(--border-color)]">
           <div v-for="(f, i) in faq" :key="f.p">
-            <button @click="faqAbierta = faqAbierta === i ? -1 : i" class="w-full flex items-center justify-between gap-4 px-6 py-5 text-left">
-              <span class="text-[12px] font-bold tracking-wide">{{ f.p }}</span>
-              <span class="text-[var(--accent-color)] text-lg leading-none shrink-0 transition-transform duration-300" :class="faqAbierta === i ? 'rotate-45' : ''">+</span>
+            <button @click="faqAbierta = faqAbierta === i ? -1 : i" class="w-full flex items-center justify-between gap-md px-lg py-lg text-left">
+              <span class="text-body font-bold tracking-wide">{{ f.p }}</span>
+              <span class="text-[var(--accent-color)] text-lead leading-none shrink-0 transition-transform duration-base" :class="faqAbierta === i ? 'rotate-45' : ''">+</span>
             </button>
-            <p v-if="faqAbierta === i" class="px-6 pb-5 text-[12px] leading-relaxed opacity-70">{{ f.r }}</p>
+            <p v-if="faqAbierta === i" class="px-lg pb-lg text-body leading-relaxed text-[var(--text-secondary)]">{{ f.r }}</p>
           </div>
         </div>
       </section>
 
       <!-- Cierre -->
-      <section class="pb-20">
-        <div class="glass-card p-10 text-center">
-          <h2 class="text-xl sm:text-2xl font-light tracking-tight mb-3">Crea tu cuenta y empieza a consultar</h2>
-          <p class="text-[12px] opacity-50 max-w-md mx-auto mb-8">
+      <section class="pb-3xl">
+        <div class="glass-card p-2xl text-center">
+          <h2 class="text-h4 sm:text-h3 font-light tracking-tight mb-md">Crea tu cuenta y empieza a consultar</h2>
+          <p class="text-body text-[var(--text-secondary)] max-w-md mx-auto mb-xl">
             El registro es gratuito y no pide tarjeta. Cada cuenta trae su cuota diaria de
             consultas, que se renueva sola cada veinticuatro horas.
           </p>
@@ -141,19 +131,19 @@
       </section>
 
       <!-- Pie -->
-      <footer class="border-t border-[var(--border-color)] py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
-        <div class="flex flex-wrap gap-6 justify-center">
+      <footer class="border-t border-[var(--border-color)] py-2xl flex flex-col sm:flex-row items-center justify-between gap-lg">
+        <div class="flex flex-wrap gap-lg justify-center">
           <component
             v-for="l in enlacesLegales" :key="l.texto"
             :is="l.ruta ? 'button' : 'a'"
             :href="l.ruta ? undefined : l.href"
             @click="l.ruta && router.push(l.ruta)"
-            class="text-[10px] uppercase tracking-[0.15em] opacity-40 hover:opacity-100 hover:text-[var(--accent-color)] transition-all"
+            class="text-caption uppercase tracking-[0.15em] text-[var(--text-muted)] hover:text-[var(--accent-color)] transition-all"
           >
             {{ l.texto }}
           </component>
         </div>
-        <p class="text-[9px] uppercase tracking-[0.2em] opacity-30">Devzio · {{ anio }}</p>
+        <p class="text-caption uppercase tracking-[0.2em] text-[var(--text-muted)]">Devzio · {{ anio }}</p>
       </footer>
     </div>
 
@@ -162,35 +152,35 @@
       enter-active-class="transition duration-200 ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100"
       leave-active-class="transition duration-150 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
     >
-      <div v-if="muro" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-md" @click.self="muro = null">
-        <div class="w-full max-w-md glass-card p-8 animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
-          <h3 class="text-lg font-light tracking-tight mb-2">{{ muro.titulo }}</h3>
-          <p class="text-[12px] leading-relaxed opacity-60 mb-6">{{ muro.texto }}</p>
+      <div v-if="muro" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md" @click.self="muro = null">
+        <div class="w-full max-w-md glass-card p-xl animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
+          <h3 class="text-lead font-light tracking-tight mb-sm">{{ muro.titulo }}</h3>
+          <p class="text-body leading-relaxed text-[var(--text-secondary)] mb-lg">{{ muro.texto }}</p>
 
           <!-- Respuesta de ejemplo: se ve que devuelve antes de pedir la cuenta -->
-          <p class="text-[9px] font-black tracking-[0.3em] uppercase opacity-40 mb-3">Ejemplo de respuesta</p>
-          <div class="rounded-2xl border border-[var(--border-color)] bg-[var(--accent-color)]/[0.03] divide-y divide-[var(--border-color)] mb-3">
-            <div v-for="([campo, valor]) in muro.ejemplo" :key="campo" class="flex items-baseline justify-between gap-4 px-4 py-2.5">
-              <span class="text-[9px] uppercase tracking-wider opacity-40 shrink-0">{{ campo }}</span>
-              <span class="text-[11px] font-medium text-right break-words">{{ valor }}</span>
+          <p class="text-caption font-black tracking-[0.3em] uppercase text-[var(--text-muted)] mb-md">Ejemplo de respuesta</p>
+          <div class="rounded-base border border-[var(--border-color)] bg-[var(--accent-color)]/[0.03] divide-y divide-[var(--border-color)] mb-md">
+            <div v-for="([campo, valor]) in muro.ejemplo" :key="campo" class="flex items-baseline justify-between gap-md px-md py-sm">
+              <span class="text-caption uppercase tracking-wider text-[var(--text-muted)] shrink-0">{{ campo }}</span>
+              <span class="text-body font-medium text-right break-words">{{ valor }}</span>
             </div>
           </div>
-          <p class="text-[9px] leading-relaxed opacity-30 mb-8">
+          <p class="text-caption leading-relaxed text-[var(--text-muted)] mb-xl">
             Datos ilustrativos. No corresponden a ninguna persona real.
           </p>
 
-          <p class="text-[9px] font-black tracking-[0.3em] uppercase opacity-40 mb-3">Requiere cuenta</p>
-          <ul class="space-y-2 mb-8">
-            <li v-for="b in beneficios" :key="b" class="flex items-start gap-2.5 text-[11px] opacity-70">
-              <svg class="w-3.5 h-3.5 shrink-0 mt-0.5 text-[var(--accent-color)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <p class="text-caption font-black tracking-[0.3em] uppercase text-[var(--text-muted)] mb-md">Requiere cuenta</p>
+          <ul class="space-y-sm mb-xl">
+            <li v-for="b in beneficios" :key="b" class="flex items-start gap-sm text-body text-[var(--text-secondary)]">
+              <svg class="w-3.5 h-3.5 shrink-0 mt-xs text-[var(--accent-color)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
               </svg>
               {{ b }}
             </li>
           </ul>
 
-          <div class="flex gap-3">
-            <button @click="muro = null" class="flex-1 py-3.5 rounded-2xl border border-[var(--border-color)] text-[10px] uppercase tracking-[0.1em] font-medium hover:bg-white/5 transition-all">
+          <div class="flex gap-md">
+            <button @click="muro = null" class="flex-1 py-md rounded-base border border-[var(--border-color)] text-caption uppercase tracking-[0.1em] font-medium hover:bg-white/5 transition-all">
               Ahora no
             </button>
             <button @click="router.push('/auth')" class="flex-1 btn-primary">Crear cuenta</button>
@@ -204,6 +194,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import BrandMark from '../ui/components/BrandMark.vue';
 import { useAuth } from '../composables/useAuth';
 
 const router = useRouter();

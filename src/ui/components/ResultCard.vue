@@ -1,52 +1,52 @@
 <template>
-  <div class="group flex flex-col gap-2 py-4 border-b last:border-0 border-[var(--border-color)] transition-all hover:translate-x-1">
+  <div class="group flex flex-col gap-sm py-md border-b last:border-0 border-[var(--border-color)] transition-all hover:translate-x-1">
     
-    <div class="flex items-center gap-3">
-        <span class="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--accent-color)]">
+    <div class="flex items-center gap-md">
+        <span class="text-body font-black uppercase tracking-[0.2em] text-[var(--accent-color)]">
             {{ label }}
         </span>
-        <div class="h-[1.5px] flex-1 bg-[var(--border-color)] opacity-20"></div>
+        <div class="h-[1.5px] flex-1 bg-[var(--border-color)] text-[var(--text-muted)]"></div>
     </div>
 
     <!-- Contenido -->
-    <div class="pl-0 sm:pl-2">
+    <div class="pl-0 sm:pl-sm">
       <slot>
         <!-- Valor null / vacío -->
-        <span v-if="isEmpty" class="text-sm font-black text-red-500 italic tracking-widest uppercase opacity-50">No registra información</span>
+        <span v-if="isEmpty" class="text-body font-black text-red-500 italic tracking-widest uppercase">No registra información</span>
 
         <!-- Objeto / Array Complejo -->
-        <div v-else-if="typeof value === 'object'" class="mt-2 pl-4 border-l-2 border-[var(--accent-color)]/30 space-y-3">
-            <div v-if="Array.isArray(value)" class="space-y-4">
-                <div v-for="(item, i) in value" :key="i" class="p-5 rounded-2xl bg-[var(--input-bg)] border-2 border-[var(--border-color)]">
-                    <div v-for="(v, k) in item" :key="k" class="flex justify-between py-2 border-b last:border-0 border-[var(--border-color)]/40">
-                        <span class="text-[10px] font-black uppercase opacity-50">{{ k }}</span>
-                        <span class="text-sm font-black text-right">{{ v }}</span>
+        <div v-else-if="typeof value === 'object'" class="mt-sm pl-md border-l-2 border-[var(--accent-color)]/30 space-y-md">
+            <div v-if="Array.isArray(value)" class="space-y-md">
+                <div v-for="(item, i) in value" :key="i" class="p-lg rounded-base bg-[var(--input-bg)] border-2 border-[var(--border-color)]">
+                    <div v-for="(v, k) in item" :key="k" class="flex justify-between py-sm border-b last:border-0 border-[var(--border-color)]/40">
+                        <span class="text-caption font-black uppercase text-[var(--text-secondary)]">{{ k }}</span>
+                        <span class="text-body font-black text-right">{{ v }}</span>
                     </div>
                 </div>
             </div>
-            <div v-else class="space-y-2">
-                <div v-for="(v, k) in value" :key="k" class="flex justify-between py-2 border-b last:border-0 border-[var(--border-color)]/40">
-                    <span class="text-[10px] font-black uppercase opacity-50">{{ k }}</span>
-                    <span class="text-sm font-black text-right">{{ v }}</span>
+            <div v-else class="space-y-sm">
+                <div v-for="(v, k) in value" :key="k" class="flex justify-between py-sm border-b last:border-0 border-[var(--border-color)]/40">
+                    <span class="text-caption font-black uppercase text-[var(--text-secondary)]">{{ k }}</span>
+                    <span class="text-body font-black text-right">{{ v }}</span>
                 </div>
             </div>
         </div>
 
         <!-- Badges para estados -->
         <span v-else-if="type === 'badge'"
-          class="inline-flex items-center gap-2 text-xs font-black px-5 py-1.5 rounded-full border-2 shadow-sm transition-all uppercase tracking-widest"
+          class="inline-flex items-center gap-sm text-caption font-black px-lg py-sm rounded-full border-2 shadow-sm transition-all uppercase tracking-widest"
           :class="badgeClass"
         >
           {{ value }}
         </span>
 
         <!-- Moneda / Dinero -->
-        <span v-else-if="type === 'currency'" class="text-2xl font-black tabular-nums tracking-tighter text-green-600 dark:text-green-400">
+        <span v-else-if="type === 'currency'" class="text-h3 font-black tabular-nums tracking-tighter text-green-600 dark:text-green-400">
           $ {{ Number(value).toLocaleString('es-EC', { minimumFractionDigits: 2 }) }}
         </span>
 
         <!-- Texto Estándar (Grande y Visible) -->
-        <span v-else class="text-lg font-black leading-tight tracking-tight text-[var(--text-primary)] break-words uppercase">
+        <span v-else class="text-lead font-black leading-tight tracking-tight text-[var(--text-primary)] break-words uppercase">
           {{ value }}
         </span>
       </slot>

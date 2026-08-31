@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-wrapper font-primary min-h-screen flex overflow-hidden relative selection:bg-[var(--accent-color)]/30">
     <!-- Capas Atmosféricas -->
-    <div class="absolute inset-0 pointer-events-none noise-overlay z-0 opacity-20"></div>
+    <div class="absolute inset-0 pointer-events-none noise-overlay z-0 text-[var(--text-muted)]"></div>
     <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
       <div class="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-[var(--accent-color)]/5 blur-[120px] rounded-full"></div>
       <div class="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] bg-[var(--accent-color)]/3 blur-[100px] rounded-full"></div>
@@ -10,7 +10,7 @@
     <!-- Botón Hamburguesa Móvil -->
     <button 
       @click="isSidebarOpen = !isSidebarOpen"
-      class="lg:hidden fixed top-4 right-4 z-50 p-3 glass-panel rounded-2xl text-[var(--accent-color)] shadow-xl active:scale-90 transition-transform"
+      class="lg:hidden fixed top-4 right-4 z-50 p-md glass-panel rounded-base text-[var(--accent-color)] shadow-xl active:scale-90 transition-transform"
     >
       <svg v-if="!isSidebarOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
       <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -18,43 +18,31 @@
 
     <!-- Sidebar -->
     <aside 
-      :class="['fixed inset-y-0 left-0 z-40 w-64 transition-all duration-500 lg:relative lg:translate-x-0 flex flex-col h-screen glass-panel', 
-      isSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0']"
+      :class="['fixed inset-y-0 left-0 z-40 w-64 transition-all duration-base lg:relative lg:translate-x-0 flex flex-col h-screen glass-panel', isSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0']"
     >
-      <div class="p-6 border-b border-[var(--border-color)]">
-        <h2 class="text-[12px] leading-tight tracking-[0.15em] font-light mb-1 uppercase" style="color: var(--text-primary);">
-          Portal de <br />
-          <span class="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FFDD00] via-[#0033A0] to-[#ED1C24]">
-            Consulta Ciudadana
-          </span>
-        </h2>
-        <p class="text-[8px] uppercase tracking-[0.3em] opacity-40 mt-1">Panel de Consultas</p>
-        <div class="mt-3 flex gap-1">
-            <div class="h-1 w-6 rounded-full bg-[#FFDD00]"></div>
-            <div class="h-1 w-3 rounded-full bg-[#0033A0]"></div>
-            <div class="h-1 w-2 rounded-full bg-[#ED1C24]"></div>
-        </div>
+      <div class="p-lg border-b border-[var(--border-color)]">
+        <BrandMark prefijo="Portal de " titulo="Consulta Ciudadana" apilado />
+        <p class="text-caption uppercase tracking-[0.3em] text-[var(--text-muted)] mt-sm">Panel de Consultas</p>
       </div>
 
-      <div class="flex-1 overflow-y-auto p-3 space-y-4 custom-scrollbar">
+      <div class="flex-1 overflow-y-auto p-md space-y-md custom-scrollbar">
         <!-- Admin Section -->
-        <div v-if="isAdmin" class="mb-4 px-1">
-          <p class="text-[8px] font-black tracking-[0.25em] mb-2 opacity-40 uppercase">Administración</p>
-          <button @click="router.push('/admin')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg border border-amber-500/20 bg-amber-500/5 text-amber-500 hover:bg-amber-500/10 transition-all text-[10px] font-bold tracking-wider">
+        <div v-if="isAdmin" class="mb-md px-xs">
+          <p class="text-caption font-black tracking-[0.25em] mb-sm text-[var(--text-muted)] uppercase">Administración</p>
+          <button @click="router.push('/admin')" class="w-full flex items-center gap-sm px-md py-sm rounded-base border border-amber-500/20 bg-amber-500/5 text-amber-500 hover:bg-amber-500/10 transition-all text-caption font-bold tracking-wider">
             <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
             Panel de control
           </button>
         </div>
 
-        <div class="px-1 space-y-4">
+        <div class="px-xs space-y-md">
           <div v-for="grupo in sectionGroups" :key="grupo.label">
-            <p class="text-[8px] font-black tracking-[0.25em] mb-1.5 opacity-40 uppercase">{{ grupo.label }}</p>
-            <nav class="space-y-0.5">
+            <p class="text-caption font-black tracking-[0.25em] mb-sm text-[var(--text-muted)] uppercase">{{ grupo.label }}</p>
+            <nav class="space-y-xs">
               <button
                 v-for="item in grupo.items" :key="item.key"
                 @click="currentSection = item.key; isSidebarOpen = false"
-                :class="['w-full flex items-center gap-2.5 text-left px-3 py-2 rounded-lg text-[10px] font-bold tracking-wide transition-all duration-300 border',
-                  currentSection === item.key ? 'bg-[var(--accent-color)] text-[var(--accent-inverse)] border-[var(--border-color)] shadow-sm' : 'text-[var(--text-secondary)] border-transparent hover:bg-[var(--accent-color)]/5 hover:text-[var(--text-primary)]']"
+                :class="['w-full flex items-center gap-sm text-left px-md py-sm rounded-base text-caption font-bold tracking-wide transition-all duration-base border', currentSection === item.key ? 'bg-[var(--accent-color)] text-[var(--accent-inverse)] border-[var(--border-color)] shadow-sm' : 'text-[var(--text-secondary)] border-transparent hover:bg-[var(--accent-color)]/5 hover:text-[var(--text-primary)]']"
               >
                 <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path v-for="d in item.icon" :key="d" :d="d" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
@@ -66,24 +54,24 @@
         </div>
       </div>
 
-      <div class="p-4 border-t border-[var(--border-color)]">
-        <button @click="handleLogout" class="w-full py-2.5 bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 hover:border-red-500/20 rounded-lg text-red-500 text-[9px] font-bold tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-2 uppercase">
+      <div class="p-md border-t border-[var(--border-color)]">
+        <button @click="handleLogout" class="w-full py-sm bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 hover:border-red-500/20 rounded-base text-red-500 text-caption font-bold tracking-[0.2em] transition-all duration-base flex items-center justify-center gap-sm uppercase">
           DESCONECTAR
         </button>
 
         <!-- Sellos de Seguridad -->
-        <div class="mt-4 flex flex-wrap justify-center gap-3 text-[8px] uppercase tracking-widest opacity-40 font-mono text-[var(--text-secondary)]">
-            <span class="flex items-center gap-1">
+        <div class="mt-md flex flex-wrap justify-center gap-md text-caption uppercase tracking-widest text-[var(--text-muted)] font-mono">
+            <span class="flex items-center gap-xs">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-width="2.5"></path></svg>
                 SSL
             </span>
             <span>·</span>
-            <span class="flex items-center gap-1">
+            <span class="flex items-center gap-xs">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-width="2.5"></path></svg>
                 CIFRADO TLS
             </span>
             <span>·</span>
-            <span class="flex items-center gap-1">
+            <span class="flex items-center gap-xs">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" stroke-width="2.5"></path></svg>
                 DEVZIO © 2026
             </span>
@@ -92,39 +80,39 @@
     </aside>
 
     <!-- Main -->
-    <main class="flex-1 flex flex-col h-screen relative z-10 p-6 sm:p-8 overflow-y-auto custom-scrollbar animate-fade-in">
-      <header class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <main class="flex-1 flex flex-col h-screen relative z-10 p-lg sm:p-xl overflow-y-auto custom-scrollbar animate-fade-in">
+      <header class="mb-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
         <div>
-          <p class="text-[9px] font-black tracking-[0.3em] text-[var(--accent-color)] uppercase mb-1">Sección Actual</p>
-          <h1 class="text-3xl font-light tracking-tight text-[var(--text-primary)]">
+          <p class="text-caption font-black tracking-[0.3em] text-[var(--accent-color)] uppercase mb-xs">Sección Actual</p>
+          <h1 class="text-h2 font-light tracking-tight text-[var(--text-primary)]">
             {{ sections[currentSection] }}
           </h1>
         </div>
 
-        <div class="flex items-center gap-3 self-end md:self-auto">
+        <div class="flex items-center gap-md self-end md:self-auto">
           <!--
             Plan y cuota vivian en una tarjeta de la barra lateral que ocupaba
             demasiado para lo que dice. Aqui van en una linea, junto al resto
             de controles de cuenta.
           -->
-          <div class="flex items-center gap-2.5 glass-panel py-2 px-3 rounded-2xl">
-            <span class="text-[8px] font-black tracking-[0.2em] uppercase px-1.5 py-0.5 rounded-full border border-[var(--accent-color)] text-[var(--accent-color)] bg-[var(--accent-color)]/5">
+          <div class="flex items-center gap-sm glass-panel py-sm px-md rounded-base">
+            <span class="text-caption font-black tracking-[0.2em] uppercase px-sm py-xs rounded-full border border-[var(--accent-color)] text-[var(--accent-color)] bg-[var(--accent-color)]/5">
               {{ planMostrado }}
             </span>
             <div class="flex flex-col leading-none">
-              <span class="text-[10px] font-bold tabular-nums text-[var(--text-primary)]">
+              <span class="text-caption font-bold tabular-nums text-[var(--text-primary)]">
                 {{ cuotaSinTope ? `${userRequests} consultas` : `${userRequests} / ${tokenLimit}` }}
               </span>
-              <span v-if="quotaCountdown" class="text-[7px] tracking-widest uppercase opacity-40 mt-0.5 hidden sm:block">
+              <span v-if="quotaCountdown" class="text-caption tracking-widest uppercase text-[var(--text-muted)] mt-xs hidden sm:block">
                 Renueva {{ quotaCountdown }}
               </span>
             </div>
           </div>
 
           <DonationMenu />
-          <div class="h-10 w-[0.5px] bg-[var(--border-color)] mx-2 hidden sm:block"></div>
-          <div class="flex items-center gap-3">
-            <button @click="toggleTheme" class="p-3 glass-panel rounded-2xl hover:bg-white/5 transition-all text-[var(--accent-color)] active:scale-90">
+          <div class="h-10 w-[0.5px] bg-[var(--border-color)] mx-sm hidden sm:block"></div>
+          <div class="flex items-center gap-md">
+            <button @click="toggleTheme" class="p-md glass-panel rounded-base hover:bg-white/5 transition-all text-[var(--accent-color)] active:scale-90">
                 <svg v-if="isDark" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
                 <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
             </button>
@@ -134,13 +122,13 @@
       </header>
 
       <!-- Content -->
-      <div class="flex-1 pb-12">
+      <div class="flex-1 pb-2xl">
         <transition 
           mode="out-in"
-          enter-active-class="transition duration-500 ease-out"
+          enter-active-class="transition duration-base ease-out"
           enter-from-class="opacity-0 translate-y-4 blur-sm"
           enter-to-class="opacity-100 translate-y-0 blur-0"
-          leave-active-class="transition duration-300 ease-in"
+          leave-active-class="transition duration-base ease-in"
           leave-from-class="opacity-100 translate-y-0 blur-0"
           leave-to-class="opacity-0 -translate-y-4 blur-sm"
         >
@@ -152,7 +140,7 @@
     </main>
 
     <!-- Overlay Móvil -->
-    <transition enter-active-class="duration-300 ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100" leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0">
+    <transition enter-active-class="duration-base ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100" leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0">
         <div v-if="isSidebarOpen" @click="isSidebarOpen = false" class="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-30"></div>
     </transition>
   </div>
@@ -161,6 +149,7 @@
 <script setup lang="ts">
 import { ref, computed, markRaw, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
+import BrandMark from '../ui/components/BrandMark.vue';
 import { useAuth } from '../composables/useAuth';
 import { authService } from '../api/authService';
 import { formatCountdown } from '../utils/quota';

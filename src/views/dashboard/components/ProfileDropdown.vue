@@ -3,13 +3,13 @@
     <!-- Trigger -->
     <div 
         @click="toggle" 
-        class="flex items-center gap-2 sm:gap-3 cursor-pointer glass-panel py-1.5 sm:py-2 px-3 sm:px-4 rounded-2xl hover:bg-white/5 transition-all group active:scale-95"
+        class="flex items-center gap-sm sm:gap-md cursor-pointer glass-panel py-sm sm:py-sm px-md sm:px-md rounded-base hover:bg-white/5 transition-all group active:scale-95"
     >
         <div class="flex flex-col items-end hidden xs:flex">
-            <span class="text-[10px] sm:text-[11px] font-bold tracking-widest text-[var(--text-primary)] group-hover:text-[var(--accent-color)] transition-colors uppercase truncate max-w-[100px]">{{ userName }}</span>
-            <span class="text-[7px] sm:text-[8px] font-black tracking-widest opacity-30">SYSTEM</span>
+            <span class="text-caption sm:text-body font-bold tracking-widest text-[var(--text-primary)] group-hover:text-[var(--accent-color)] transition-colors uppercase truncate max-w-[100px]">{{ userName }}</span>
+            <span class="text-caption sm:text-caption font-black tracking-widest text-[var(--text-muted)]">SYSTEM</span>
         </div>
-        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-2xl bg-gradient-to-br from-[var(--accent-color)] to-violet-400 flex items-center justify-center text-[10px] sm:text-[11px] font-black text-white shadow-lg shadow-[var(--accent-color)]/20 rotate-3 group-hover:rotate-0 transition-transform">
+        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-base bg-gradient-to-br from-[var(--accent-color)] to-violet-400 flex items-center justify-center text-caption sm:text-body font-black text-white shadow-lg shadow-[var(--accent-color)]/20 rotate-3 group-hover:rotate-0 transition-transform">
             {{ userName.substring(0, 2).toUpperCase() }}
         </div>
     </div>
@@ -30,22 +30,22 @@
       >
         <div 
           v-if="isOpen" 
-          class="fixed z-[9999] w-[85%] max-w-[280px] sm:w-64 p-2 rounded-2xl border shadow-2xl overflow-hidden bg-[var(--surface-color)] border-[var(--border-color)]"
+          class="fixed z-[9999] w-[85%] max-w-[280px] sm:w-64 p-sm rounded-base border shadow-2xl overflow-hidden bg-[var(--surface-color)] border-[var(--border-color)]"
           :style="isMobile ? mobileStyle : desktopStyle"
         >
-          <div class="p-4 border-b border-[var(--border-color)]/50 mb-1">
-              <p class="text-[8px] font-black opacity-40 uppercase tracking-widest">Cuenta Activa</p>
-              <p class="text-xs font-bold truncate">{{ userName }}</p>
+          <div class="p-md border-b border-[var(--border-color)]/50 mb-xs">
+              <p class="text-caption font-black text-[var(--text-muted)] uppercase tracking-widest">Cuenta Activa</p>
+              <p class="text-caption font-bold truncate">{{ userName }}</p>
           </div>
 
-          <button @click="goToProfile" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[var(--accent-color)]/10 hover:text-[var(--accent-color)] transition-all text-left">
-            <svg class="w-4 h-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-            <span class="text-[10px] font-bold uppercase tracking-wider">Ajustes</span>
+          <button @click="goToProfile" class="w-full flex items-center gap-md px-md py-md rounded-base hover:bg-[var(--accent-color)]/10 hover:text-[var(--accent-color)] transition-all text-left">
+            <svg class="w-4 h-4 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            <span class="text-caption font-bold uppercase tracking-wider">Ajustes</span>
           </button>
 
-          <button @click="logoutAction" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 hover:text-red-500 transition-all text-left">
-            <svg class="w-4 h-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-            <span class="text-[10px] font-bold uppercase tracking-wider">Salir</span>
+          <button @click="logoutAction" class="w-full flex items-center gap-md px-md py-md rounded-base hover:bg-red-500/10 hover:text-red-500 transition-all text-left">
+            <svg class="w-4 h-4 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            <span class="text-caption font-bold uppercase tracking-wider">Salir</span>
           </button>
         </div>
       </transition>

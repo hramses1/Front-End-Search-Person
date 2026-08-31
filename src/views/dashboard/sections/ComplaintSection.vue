@@ -14,8 +14,8 @@
       </div>
     </template>
     <template #results="{ data }">
-      <div v-if="Array.isArray(data)" class="space-y-4">
-        <div v-for="(item, idx) in data" :key="idx" class="p-4 rounded-xl border border-[var(--border-color)] bg-[var(--input-bg)]/30 animate-fade-in">
+      <div v-if="Array.isArray(data)" class="space-y-md">
+        <div v-for="(item, idx) in data" :key="idx" class="p-md rounded-base border border-[var(--border-color)] bg-[var(--input-bg)]/30 animate-fade-in">
             <ResultCard v-for="(v, k) in item" :key="k" :label="mapKey(String(k))" :value="v" :type="detectType(String(k), v)" />
         </div>
       </div>

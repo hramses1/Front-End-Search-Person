@@ -7,25 +7,25 @@
     @copy="copyResults"
   >
     <template #fields>
-      <div class="space-y-8 py-4">
-        <div class="mb-2">
-          <h2 class="text-[20px] font-light tracking-[-0.02em] text-[var(--text-primary)] leading-tight">
+      <div class="space-y-xl py-md">
+        <div class="mb-sm">
+          <h2 class="text-lead font-light tracking-[-0.02em] text-[var(--text-primary)] leading-tight">
             Búsqueda por <span class="font-medium text-[var(--accent-color)]">Nombre</span>
           </h2>
-          <p class="text-[11px] uppercase tracking-[0.15em] opacity-40 mt-1 font-medium">Identificación de Personas Naturales</p>
+          <p class="text-body uppercase tracking-[0.15em] text-[var(--text-muted)] mt-xs font-medium">Identificación de Personas Naturales</p>
         </div>
 
-        <div class="grid grid-cols-1 gap-8">
+        <div class="grid grid-cols-1 gap-xl">
           <div class="relative group input-container">
             <input v-model="name" type="text" id="name" placeholder=" " class="custom-input peer" />
             <label for="name">Nombres Completos</label>
-            <div class="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[var(--accent-color)] transition-all duration-500 group-focus-within:w-full"></div>
+            <div class="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[var(--accent-color)] transition-all duration-base group-focus-within:w-full"></div>
           </div>
           
           <div class="relative group input-container">
             <input v-model="lastname" type="text" id="lastname" placeholder=" " class="custom-input peer" />
             <label for="lastname">Apellidos Completos</label>
-            <div class="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[var(--accent-color)] transition-all duration-500 group-focus-within:w-full"></div>
+            <div class="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[var(--accent-color)] transition-all duration-base group-focus-within:w-full"></div>
           </div>
         </div>
       </div>
@@ -34,101 +34,101 @@
     <!-- Panel de filtros — Rediseño Bento Premium -->
     <template #filters>
       <transition
-        enter-active-class="transition duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)]"
+        enter-active-class="transition duration-base ease-[cubic-bezier(0.2,0.8,0.2,1)]"
         enter-from-class="opacity-0 translate-y-8 scale-[0.98]"
         enter-to-class="opacity-100 translate-y-0 scale-100"
-        leave-active-class="transition duration-300 ease-in"
+        leave-active-class="transition duration-base ease-in"
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
       >
-        <div v-if="rawResults && rawResults.length > 0" class="mt-10 space-y-8">
-          <div class="flex items-end justify-between border-b border-[var(--border-color)] pb-4">
+        <div v-if="rawResults && rawResults.length > 0" class="mt-2xl space-y-xl">
+          <div class="flex items-end justify-between border-b border-[var(--border-color)] pb-md">
             <div>
-              <span class="text-[10px] font-bold tracking-[0.25em] uppercase text-[var(--accent-color)] opacity-30">Filtros Inteligentes</span>
-              <h3 class="text-sm font-medium tracking-tight mt-1">Refinar resultados actuales</h3>
+              <span class="text-caption font-bold tracking-[0.25em] uppercase text-[var(--accent-color)]">Filtros Inteligentes</span>
+              <h3 class="text-body font-medium tracking-tight mt-xs">Refinar resultados actuales</h3>
             </div>
             <button
               v-if="hasActiveFilters"
               @click="clearFilters"
-              class="text-[10px] font-bold tracking-widest uppercase text-[var(--accent-color)] hover:opacity-100 transition-all border-b border-[var(--accent-color)]/40 pb-0.5"
+              class="text-caption font-bold tracking-widest uppercase text-[var(--accent-color)] transition-all border-b border-[var(--accent-color)]/40 pb-xs"
             >
               Resetear Filtros
             </button>
           </div>
 
-          <div class="grid grid-cols-1 gap-4">
+          <div class="grid grid-cols-1 gap-md">
             <!-- Bloque: Búsqueda Rápida Interna -->
-            <div class="glass-panel p-5 rounded-2xl space-y-4 shadow-sm hover:shadow-md transition-shadow duration-500">
-               <div class="flex items-center gap-2 mb-1">
+            <div class="glass-panel p-lg rounded-base space-y-md shadow-sm hover:shadow-md transition-shadow duration-base">
+               <div class="flex items-center gap-sm mb-xs">
                  <svg class="w-3.5 h-3.5 text-[var(--accent-color)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                 <span class="text-[9px] font-bold tracking-widest uppercase text-[var(--text-primary)] opacity-70">Búsqueda Interna</span>
+                 <span class="text-caption font-bold tracking-widest uppercase text-[var(--text-primary)]">Búsqueda Interna</span>
                </div>
-               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                 <input v-model="filterName" type="text" placeholder="Filtrar nombre..." class="w-full bg-transparent border-b border-[var(--border-color)] py-2 text-xs outline-none focus:border-[var(--accent-color)] text-[var(--text-primary)] transition-colors placeholder:text-[var(--text-muted)]" />
-                 <input v-model="filterLastname" type="text" placeholder="Filtrar apellido..." class="w-full bg-transparent border-b border-[var(--border-color)] py-2 text-xs outline-none focus:border-[var(--accent-color)] text-[var(--text-primary)] transition-colors placeholder:text-[var(--text-muted)]" />
+               <div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+                 <input v-model="filterName" type="text" placeholder="Filtrar nombre..." class="w-full bg-transparent border-b border-[var(--border-color)] py-sm text-caption outline-none focus:border-[var(--accent-color)] text-[var(--text-primary)] transition-colors placeholder:text-[var(--text-muted)]" />
+                 <input v-model="filterLastname" type="text" placeholder="Filtrar apellido..." class="w-full bg-transparent border-b border-[var(--border-color)] py-sm text-caption outline-none focus:border-[var(--accent-color)] text-[var(--text-primary)] transition-colors placeholder:text-[var(--text-muted)]" />
                </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div class="glass-panel p-5 rounded-2xl flex flex-col justify-between shadow-sm">
-                <span class="text-[9px] font-bold tracking-widest uppercase text-[var(--text-primary)] opacity-70 mb-3">Cédula / RUC</span>
-                <input v-model="filterCedula" type="text" placeholder="0000000000" class="bg-transparent border-b border-[var(--border-color)] py-2 text-xs outline-none focus:border-[var(--accent-color)] text-[var(--text-primary)] transition-colors placeholder:text-[var(--text-muted)]" />
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+              <div class="glass-panel p-lg rounded-base flex flex-col justify-between shadow-sm">
+                <span class="text-caption font-bold tracking-widest uppercase text-[var(--text-primary)] mb-md">Cédula / RUC</span>
+                <input v-model="filterCedula" type="text" placeholder="0000000000" class="bg-transparent border-b border-[var(--border-color)] py-sm text-caption outline-none focus:border-[var(--accent-color)] text-[var(--text-primary)] transition-colors placeholder:text-[var(--text-muted)]" />
               </div>
-              <div class="glass-panel p-5 rounded-2xl flex flex-col justify-between shadow-sm">
-                <span class="text-[9px] font-bold tracking-widest uppercase text-[var(--text-primary)] opacity-70 mb-3">Localidad</span>
-                <input v-model="filterCity" type="text" placeholder="Ciudad..." class="bg-transparent border-b border-[var(--border-color)] py-2 text-xs outline-none focus:border-[var(--accent-color)] text-[var(--text-primary)] transition-colors placeholder:text-[var(--text-muted)]" />
+              <div class="glass-panel p-lg rounded-base flex flex-col justify-between shadow-sm">
+                <span class="text-caption font-bold tracking-widest uppercase text-[var(--text-primary)] mb-md">Localidad</span>
+                <input v-model="filterCity" type="text" placeholder="Ciudad..." class="bg-transparent border-b border-[var(--border-color)] py-sm text-caption outline-none focus:border-[var(--accent-color)] text-[var(--text-primary)] transition-colors placeholder:text-[var(--text-muted)]" />
               </div>
             </div>
 
-            <div class="glass-panel p-5 rounded-2xl shadow-sm">
-              <div class="flex items-center justify-between mb-4">
-                <span class="text-[9px] font-bold tracking-widest uppercase text-[var(--text-primary)] opacity-70">Rango de Edad</span>
-                <span class="text-[10px] font-bold text-[var(--accent-color)] bg-[var(--accent-color)]/5 px-2 py-0.5 rounded-lg">{{ filterAgeMin || 0 }} — {{ filterAgeMax || 100 }}</span>
+            <div class="glass-panel p-lg rounded-base shadow-sm">
+              <div class="flex items-center justify-between mb-md">
+                <span class="text-caption font-bold tracking-widest uppercase text-[var(--text-primary)]">Rango de Edad</span>
+                <span class="text-caption font-bold text-[var(--accent-color)] bg-[var(--accent-color)]/5 px-sm py-xs rounded-base">{{ filterAgeMin || 0 }} — {{ filterAgeMax || 100 }}</span>
               </div>
-              <div class="flex items-center gap-4">
-                <input v-model.number="filterAgeMin" type="number" placeholder="Mín" class="w-1/2 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[11px] outline-none focus:border-[var(--accent-color)] text-center transition-all text-[var(--text-primary)]" />
+              <div class="flex items-center gap-md">
+                <input v-model.number="filterAgeMin" type="number" placeholder="Mín" class="w-1/2 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-base px-md py-sm text-body outline-none focus:border-[var(--accent-color)] text-center transition-all text-[var(--text-primary)]" />
                 <div class="w-4 h-[1px] bg-[var(--border-color)]"></div>
-                <input v-model.number="filterAgeMax" type="number" placeholder="Máx" class="w-1/2 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl px-3 py-2 text-[11px] outline-none focus:border-[var(--accent-color)] text-center transition-all text-[var(--text-primary)]" />
+                <input v-model.number="filterAgeMax" type="number" placeholder="Máx" class="w-1/2 bg-[var(--bg-color)] border border-[var(--border-color)] rounded-base px-md py-sm text-body outline-none focus:border-[var(--accent-color)] text-center transition-all text-[var(--text-primary)]" />
               </div>
             </div>
 
-            <div class="space-y-4">
-              <div v-if="availableGenders.length > 0" class="glass-panel p-5 rounded-2xl shadow-sm">
-                <div class="flex items-center justify-between mb-4">
-                   <span class="text-[9px] font-bold tracking-widest uppercase text-[var(--text-primary)] opacity-70">Género</span>
-                   <span v-if="filterGender" class="text-[8px] bg-[var(--accent-color)] text-[var(--bg-color)] px-2 py-0.5 rounded-full font-bold">1 SELECCIONADO</span>
+            <div class="space-y-md">
+              <div v-if="availableGenders.length > 0" class="glass-panel p-lg rounded-base shadow-sm">
+                <div class="flex items-center justify-between mb-md">
+                   <span class="text-caption font-bold tracking-widest uppercase text-[var(--text-primary)]">Género</span>
+                   <span v-if="filterGender" class="text-caption bg-[var(--accent-color)] text-[var(--bg-color)] px-sm py-xs rounded-full font-bold">1 SELECCIONADO</span>
                 </div>
-                <div class="flex flex-wrap gap-2">
-                  <button v-for="g in availableGenders" :key="g" @click="filterGender = filterGender === g ? '' : g" :class="['px-4 py-2 rounded-full text-[10px] tracking-wider transition-all duration-300 uppercase font-bold border-2', filterGender === g ? 'bg-[var(--accent-color)] text-[var(--accent-inverse)] border-[var(--accent-color)] shadow-md' : 'bg-white border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--accent-color)]']">{{ g }}</button>
-                </div>
-              </div>
-
-              <div v-if="availableNationalities.length > 0" class="glass-panel p-5 rounded-2xl shadow-sm">
-                <div class="flex items-center justify-between mb-4">
-                   <span class="text-[9px] font-bold tracking-widest uppercase text-[var(--text-primary)] opacity-70">Nacionalidad</span>
-                   <span v-if="filterNationalities.length > 0" class="text-[8px] bg-[var(--accent-color)] text-[var(--accent-inverse)] px-2 py-0.5 rounded-full font-bold">{{ filterNationalities.length }} SELECCIONADOS</span>
-                </div>
-                <div class="flex flex-wrap gap-2">
-                  <button v-for="nat in availableNationalities" :key="nat" @click="toggleNationality(nat)" :class="['px-4 py-2 rounded-full text-[10px] tracking-wider transition-all duration-300 uppercase font-bold border-2', filterNationalities.includes(nat) ? 'bg-[var(--accent-color)] text-[var(--accent-inverse)] border-[var(--accent-color)] shadow-md' : 'bg-white border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--accent-color)]']">{{ nat }}</button>
+                <div class="flex flex-wrap gap-sm">
+                  <button v-for="g in availableGenders" :key="g" @click="filterGender = filterGender === g ? '' : g" :class="['px-md py-sm rounded-full text-caption tracking-wider transition-all duration-base uppercase font-bold border-2', filterGender === g ? 'bg-[var(--accent-color)] text-[var(--accent-inverse)] border-[var(--accent-color)] shadow-md' : 'bg-white border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--accent-color)]']">{{ g }}</button>
                 </div>
               </div>
 
-              <div v-if="availableMaritalStatuses.length > 0" class="glass-panel p-5 rounded-2xl shadow-sm">
-                <div class="flex items-center justify-between mb-4">
-                   <span class="text-[9px] font-bold tracking-widest uppercase text-[var(--text-primary)] opacity-70">Estado Civil</span>
-                   <span v-if="filterMaritalStatus" class="text-[8px] bg-[var(--accent-color)] text-[var(--accent-inverse)] px-2 py-0.5 rounded-full font-bold">1 SELECCIONADO</span>
+              <div v-if="availableNationalities.length > 0" class="glass-panel p-lg rounded-base shadow-sm">
+                <div class="flex items-center justify-between mb-md">
+                   <span class="text-caption font-bold tracking-widest uppercase text-[var(--text-primary)]">Nacionalidad</span>
+                   <span v-if="filterNationalities.length > 0" class="text-caption bg-[var(--accent-color)] text-[var(--accent-inverse)] px-sm py-xs rounded-full font-bold">{{ filterNationalities.length }} SELECCIONADOS</span>
                 </div>
-                <div class="flex flex-wrap gap-2">
-                  <button v-for="ms in availableMaritalStatuses" :key="ms" @click="filterMaritalStatus = filterMaritalStatus === ms ? '' : ms" :class="['px-4 py-2 rounded-full text-[10px] tracking-wider transition-all duration-300 uppercase font-bold border-2', filterMaritalStatus === ms ? 'bg-[var(--accent-color)] text-[var(--accent-inverse)] border-[var(--accent-color)] shadow-md' : 'bg-white border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--accent-color)]']">{{ ms }}</button>
+                <div class="flex flex-wrap gap-sm">
+                  <button v-for="nat in availableNationalities" :key="nat" @click="toggleNationality(nat)" :class="['px-md py-sm rounded-full text-caption tracking-wider transition-all duration-base uppercase font-bold border-2', filterNationalities.includes(nat) ? 'bg-[var(--accent-color)] text-[var(--accent-inverse)] border-[var(--accent-color)] shadow-md' : 'bg-white border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--accent-color)]']">{{ nat }}</button>
+                </div>
+              </div>
+
+              <div v-if="availableMaritalStatuses.length > 0" class="glass-panel p-lg rounded-base shadow-sm">
+                <div class="flex items-center justify-between mb-md">
+                   <span class="text-caption font-bold tracking-widest uppercase text-[var(--text-primary)]">Estado Civil</span>
+                   <span v-if="filterMaritalStatus" class="text-caption bg-[var(--accent-color)] text-[var(--accent-inverse)] px-sm py-xs rounded-full font-bold">1 SELECCIONADO</span>
+                </div>
+                <div class="flex flex-wrap gap-sm">
+                  <button v-for="ms in availableMaritalStatuses" :key="ms" @click="filterMaritalStatus = filterMaritalStatus === ms ? '' : ms" :class="['px-md py-sm rounded-full text-caption tracking-wider transition-all duration-base uppercase font-bold border-2', filterMaritalStatus === ms ? 'bg-[var(--accent-color)] text-[var(--accent-inverse)] border-[var(--accent-color)] shadow-md' : 'bg-white border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--accent-color)]']">{{ ms }}</button>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="flex justify-center pt-4">
-            <div class="bg-[var(--accent-color)]/5 border border-[var(--accent-color)]/10 px-4 py-2 rounded-2xl flex items-center gap-2">
+          <div class="flex justify-center pt-md">
+            <div class="bg-[var(--accent-color)]/5 border border-[var(--accent-color)]/10 px-md py-sm rounded-base flex items-center gap-sm">
               <span class="w-1.5 h-1.5 rounded-full bg-[var(--accent-color)] animate-pulse"></span>
-              <p class="text-[9px] text-[var(--accent-color)] uppercase tracking-[0.2em] font-bold">
+              <p class="text-caption text-[var(--accent-color)] uppercase tracking-[0.2em] font-bold">
                 Mostrando {{ filteredResults?.length ?? 0 }} de {{ rawResults.length }} encontrados
               </p>
             </div>
@@ -138,8 +138,8 @@
     </template>
 
     <template #results="{ data }">
-      <div v-if="Array.isArray(data)" class="grid grid-cols-1 gap-6 animate-fade-in-up">
-        <div v-for="(item, idx) in data" :key="idx" class="group relative bg-[var(--input-bg)]/40 p-6 rounded-3xl border border-[var(--border-color)]/60 hover:border-[var(--accent-color)]/20 transition-all duration-500 hover:shadow-xl hover:shadow-[var(--accent-color)]/5 overflow-hidden">
+      <div v-if="Array.isArray(data)" class="grid grid-cols-1 gap-lg animate-fade-in-up">
+        <div v-for="(item, idx) in data" :key="idx" class="group relative bg-[var(--input-bg)]/40 p-lg rounded-base border border-[var(--border-color)]/60 hover:border-[var(--accent-color)]/20 transition-all duration-base hover:shadow-xl hover:shadow-[var(--accent-color)]/5 overflow-hidden">
           <div class="absolute -right-4 -top-4 w-24 h-24 bg-[var(--accent-color)]/5 rounded-full blur-2xl group-hover:bg-[var(--accent-color)]/10 transition-colors"></div>
           <div class="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-12">
             <ResultCard v-for="(v, k) in item" :key="k" :label="mapKey(String(k))" :value="v" :type="detectType(String(k), v)" />

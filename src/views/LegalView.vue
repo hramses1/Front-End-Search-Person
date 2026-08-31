@@ -1,60 +1,60 @@
 <template>
   <div class="font-primary min-h-screen relative selection:bg-[var(--accent-color)]/30" style="background-color: var(--bg-color); color: var(--text-primary);">
-    <div class="absolute inset-0 pointer-events-none noise-overlay z-0 opacity-20"></div>
+    <div class="absolute inset-0 pointer-events-none noise-overlay z-0 text-[var(--text-muted)]"></div>
 
-    <div class="relative z-10 max-w-3xl mx-auto px-6 sm:px-8">
+    <div class="relative z-10 max-w-3xl mx-auto px-lg sm:px-xl">
 
-      <header class="flex items-center justify-between py-6 border-b border-[var(--border-color)]">
-        <button @click="router.push('/')" class="flex items-center gap-2 text-[10px] uppercase tracking-[0.15em] opacity-50 hover:opacity-100 hover:text-[var(--accent-color)] transition-all">
+      <header class="flex items-center justify-between py-lg border-b border-[var(--border-color)]">
+        <button @click="router.push('/')" class="flex items-center gap-sm text-caption uppercase tracking-[0.15em] text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-all">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
           Volver a la portada
         </button>
-        <button @click="toggleTheme" class="p-2.5 glass-panel rounded-2xl text-[var(--accent-color)] active:scale-90 transition-transform">
+        <button @click="toggleTheme" class="p-sm glass-panel rounded-base text-[var(--accent-color)] active:scale-90 transition-transform">
           <svg v-if="isDark" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.8" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
           <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.8" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         </button>
       </header>
 
-      <article class="py-16">
-        <p class="text-[9px] font-black tracking-[0.35em] uppercase opacity-40 mb-4">{{ doc.rotulo || 'Legal' }}</p>
-        <h1 class="text-3xl sm:text-4xl font-light tracking-tight mb-4">{{ doc.titulo }}</h1>
-        <p class="text-[10px] uppercase tracking-[0.15em] opacity-40 mb-10">
+      <article class="py-3xl">
+        <p class="text-caption font-black tracking-[0.35em] uppercase text-[var(--text-muted)] mb-md">{{ doc.rotulo || 'Legal' }}</p>
+        <h1 class="text-h2 sm:text-4xl font-light tracking-tight mb-md">{{ doc.titulo }}</h1>
+        <p class="text-caption uppercase tracking-[0.15em] text-[var(--text-muted)] mb-2xl">
           Última actualización: {{ doc.actualizado }}
         </p>
 
-        <p class="text-[13px] leading-relaxed opacity-70 mb-12">{{ doc.intro }}</p>
+        <p class="text-body leading-relaxed text-[var(--text-secondary)] mb-2xl">{{ doc.intro }}</p>
 
-        <section v-for="(sec, i) in doc.secciones" :key="sec.h" class="mb-10">
-          <h2 class="text-[13px] font-bold tracking-wide mb-4 flex items-baseline gap-3">
-            <span class="text-[var(--accent-color)] font-mono text-[11px]">{{ String(i + 1).padStart(2, '0') }}</span>
+        <section v-for="(sec, i) in doc.secciones" :key="sec.h" class="mb-2xl">
+          <h2 class="text-body font-bold tracking-wide mb-md flex items-baseline gap-md">
+            <span class="text-[var(--accent-color)] font-mono text-body">{{ String(i + 1).padStart(2, '0') }}</span>
             {{ sec.h }}
           </h2>
-          <div class="space-y-3 pl-8">
-            <p v-for="(par, j) in sec.p" :key="j" class="text-[12px] leading-relaxed opacity-70">{{ par }}</p>
-            <ul v-if="sec.lista" class="space-y-2 pt-1">
-              <li v-for="item in sec.lista" :key="item" class="flex items-start gap-2.5 text-[12px] leading-relaxed opacity-70">
-                <span class="text-[var(--accent-color)] mt-1.5 shrink-0">&middot;</span>
+          <div class="space-y-md pl-xl prose-limit">
+            <p v-for="(par, j) in sec.p" :key="j" class="text-body leading-relaxed text-[var(--text-secondary)]">{{ par }}</p>
+            <ul v-if="sec.lista" class="space-y-sm pt-xs">
+              <li v-for="item in sec.lista" :key="item" class="flex items-start gap-sm text-body leading-relaxed text-[var(--text-secondary)]">
+                <span class="text-[var(--accent-color)] mt-sm shrink-0">&middot;</span>
                 {{ item }}
               </li>
             </ul>
           </div>
         </section>
 
-        <div v-if="route.name !== 'contacto'" class="glass-card p-6 mt-12">
-          <p class="text-[9px] font-black tracking-[0.25em] uppercase opacity-40 mb-2">Contacto</p>
-          <p class="text-[12px] leading-relaxed opacity-70">
+        <div v-if="route.name !== 'contacto'" class="glass-card p-lg mt-2xl">
+          <p class="text-caption font-black tracking-[0.25em] uppercase text-[var(--text-muted)] mb-sm">Contacto</p>
+          <p class="text-body leading-relaxed text-[var(--text-secondary)]">
             Para cualquier consulta sobre este documento, escribe a
             <a href="mailto:arismendiramses@gmail.com" class="text-[var(--accent-color)] hover:underline">arismendiramses@gmail.com</a>.
           </p>
         </div>
 
-        <nav class="flex flex-wrap gap-6 mt-12 pt-8 border-t border-[var(--border-color)]">
+        <nav class="flex flex-wrap gap-lg mt-2xl pt-xl border-t border-[var(--border-color)]">
           <button
             v-for="l in otros" :key="l.ruta"
             @click="router.push(l.ruta)"
-            class="text-[10px] uppercase tracking-[0.15em] opacity-40 hover:opacity-100 hover:text-[var(--accent-color)] transition-all"
+            class="text-caption uppercase tracking-[0.15em] text-[var(--text-muted)] hover:text-[var(--accent-color)] transition-all"
           >
             {{ l.texto }}
           </button>

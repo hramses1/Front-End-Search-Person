@@ -2,7 +2,7 @@
   <div class="relative inline-block" ref="anchorRef">
     <button 
       @click="toggle"
-      class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-amber-500/5 border border-amber-500/20 rounded-2xl text-amber-500 text-[10px] sm:text-[11px] font-bold tracking-widest hover:bg-amber-500/10 transition-all active:scale-95 shadow-lg shadow-amber-500/5"
+      class="flex items-center gap-sm px-md sm:px-md py-sm bg-amber-500/5 border border-amber-500/20 rounded-base text-amber-500 text-caption sm:text-body font-bold tracking-widest hover:bg-amber-500/10 transition-all active:scale-95 shadow-lg shadow-amber-500/5"
     >
       <span class="animate-bounce">☕</span>
       <span class="hidden xs:inline">DONACIÓN</span>
@@ -16,7 +16,7 @@
       </transition>
 
       <transition 
-        enter-active-class="transition duration-300 ease-out" 
+        enter-active-class="transition duration-base ease-out" 
         enter-from-class="transform scale-95 opacity-0 translate-y-4 sm:translate-y-0" 
         enter-to-class="transform scale-100 opacity-100 translate-y-0"
         leave-active-class="transition duration-200 ease-in"
@@ -25,45 +25,44 @@
       >
         <div 
           v-if="isOpen" 
-          class="fixed z-[9999] w-[90%] max-w-[340px] sm:w-80 p-6 sm:p-7 rounded-3xl border shadow-2xl overflow-hidden bg-[var(--surface-color)] border-[var(--border-color)]"
+          class="fixed z-[9999] w-[90%] max-w-[340px] sm:w-80 p-lg sm:p-7 rounded-base border shadow-2xl overflow-hidden bg-[var(--surface-color)] border-[var(--border-color)]"
           :style="isMobile ? mobileStyle : desktopStyle"
         >
           <div class="absolute top-0 left-0 w-full h-1.5 bg-amber-500"></div>
           
-          <div class="flex justify-between items-center mb-6">
+          <div class="flex justify-between items-center mb-lg">
             <div class="flex flex-col">
-                <span class="text-[9px] font-black text-amber-500 tracking-[0.2em] uppercase">Apoyo Voluntario</span>
-                <span class="text-[11px] font-bold uppercase">Invítame un café</span>
+                <span class="text-caption font-black text-amber-500 tracking-[0.2em] uppercase">Apoyo Voluntario</span>
+                <span class="text-body font-bold uppercase">Invítame un café</span>
             </div>
-            <button @click="close" class="p-2 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
+            <button @click="close" class="p-sm rounded-base hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="3"></path></svg>
             </button>
           </div>
-<div class="flex flex-col items-center gap-6">
+<div class="flex flex-col items-center gap-lg">
   <!-- QR con efecto de empuje (Push layout) -->
   <div 
       @click="isQrZoomed = !isQrZoomed"
-      :class="['p-4 bg-white rounded-2xl shadow-xl ring-1 ring-black/5 cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]', 
-      isQrZoomed ? 'scale-110 sm:scale-125 z-50 mb-10 sm:mb-14 shadow-2xl' : 'hover:scale-105 active:scale-95 mb-0']"
+      :class="['p-md bg-white rounded-base shadow-xl ring-1 ring-black/5 cursor-pointer transition-all duration-base ease-[cubic-bezier(0.34,1.56,0.64,1)]', isQrZoomed ? 'scale-110 sm:scale-125 z-50 mb-2xl sm:mb-14 shadow-2xl' : 'hover:scale-105 active:scale-95 mb-0']"
   >
       <img src="/Cafecito-qrcode.png" alt="QR" class="w-full h-auto object-contain max-w-[140px] sm:max-w-[160px]" />
-      <p v-if="!isQrZoomed" class="text-[8px] font-black text-center mt-2 opacity-20 uppercase tracking-tighter">Clic para ampliar</p>
+      <p v-if="!isQrZoomed" class="text-caption font-black text-center mt-sm text-[var(--text-muted)] uppercase tracking-tighter">Clic para ampliar</p>
   </div>
 
   <!-- El contenido de abajo se desplazará automáticamente por el margen del QR -->
-  <div class="w-full space-y-4 transition-all duration-500">
+  <div class="w-full space-y-md transition-all duration-base">
       <form action="https://www.paypal.com/ncp/payment/4M6VX3YHV39U4" method="post" target="_blank">
         <button 
           type="submit" 
-          class="w-full py-4 bg-[#FFD140] hover:bg-[#ffc400] text-black font-extrabold text-[11px] tracking-[0.1em] rounded-xl shadow-lg transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-2 uppercase"
+          class="w-full py-md bg-[#FFD140] hover:bg-[#ffc400] text-black font-extrabold text-body tracking-[0.1em] rounded-base shadow-lg transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-sm uppercase"
         >
           Paypal Secure
         </button>
       </form>
 
-      <div class="flex flex-col items-center gap-2 opacity-80">
+      <div class="flex flex-col items-center gap-sm opacity-80">
           <img src="/paypal-cards.svg" alt="cards" class="h-4" />
-          <p class="text-[9px] text-center font-bold opacity-40 uppercase tracking-tighter">
+          <p class="text-caption text-center font-bold text-[var(--text-muted)] uppercase tracking-tighter">
             100% Protegido
           </p>
       </div>

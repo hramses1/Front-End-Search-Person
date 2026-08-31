@@ -1,10 +1,10 @@
 <template>
-  <div class="auth-wrapper font-primary relative overflow-hidden flex items-center justify-center p-6">
+  <div class="auth-wrapper font-primary relative overflow-hidden flex items-center justify-center p-lg">
     <!-- Botón de Tema Flotante -->
     <button 
       type="button"
       @click="toggleTheme" 
-      class="absolute top-6 right-6 z-50 p-3 backdrop-blur-md border rounded-2xl shadow-lg transition-all duration-300 group hover:scale-105"
+      class="absolute top-6 right-6 z-50 p-md backdrop-blur-md border rounded-base shadow-lg transition-all duration-base group hover:scale-105"
       style="background-color: var(--glass-bg); border-color: var(--border-color); color: var(--accent-color);"
       title="Cambiar Tema"
     >
@@ -19,39 +19,39 @@
     
     <div class="absolute inset-0 pointer-events-none overflow-hidden z-0" style="will-change: transform; transform: translateZ(0);">
       <div 
-        class="absolute -inset-[50%] opacity-40 blur-[130px] gradient-mesh transition-transform duration-[1000ms] ease-out delay-75"
+        class="absolute -inset-[50%] text-[var(--text-muted)] blur-[130px] gradient-mesh transition-transform duration-[1000ms] ease-out delay-75"
         :style="{ transform: `translate3d(${mouseX * -0.04}px, ${mouseY * -0.04}px, 0)` }"
       ></div>
     </div>
 
     <!-- Contenedor Principal (Soft Neumorphism & Glassmorphism) -->
     <div 
-      class="w-full max-w-[440px] p-8 sm:p-12 rounded-[2rem] bg-obsidian-soft border-[0.5px] relative z-10 shadow-negative"
+      class="w-full max-w-[440px] p-xl sm:p-2xl rounded-base bg-obsidian-soft border-[0.5px] relative z-10 shadow-negative"
       style="border-color: var(--border-color);"
     >
-      <div class="text-center mb-12 mask-reveal delay-100 relative">
-        <h1 class="text-[28px] tracking-[0.25em] font-light mb-2 drop-shadow-md" style="color: var(--text-primary);">PORTAL</h1>
-        <p class="text-[10px] uppercase tracking-[0.4em]" style="color: var(--text-secondary);">Acesso Restringido</p>
+      <div class="text-center mb-2xl mask-reveal delay-100 relative">
+        <h1 class="text-h4 tracking-[0.25em] font-light mb-sm drop-shadow-md" style="color: var(--text-primary);">PORTAL</h1>
+        <p class="text-caption uppercase tracking-[0.4em]" style="color: var(--text-secondary);">Acesso Restringido</p>
         <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 w-8 h-[1px] bg-gradient-to-r from-transparent via-pale-blue/30 to-transparent"></div>
       </div>
 
       <!-- Selector de Modo Login / Registro -->
-      <div class="flex justify-center mb-10 gap-10 text-[11px] font-medium tracking-[0.2em] mask-reveal delay-200">
+      <div class="flex justify-center mb-2xl gap-2xl text-body font-medium tracking-[0.2em] mask-reveal delay-200">
         <button 
           @click="setMode(true)" 
           :style="{ color: isLogin ? 'var(--accent-color)' : 'var(--text-secondary)' }"
-          class="pb-2 transition-all duration-300 relative group"
+          class="pb-sm transition-all duration-base relative group"
         >
           INICIAR
-          <span class="absolute bottom-0 left-0 w-full h-[1px] transform scale-x-0 transition-transform duration-300 origin-left" :class="isLogin ? 'scale-x-100' : 'group-hover:scale-x-50'" style="background-color: var(--accent-color);"></span>
+          <span class="absolute bottom-0 left-0 w-full h-[1px] transform scale-x-0 transition-transform duration-base origin-left" :class="isLogin ? 'scale-x-100' : 'group-hover:scale-x-50'" style="background-color: var(--accent-color);"></span>
         </button>
         <button 
           @click="setMode(false)" 
           :style="{ color: !isLogin ? 'var(--accent-color)' : 'var(--text-secondary)' }"
-          class="pb-2 transition-all duration-300 relative group"
+          class="pb-sm transition-all duration-base relative group"
         >
           REGISTRO
-          <span class="absolute bottom-0 left-0 w-full h-[1px] transform scale-x-0 transition-transform duration-300 origin-left" :class="!isLogin ? 'scale-x-100' : 'group-hover:scale-x-50'" style="background-color: var(--accent-color);"></span>
+          <span class="absolute bottom-0 left-0 w-full h-[1px] transform scale-x-0 transition-transform duration-base origin-left" :class="!isLogin ? 'scale-x-100' : 'group-hover:scale-x-50'" style="background-color: var(--accent-color);"></span>
         </button>
       </div>
 
@@ -61,20 +61,20 @@
         <!-- Vista de Login / Render Token -->
         <transition name="fade-slide" mode="out-in">
           <div v-if="successToken" key="success" class="space-y-7 text-center mask-reveal delay-300">
-            <div class="p-6 border rounded-xl relative group text-left" style="background-color: var(--card-bg); border-color: var(--border-color);">
-              <p class="text-[10px] tracking-[0.2em] mb-4 text-center" style="color: var(--accent-color);">TOKEN OBTENIDO CON ÉXITO</p>
-              <div class="w-full rounded-lg p-4 overflow-x-auto border-[0.5px]" style="background-color: rgba(0,0,0,0.1); border-color: var(--border-color);">
-                <p class="font-mono text-[11px] break-all opacity-90 select-all" style="color: var(--text-primary);">{{ successToken }}</p>
+            <div class="p-lg border rounded-base relative group text-left" style="background-color: var(--card-bg); border-color: var(--border-color);">
+              <p class="text-caption tracking-[0.2em] mb-md text-center" style="color: var(--accent-color);">TOKEN OBTENIDO CON ÉXITO</p>
+              <div class="w-full rounded-base p-md overflow-x-auto border-[0.5px]" style="background-color: rgba(0,0,0,0.1); border-color: var(--border-color);">
+                <p class="font-mono text-body break-all opacity-90 select-all" style="color: var(--text-primary);">{{ successToken }}</p>
               </div>
             </div>
             <button
               type="button"
               @click="resetLogin"
-              class="text-[10px] transition-colors tracking-[0.2em] relative inline-block group"
+              class="text-caption transition-colors tracking-[0.2em] relative inline-block group"
               style="color: var(--text-secondary);"
             >
               VOLVER
-              <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-white/40 transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
+              <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-white/40 transform scale-x-0 transition-transform duration-base origin-left group-hover:scale-x-100"></span>
             </button>
           </div>
 
@@ -85,18 +85,18 @@
                 type="text" 
                 id="identity"
                 required
-                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-2 transition-all duration-300 peer custom-input placeholder-transparent"
+                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input placeholder-transparent"
                 style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
                 placeholder="USUARIO O EMAIL"
               />
               <label 
                 for="identity" 
-                class="absolute left-0 top-0 text-xs tracking-[0.2em] transition-all duration-300 peer-focus:-translate-y-5 peer-focus:text-[10px] peer-focus:opacity-100 opacity-50 peer-valid:-translate-y-5 peer-valid:text-[10px]"
+                class="absolute left-0 top-0 text-caption tracking-[0.2em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
                 style="color: var(--text-secondary);"
               >
                 USUARIO O EMAIL
               </label>
-              <div class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-500 origin-center" style="background-color: var(--accent-color);"></div>
+              <div class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-base origin-center" style="background-color: var(--accent-color);"></div>
             </div>
 
             <div class="relative group input-container mask-reveal delay-400 relative">
@@ -105,18 +105,18 @@
                 type="password" 
                 id="login_password"
                 required
-                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-2 transition-all duration-300 peer custom-input placeholder-transparent"
+                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input placeholder-transparent"
                 style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
                 placeholder="CONTRASEÑA"
               />
               <label 
                 for="login_password" 
-                class="absolute left-0 top-0 text-xs tracking-[0.2em] transition-all duration-300 peer-focus:-translate-y-5 peer-focus:text-[10px] peer-focus:opacity-100 opacity-50 peer-valid:-translate-y-5 peer-valid:text-[10px]"
+                class="absolute left-0 top-0 text-caption tracking-[0.2em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
                 style="color: var(--text-secondary);"
               >
                 CONTRASEÑA
               </label>
-              <div class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-500 origin-center" style="background-color: var(--accent-color);"></div>
+              <div class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-base origin-center" style="background-color: var(--accent-color);"></div>
             </div>
           </div>
           
@@ -130,18 +130,18 @@
                 required
                 @input="validateField('name')"
                 :class="registerErrors.name ? 'border-red-500/50 focus:border-red-500' : ''"
-                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-2 transition-all duration-300 peer custom-input"
+                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input"
                 style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
               />
               <label 
                 for="name" 
-                class="absolute left-0 top-0 text-xs tracking-[0.2em] transition-all duration-300 peer-focus:-translate-y-5 peer-focus:text-[10px] peer-focus:opacity-100 opacity-50 peer-valid:-translate-y-5 peer-valid:text-[10px]"
+                class="absolute left-0 top-0 text-caption tracking-[0.2em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
                 style="color: var(--text-secondary);"
               >
                 NOMBRE COMPLETO
               </label>
-              <div v-if="registerErrors.name" class="text-red-400 text-[9px] mt-1 tracking-wider uppercase">{{ registerErrors.name }}</div>
-              <div v-else class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-500 origin-center" style="background-color: var(--accent-color);"></div>
+              <div v-if="registerErrors.name" class="text-red-400 text-caption mt-xs tracking-wider uppercase">{{ registerErrors.name }}</div>
+              <div v-else class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-base origin-center" style="background-color: var(--accent-color);"></div>
             </div>
 
             <div class="relative group input-container mask-reveal delay-350">
@@ -152,18 +152,18 @@
                 required
                 @input="validateField('username')"
                 :class="registerErrors.username ? 'border-red-500/50 focus:border-red-500' : ''"
-                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-2 transition-all duration-300 peer custom-input"
+                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input"
                 style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
               />
               <label 
                 for="username" 
-                class="absolute left-0 top-0 text-xs tracking-[0.2em] transition-all duration-300 peer-focus:-translate-y-5 peer-focus:text-[10px] peer-focus:opacity-100 opacity-50 peer-valid:-translate-y-5 peer-valid:text-[10px]"
+                class="absolute left-0 top-0 text-caption tracking-[0.2em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
                 style="color: var(--text-secondary);"
               >
                 USUARIO
               </label>
-              <div v-if="registerErrors.username" class="text-red-400 text-[9px] mt-1 tracking-wider uppercase">{{ registerErrors.username }}</div>
-              <div v-else class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-500 origin-center" style="background-color: var(--accent-color);"></div>
+              <div v-if="registerErrors.username" class="text-red-400 text-caption mt-xs tracking-wider uppercase">{{ registerErrors.username }}</div>
+              <div v-else class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-base origin-center" style="background-color: var(--accent-color);"></div>
             </div>
 
             <div class="relative group input-container mask-reveal delay-400">
@@ -174,18 +174,18 @@
                 required
                 @input="validateField('email')"
                 :class="registerErrors.email ? 'border-red-500/50 focus:border-red-500' : ''"
-                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-2 transition-all duration-300 peer custom-input placeholder-transparent"
+                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input placeholder-transparent"
                 style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
                 placeholder="CORREO ELECTRÓNICO"
               />
               <label 
                 for="email" 
-                class="absolute left-0 top-0 text-xs tracking-[0.2em] transition-all duration-300 peer-focus:-translate-y-5 peer-focus:text-[10px] peer-focus:opacity-100 opacity-50 peer-valid:-translate-y-5 peer-valid:text-[10px]"
+                class="absolute left-0 top-0 text-caption tracking-[0.2em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
                 style="color: var(--text-secondary);"
               >
                 CORREO ELECTRÓNICO
               </label>
-              <div v-if="registerErrors.email" class="text-red-400 text-[9px] mt-1 tracking-wider uppercase">{{ registerErrors.email }}</div>
+              <div v-if="registerErrors.email" class="text-red-400 text-caption mt-xs tracking-wider uppercase">{{ registerErrors.email }}</div>
             </div>
 
             <div class="relative group input-container mask-reveal delay-500">
@@ -197,19 +197,19 @@
                 minlength="9"
                 @input="validateField('password')"
                 :class="registerErrors.password ? 'border-red-500/50 focus:border-red-500' : ''"
-                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-2 transition-all duration-300 peer custom-input placeholder-transparent"
+                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input placeholder-transparent"
                 style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
                 placeholder="CONTRASEÑA"
               />
               <label 
                 for="password" 
-                class="absolute left-0 top-0 text-xs tracking-[0.2em] transition-all duration-300 peer-focus:-translate-y-5 peer-focus:text-[10px] peer-focus:opacity-100 opacity-50 peer-valid:-translate-y-5 peer-valid:text-[10px]"
+                class="absolute left-0 top-0 text-caption tracking-[0.2em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
                 style="color: var(--text-secondary);"
               >
                 CONTRASEÑA
               </label>
-              <div v-if="registerErrors.password" class="text-red-400 text-[9px] mt-1 tracking-wider uppercase">{{ registerErrors.password }}</div>
-              <div v-else class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-500 origin-center" style="background-color: var(--accent-color);"></div>
+              <div v-if="registerErrors.password" class="text-red-400 text-caption mt-xs tracking-wider uppercase">{{ registerErrors.password }}</div>
+              <div v-else class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-base origin-center" style="background-color: var(--accent-color);"></div>
             </div>
 
             <div class="relative group input-container mask-reveal delay-600">
@@ -221,41 +221,41 @@
                 minlength="9"
                 @input="validateField('passwordConfirm')"
                 :class="registerErrors.passwordConfirm ? 'border-red-500/50 focus:border-red-500' : ''"
-                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-2 transition-all duration-300 peer custom-input placeholder-transparent"
+                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input placeholder-transparent"
                 style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
                 placeholder="CONFIRMAR CONTRASEÑA"
               />
               <label 
                 for="passwordConfirm" 
-                class="absolute left-0 top-0 text-xs tracking-[0.2em] transition-all duration-300 peer-focus:-translate-y-5 peer-focus:text-[10px] peer-focus:opacity-100 opacity-50 peer-valid:-translate-y-5 peer-valid:text-[10px]"
+                class="absolute left-0 top-0 text-caption tracking-[0.2em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
                 style="color: var(--text-secondary);"
               >
                 CONFIRMAR CONTRASEÑA
               </label>
-              <div v-if="registerErrors.passwordConfirm" class="text-red-400 text-[9px] mt-1 tracking-wider uppercase">{{ registerErrors.passwordConfirm }}</div>
+              <div v-if="registerErrors.passwordConfirm" class="text-red-400 text-caption mt-xs tracking-wider uppercase">{{ registerErrors.passwordConfirm }}</div>
             </div>
           </div>
         </transition>
 
-        <div class="min-h-[20px] flex items-center justify-center py-1">
+        <div class="min-h-[20px] flex items-center justify-center py-xs">
           <transition name="slide-up">
-            <p v-if="errorMsg" class="text-red-400/90 text-[11px] tracking-[0.1em] text-center font-medium leading-relaxed">{{ errorMsg }}</p>
-            <p v-else-if="successMsg" class="text-[11px] tracking-[0.1em] text-center font-medium leading-relaxed" style="color: var(--accent-color);">{{ successMsg }}</p>
+            <p v-if="errorMsg" class="text-red-400/90 text-body tracking-[0.1em] text-center font-medium leading-relaxed">{{ errorMsg }}</p>
+            <p v-else-if="successMsg" class="text-body tracking-[0.1em] text-center font-medium leading-relaxed" style="color: var(--accent-color);">{{ successMsg }}</p>
           </transition>
         </div>
 
         <!-- Botón de Cristal Ahumado (Exposición Sutil) -->
-        <div v-if="!successToken" class="pt-2 mask-reveal delay-700">
+        <div v-if="!successToken" class="pt-sm mask-reveal delay-700">
           <button 
             type="submit" 
-            class="w-full py-4 border rounded-xl text-[11px] tracking-[0.3em] uppercase transition-all duration-500 overflow-hidden relative group hover-smoke-glass"
+            class="w-full py-md border rounded-base text-body tracking-[0.3em] uppercase transition-all duration-base overflow-hidden relative group hover-smoke-glass"
             style="background-color: var(--glass-bg); border-color: var(--border-color); color: var(--text-primary);"
             :disabled="isLoading"
           >
             <!-- Efecto de Barrido Lumínico -->
             <div class="absolute inset-0 -translate-x-full group-hover:animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
             
-            <span class="relative z-10 font-medium transition-all duration-300 flex items-center justify-center gap-3">
+            <span class="relative z-10 font-medium transition-all duration-base flex items-center justify-center gap-md">
               <span v-if="isLoading && !isGoogleLoading" class="w-3 h-3 border border-t-transparent border-current rounded-full animate-spin"></span>
               {{ (isLoading && !isGoogleLoading) ? 'PROCESANDO SOLICITUD...' : (isLogin ? 'ACCEDER AL SISTEMA SEGURO' : 'CREAR CUENTA PROTEGIDA') }}
             </span>
@@ -263,22 +263,22 @@
         </div>
 
         <!-- Divisor -->
-        <div v-if="!successToken" class="flex items-center gap-4 mask-reveal delay-700 mt-6">
+        <div v-if="!successToken" class="flex items-center gap-md mask-reveal delay-700 mt-lg">
           <div class="h-[1px] flex-1" style="background-color: var(--border-color);"></div>
-          <span class="text-[10px] tracking-widest text-smoke">O</span>
+          <span class="text-caption tracking-widest text-smoke">O</span>
           <div class="h-[1px] flex-1" style="background-color: var(--border-color);"></div>
         </div>
 
         <!-- Botón Google Login -->
-        <div v-if="!successToken" class="mask-reveal delay-700 mt-6">
+        <div v-if="!successToken" class="mask-reveal delay-700 mt-lg">
           <button 
             type="button" 
             @click="initiateGoogleLogin"
-            class="w-full py-4 border rounded-xl text-[11px] tracking-[0.2em] font-medium transition-all duration-400 flex items-center justify-center gap-3 relative group overflow-hidden"
+            class="w-full py-md border rounded-base text-body tracking-[0.2em] font-medium transition-all duration-base flex items-center justify-center gap-md relative group overflow-hidden"
             style="background-color: var(--bg-color); border-color: var(--border-color); color: var(--text-primary);"
             :disabled="isLoading"
           >
-            <div class="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none" style="background-color: var(--accent-color);"></div>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-base pointer-events-none" style="background-color: var(--accent-color);"></div>
             <span v-if="isGoogleLoading" class="w-3 h-3 border border-t-transparent border-current rounded-full animate-spin"></span>
             <svg v-else class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -291,24 +291,24 @@
         </div>
 
         <!-- Trust Signals / Seguridad (Punto 8 del checklist) -->
-        <div v-if="!successToken" class="mask-reveal delay-700 mt-6 flex flex-wrap justify-center items-center gap-4 text-[9px] uppercase tracking-wider opacity-60 font-mono" style="color: var(--text-secondary);">
-          <div class="flex items-center gap-1.5" title="Certificado SSL Activo">
+        <div v-if="!successToken" class="mask-reveal delay-700 mt-lg flex flex-wrap justify-center items-center gap-md text-caption uppercase tracking-wider text-[var(--text-secondary)] font-mono" style="color: var(--text-secondary);">
+          <div class="flex items-center gap-sm" title="Certificado SSL Activo">
             <svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
             Conexión Segura
           </div>
-          <div class="flex items-center gap-1.5" title="Respuesta Ultrarrápida">
+          <div class="flex items-center gap-sm" title="Respuesta Ultrarrápida">
             <svg class="w-3 h-3 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
             Búsquedas en MS
           </div>
-          <div class="flex items-center gap-1.5" title="Información Oficial">
+          <div class="flex items-center gap-sm" title="Información Oficial">
             <svg class="w-3 h-3" style="color: var(--accent-color);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             Validación Oficial
           </div>
         </div>
 
         <!-- Términos y condiciones Link -->
-        <div v-if="!successToken" class="text-center mt-6 mask-reveal delay-700">
-          <p class="text-[9px] tracking-widest uppercase opacity-50" style="color: var(--text-secondary);">
+        <div v-if="!successToken" class="text-center mt-lg mask-reveal delay-700">
+          <p class="text-caption tracking-widest uppercase text-[var(--text-secondary)]" style="color: var(--text-secondary);">
             AL CONTINUAR, ACEPTAS NUESTROS
             <button type="button" @click="showTerms = true" class="underline hover:text-current transition-colors ml-1" style="color: var(--text-primary);">TÉRMINOS Y CONDICIONES</button>
           </p>
@@ -319,39 +319,39 @@
 
     <!-- Modal de Términos -->
     <transition name="fade-slide">
-      <div v-if="showTerms" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div v-if="showTerms" class="fixed inset-0 z-50 flex items-center justify-center p-md">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="showTerms = false"></div>
-        <div class="relative w-full max-w-lg p-8 rounded-2xl shadow-2xl overflow-hidden border max-h-[80vh] flex flex-col" style="background-color: var(--card-bg); border-color: var(--border-color);">
-          <div class="mb-6 flex justify-between items-center">
-            <h2 class="text-sm tracking-[0.2em] font-medium" style="color: var(--text-primary);">⚠️ AVISO IMPORTANTE</h2>
-            <button @click="showTerms = false" class="p-2 opacity-50 hover:opacity-100 transition-opacity">
+        <div class="relative w-full max-w-lg p-xl rounded-base shadow-2xl overflow-hidden border max-h-[80vh] flex flex-col" style="background-color: var(--card-bg); border-color: var(--border-color);">
+          <div class="mb-lg flex justify-between items-center">
+            <h2 class="text-body tracking-[0.2em] font-medium" style="color: var(--text-primary);">⚠️ AVISO IMPORTANTE</h2>
+            <button @click="showTerms = false" class="p-sm text-[var(--text-secondary)] transition-opacity">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
           </div>
           
-          <div class="overflow-y-auto custom-scrollbar pr-2 flex-1 text-xs leading-relaxed space-y-4 font-light opacity-90" style="color: var(--text-secondary);">
+          <div class="overflow-y-auto custom-scrollbar pr-sm flex-1 text-caption leading-relaxed space-y-md font-light opacity-90" style="color: var(--text-secondary);">
             <p>Esta plataforma se conecta a servicios externos para obtener información pública. Los datos mostrados provienen de fuentes oficiales o abiertas y se entregan únicamente con fines informativos.</p>
             
-            <h3 class="font-medium tracking-widest mt-6 mb-2" style="color: var(--text-primary);">📌 LIMITACIONES Y RESPONSABILIDAD</h3>
-            <ul class="list-disc pl-4 space-y-2">
+            <h3 class="font-medium tracking-widest mt-lg mb-sm" style="color: var(--text-primary);">📌 LIMITACIONES Y RESPONSABILIDAD</h3>
+            <ul class="list-disc pl-md space-y-sm">
               <li>No garantizamos que la información presentada sea exacta, completa o esté actualizada al 100%.</li>
               <li>El uso que se haga de los datos obtenidos a través de esta plataforma es responsabilidad exclusiva del usuario.</li>
               <li><strong>Devzio Solutions</strong> (desarrolladores) y esta plataforma no se hacen responsables por daños, perjuicios o consecuencias derivadas de un uso indebido, fraudulento o ilegal de la información.</li>
             </ul>
 
-            <h3 class="font-medium tracking-widest mt-6 mb-2" style="color: var(--text-primary);">🔒 PRIVACIDAD</h3>
-            <ul class="list-disc pl-4 space-y-2">
+            <h3 class="font-medium tracking-widest mt-lg mb-sm" style="color: var(--text-primary);">🔒 PRIVACIDAD</h3>
+            <ul class="list-disc pl-md space-y-sm">
               <li>No almacenamos información personal sensible más allá de lo necesario para el funcionamiento del portal.</li>
               <li>Los registros temporales de búsqueda se utilizan únicamente para mejorar la experiencia de uso y se eliminan periódicamente.</li>
             </ul>
             
-            <p class="pt-4 border-t mt-6 opacity-60 text-[10px] tracking-widest" style="border-color: var(--border-color);">
+            <p class="pt-md border-t mt-lg text-[var(--text-secondary)] text-caption tracking-widest" style="border-color: var(--border-color);">
               AL CONTINUAR UTILIZANDO ESTA PLATAFORMA, CONFIRMAS QUE COMPRENDES Y ACEPTAS ESTAS CONDICIONES.
             </p>
           </div>
           
-          <div class="mt-6 pt-4 flex justify-end tracking-widest">
-            <button @click="showTerms = false" class="px-6 py-2 rounded-xl text-[10px] font-medium transition-all" style="background-color: var(--accent-color); color: #FFF;">ENTENDIDO</button>
+          <div class="mt-lg pt-md flex justify-end tracking-widest">
+            <button @click="showTerms = false" class="px-lg py-sm rounded-base text-caption font-medium transition-all" style="background-color: var(--accent-color); color: #FFF;">ENTENDIDO</button>
           </div>
         </div>
       </div>
