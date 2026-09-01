@@ -8,13 +8,23 @@
     El color acompana, no comunica: cada sello lleva siempre su etiqueta.
   -->
   <div
-    class="flex flex-wrap items-center justify-center gap-md text-overline uppercase tracking-[0.14em] font-mono"
+    class="flex flex-wrap items-center justify-center gap-md text-overline uppercase tracking-[0.14em] font-mono leading-none"
     style="color: var(--text-muted);"
   >
     <template v-for="(s, i) in sellos" :key="s.texto">
-      <span v-if="i > 0" aria-hidden="true" style="color: var(--border-color);">·</span>
+      <!--
+        Divisor de un pixel en vez del caracter ·: las metricas de una fuente
+        monoespaciada lo situaban a distinta altura que los iconos, y ese era
+        el desajuste visible. Una regla vertical siempre queda centrada.
+      -->
+      <span
+        v-if="i > 0"
+        aria-hidden="true"
+        class="w-px h-3 shrink-0"
+        :style="{ backgroundColor: 'var(--border-color)' }"
+      ></span>
 
-      <span class="flex items-center gap-xs" :title="s.titulo">
+      <span class="inline-flex items-center gap-xs leading-none" :title="s.titulo">
         <svg
           class="w-3.5 h-3.5 shrink-0"
           :style="{ color: s.color }"
@@ -22,7 +32,11 @@
         >
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="s.icono" />
         </svg>
-        {{ s.texto }}
+        <!--
+          El texto va en su propio span: pegado al </svg> quedaba un espacio
+          literal que se sumaba al gap y hacia que cada sello separase distinto.
+        -->
+        <span>{{ s.texto }}</span>
       </span>
     </template>
   </div>
