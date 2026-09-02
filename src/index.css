@@ -94,7 +94,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Enlace de salto: lo primero que recibe el foco en cada página. */
 .salto-contenido {
-  @apply absolute left-md top-md z-[9999] px-lg py-sm rounded-base
+  @apply absolute left-md top-md z-[9999] inline-flex items-center
+         min-h-[2.75rem] px-lg rounded-base
          bg-[var(--accent-color)] text-[var(--accent-inverse)]
          font-body text-caption font-medium;
   transform: translateY(-200%);
@@ -103,6 +104,22 @@ h1, h2, h3, h4, h5, h6 {
 .salto-contenido:focus {
   transform: translateY(0);
 }
+
+/* ─── Enlaces secundarios ────────────────────────────────────
+   Pies de página y navegación legal. El texto es pequeño porque
+   así lo pide la jerarquía, pero el área táctil no puede serlo:
+   medían 20px de alto, menos de la mitad del mínimo.
+
+   Se lleva la caja a 44px sin tocar el tamaño de letra, así que
+   el dedo tiene dónde caer y el diseño no cambia de peso.
+   ───────────────────────────────────────────────────────────── */
+.enlace-menor {
+  @apply inline-flex items-center min-h-[2.75rem]
+         text-caption uppercase tracking-[0.15em] transition-all;
+  color: var(--text-muted);
+  transition-duration: 200ms;
+}
+.enlace-menor:hover { color: var(--accent-color); }
 
 /* ─── Contenedor fluido ──────────────────────────────────────
    El padding lateral interpola entre 16 y 32px según el ancho,

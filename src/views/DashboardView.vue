@@ -173,7 +173,7 @@ import JudgementSection from './dashboard/sections/JudgementSection.vue';
 import ProfileSection from './dashboard/sections/ProfileSection.vue';
 
 const router = useRouter();
-const { logout, userName, isDark, toggleTheme, userPlan, userRole, userRequests, tokenLimit, quotaResetAt, isAdmin, userId, setPlanData, setQuota } = useAuth();
+const { logout, isDark, toggleTheme, userPlan, userRole, userRequests, tokenLimit, isAdmin, userId, setPlanData, setQuota } = useAuth();
 
 const isSidebarOpen = ref(false);
 

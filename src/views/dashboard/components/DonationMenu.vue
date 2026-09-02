@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, onUnmounted, computed } from 'vue';
+import { ref, reactive, onMounted, onUnmounted } from 'vue';
 
 const isOpen = ref(false);
 const isQrZoomed = ref(false);

@@ -134,13 +134,13 @@
 
       <!-- Pie -->
       <footer class="border-t border-[var(--border-color)] py-2xl flex flex-col sm:flex-row items-center justify-between gap-lg">
-        <div class="flex flex-wrap gap-lg justify-center">
+        <div class="flex flex-wrap gap-x-lg gap-y-0 justify-center">
           <component
             v-for="l in enlacesLegales" :key="l.texto"
             :is="l.ruta ? 'button' : 'a'"
             :href="l.ruta ? undefined : l.href"
             @click="l.ruta && router.push(l.ruta)"
-            class="text-caption uppercase tracking-[0.15em] text-[var(--text-muted)] hover:text-[var(--accent-color)] transition-all"
+            class="enlace-menor"
           >
             {{ l.texto }}
           </component>

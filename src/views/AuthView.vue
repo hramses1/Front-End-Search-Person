@@ -40,7 +40,7 @@
         <button 
           @click="setMode(true)" 
           :style="{ color: isLogin ? 'var(--accent-color)' : 'var(--text-secondary)' }"
-          class="pb-sm transition-all duration-base relative group"
+          class="inline-flex items-end justify-center min-h-[2.75rem] pb-sm transition-all duration-base relative group"
         >
           INICIAR
           <span class="absolute bottom-0 left-0 w-full h-[1px] transform scale-x-0 transition-transform duration-base origin-left" :class="isLogin ? 'scale-x-100' : 'group-hover:scale-x-50'" style="background-color: var(--accent-color);"></span>
@@ -48,7 +48,7 @@
         <button 
           @click="setMode(false)" 
           :style="{ color: !isLogin ? 'var(--accent-color)' : 'var(--text-secondary)' }"
-          class="pb-sm transition-all duration-base relative group"
+          class="inline-flex items-end justify-center min-h-[2.75rem] pb-sm transition-all duration-base relative group"
         >
           REGISTRO
           <span class="absolute bottom-0 left-0 w-full h-[1px] transform scale-x-0 transition-transform duration-base origin-left" :class="!isLogin ? 'scale-x-100' : 'group-hover:scale-x-50'" style="background-color: var(--accent-color);"></span>

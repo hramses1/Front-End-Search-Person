@@ -5,13 +5,13 @@
     <div class="relative z-10 max-w-3xl mx-auto px-lg sm:px-xl">
 
       <header class="flex items-center justify-between py-lg border-b border-[var(--border-color)]">
-        <button @click="router.push('/')" class="flex items-center gap-sm text-caption uppercase tracking-[0.15em] text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-all">
+        <button @click="router.push('/')" class="inline-flex items-center min-h-[2.75rem] gap-sm text-caption uppercase tracking-[0.15em] text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-all">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
           Volver a la portada
         </button>
-        <button @click="toggleTheme" class="p-sm glass-panel rounded-base text-[var(--accent-color)] active:scale-90 transition-transform">
+        <button @click="toggleTheme" class="inline-flex items-center justify-center min-h-[2.75rem] min-w-[2.75rem] glass-panel rounded-base text-[var(--accent-color)] active:scale-90 transition-transform">
           <svg v-if="isDark" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.8" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
           <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.8" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         </button>
@@ -62,11 +62,11 @@
           </div>
         </div>
 
-        <nav class="flex flex-wrap gap-lg mt-2xl pt-xl border-t border-[var(--border-color)]">
+        <nav class="flex flex-wrap gap-x-lg gap-y-0 mt-2xl pt-xl border-t border-[var(--border-color)]">
           <button
             v-for="l in otros" :key="l.ruta"
             @click="router.push(l.ruta)"
-            class="text-caption uppercase tracking-[0.15em] text-[var(--text-muted)] hover:text-[var(--accent-color)] transition-all"
+            class="enlace-menor"
           >
             {{ l.texto }}
           </button>

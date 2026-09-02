@@ -3,7 +3,7 @@
        comprime cuando el contenido desborda, en vez de acompanarlo. -->
   <footer class="mt-auto shrink-0 pt-sm border-t border-[var(--border-color)] flex flex-col sm:flex-row items-center justify-between gap-md pb-md relative">
     <!-- Copyright & Legal -->
-    <div class="flex items-center gap-md order-2 sm:order-1 flex-wrap justify-center">
+    <div class="flex items-center gap-x-md gap-y-0 order-2 sm:order-1 flex-wrap justify-center">
       <span class="text-caption font-black text-[var(--text-secondary)] tracking-[0.14em] uppercase">© {{ anio }} Devzio</span>
       <div class="h-3 w-[1.5px] bg-[var(--border-color)] text-[var(--text-muted)]"></div>
 
@@ -16,7 +16,7 @@
       <button
         v-for="l in legales" :key="l.ruta"
         @click="router.push(l.ruta)"
-        class="text-caption font-bold tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--accent-color)] transition-all"
+        class="enlace-menor font-bold"
       >
         {{ l.texto }}
       </button>
