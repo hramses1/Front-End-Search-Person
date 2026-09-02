@@ -1,8 +1,20 @@
 <template>
   <div class="relative inline-block" ref="anchorRef">
-    <!-- Trigger -->
+    <!--
+      Trigger. Era un div con @click: no se podia enfocar ni activar con el
+      teclado, y este menu es la unica via para cerrar sesion. Lleva div dentro,
+      asi que no puede ser un <button> sin producir HTML invalido; se le dan el
+      rol y el comportamiento a mano.
+    -->
     <div 
+        role="button"
+        tabindex="0"
+        :aria-expanded="isOpen"
+        aria-haspopup="menu"
+        aria-label="Menú de perfil"
         @click="toggle" 
+        @keydown.enter.prevent="toggle"
+        @keydown.space.prevent="toggle"
         class="flex items-center gap-sm sm:gap-md cursor-pointer glass-panel py-sm sm:py-sm px-md sm:px-md rounded-base hover:bg-white/5 transition-all group active:scale-95"
     >
         <div class="flex flex-col items-end hidden xs:flex">
@@ -86,13 +98,20 @@ const emit = defineEmits(['update:section', 'logout']);
 const goToProfile = () => { emit('update:section', 'profile'); close(); };
 const logoutAction = () => { emit('logout'); close(); };
 
+/* Escape cierra el menu, como en cualquier desplegable. */
+const alPulsarTecla = (e: KeyboardEvent) => {
+    if (e.key === 'Escape' && isOpen.value) close();
+};
+
 onMounted(() => {
     checkMobile();
     window.addEventListener('resize', checkMobile);
     window.addEventListener('resize', updatePosition);
+    window.addEventListener('keydown', alPulsarTecla);
 });
 onUnmounted(() => {
     window.removeEventListener('resize', checkMobile);
     window.removeEventListener('resize', updatePosition);
+    window.removeEventListener('keydown', alPulsarTecla);
 });
 </script>
