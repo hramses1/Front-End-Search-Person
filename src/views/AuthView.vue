@@ -533,7 +533,15 @@ const initiateGoogleLogin = async () => {
       isLoading.value = false;
     }
   } catch (error) {
-    errorMsg.value = 'No se pudo contactar con el servicio de autenticación.';
+    // auth-methods esta en PUBLIC_AUTH_PATHS, asi que el interceptor no lo
+    // normaliza y aqui llega el error crudo. Distinguir los dos casos importa:
+    // "no se pudo contactar" apunta a red o servidor caido, mientras que una
+    // respuesta con estado significa que el servicio si contesto y el problema
+    // esta en el, que es un diagnostico muy distinto.
+    const estado = (error as { response?: { status?: number } })?.response?.status;
+    errorMsg.value = estado
+      ? `El servicio de autenticación respondió con un error (${estado}). Intenta de nuevo en unos minutos.`
+      : 'No se pudo contactar con el servicio de autenticación. Revisa tu conexión.';
     isGoogleLoading.value = false;
     isLoading.value = false;
   }
