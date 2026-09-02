@@ -153,7 +153,7 @@
 
               <div class="flex items-center justify-between gap-md">
                 <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
-                  {{ usuariosFiltrados.length }} de {{ users.length }} usuarios
+                  {{ usuariosFiltrados.length }} de {{ plural(users.length, 'usuario') }}
                 </p>
                 <button v-if="hayFiltros" type="button" class="btn-tertiary" @click="limpiarFiltros">
                   Quitar filtros
@@ -327,7 +327,7 @@
 
                     <div class="flex items-center justify-between gap-md">
                       <span class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
-                        {{ usuariosPorPlan[pl.description] ?? 0 }} usuarios
+                        {{ plural(usuariosPorPlan[pl.description] ?? 0, 'usuario') }}
                       </span>
                       <button type="button" class="btn-secondary" @click="abrirPlan(pl)">Editar</button>
                     </div>
@@ -400,7 +400,9 @@
                 v-if="planEditando?.id && (usuariosPorPlan[planEditando.description] ?? 0) > 0"
                 class="rounded-base border border-amber-500/20 bg-amber-500/5 px-md py-md text-caption leading-relaxed text-amber-500"
               >
-                Este plan lo usan {{ usuariosPorPlan[planEditando.description] }} usuarios. El cambio les afecta a todos.
+                {{ usuariosPorPlan[planEditando.description] === 1
+                  ? 'Este plan lo usa un usuario. El cambio le afecta.'
+                  : `Este plan lo usan ${usuariosPorPlan[planEditando.description]} usuarios. El cambio les afecta a todos.` }}
               </p>
 
               <p v-if="errorPlan" class="rounded-base border border-red-500/20 bg-red-500/5 px-md py-md text-caption leading-relaxed text-red-400">
@@ -423,8 +425,9 @@
             <div v-if="planEditando?.id" class="mt-lg pt-lg border-t border-[var(--border-color)]">
               <template v-if="(usuariosPorPlan[planEditando.description] ?? 0) > 0">
                 <p class="text-caption leading-relaxed text-[var(--text-muted)]">
-                  Para eliminar este plan, antes hay que mover sus
-                  {{ usuariosPorPlan[planEditando.description] }} usuarios a otro.
+                  {{ usuariosPorPlan[planEditando.description] === 1
+                    ? 'Para eliminar este plan, antes hay que mover su único usuario a otro.'
+                    : `Para eliminar este plan, antes hay que mover sus ${usuariosPorPlan[planEditando.description]} usuarios a otro.` }}
                 </p>
               </template>
 
@@ -601,6 +604,7 @@ import BrandMark from '../ui/components/BrandMark.vue';
 import SecuritySeals from '../ui/components/SecuritySeals.vue';
 import { useAuth } from '../composables/useAuth';
 import { authService } from '../api/authService';
+import { plural } from '../utils/plural';
 import MainFooter from '../ui/components/MainFooter.vue';
 
 const router = useRouter();
@@ -993,7 +997,7 @@ const fetchUsers = async () => {
     // Ya se recorren todas las paginas; solo se avisa si el tope de seguridad
     // dejo alguna fuera.
     if (data.paginasOmitidas > 0) {
-      loadError.value = `Mostrando ${users.value.length} de ${data.totalItems} usuarios: quedaron ${data.paginasOmitidas} páginas sin cargar.`;
+      loadError.value = `Mostrando ${users.value.length} de ${plural(data.totalItems, 'usuario')}: quedaron ${plural(data.paginasOmitidas, 'página')} sin cargar.`;
     }
   } catch (error: any) {
     // Se avisa de forma explícita en vez de mostrar una tabla vacía, que
