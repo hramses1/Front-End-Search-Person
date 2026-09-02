@@ -79,7 +79,7 @@
           </div>
 
           <div v-else-if="isLogin" key="login" class="space-y-7">
-            <div class="relative group input-container mask-reveal delay-300 relative">
+            <div class="relative group input-container mask-reveal delay-300">
               <input 
                 v-model="loginForm.identity" 
                 type="text" 
@@ -99,7 +99,7 @@
               <div class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-base origin-center" style="background-color: var(--accent-color);"></div>
             </div>
 
-            <div class="relative group input-container mask-reveal delay-400 relative">
+            <div class="relative group input-container mask-reveal delay-400">
               <input 
                 v-model="loginForm.password" 
                 type="password" 

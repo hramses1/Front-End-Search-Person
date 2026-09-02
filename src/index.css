@@ -70,6 +70,50 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
 }
 
+/* ─── Foco visible ───────────────────────────────────────────
+   WCAG 2.4.7 exige que el elemento enfocado se distinga. Varias
+   clases usaban outline-none sin sustituto, de modo que navegar
+   con teclado era imposible: no se veía dónde estabas.
+
+   Se usa :focus-visible, no :focus, para que el anillo aparezca
+   al tabular pero no al hacer clic con el ratón.
+   ───────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* En los campos de línea el anillo se sustituye por un borde grueso,
+   que encaja mejor con su forma. */
+.custom-input:focus-visible {
+  outline: none;
+  border-bottom-width: 2px;
+  border-color: var(--accent-color);
+}
+
+/* Enlace de salto: lo primero que recibe el foco en cada página. */
+.salto-contenido {
+  @apply absolute left-md top-md z-[9999] px-lg py-sm rounded-base
+         bg-[var(--accent-color)] text-[var(--accent-inverse)]
+         font-body text-caption font-medium;
+  transform: translateY(-200%);
+  transition: transform 150ms ease-out;
+}
+.salto-contenido:focus {
+  transform: translateY(0);
+}
+
+/* ─── Contenedor fluido ──────────────────────────────────────
+   El padding lateral interpola entre 16 y 32px según el ancho,
+   en vez de saltar en cada punto de ruptura.
+   ───────────────────────────────────────────────────────────── */
+.contenedor {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+}
+
 /* Ancho de lectura: entre 50 y 75 caracteres por línea. */
 .prose-limit {
   max-width: 68ch;
@@ -87,7 +131,7 @@ h1, h2, h3, h4, h5, h6 {
    ───────────────────────────────────────────────────────────── */
 .btn-base {
   @apply inline-flex items-center justify-center gap-sm
-         min-h-[48px] px-lg rounded-base
+         min-h-[3rem] px-lg rounded-base
          font-body text-caption font-medium
          transition-all ease-out
          disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none;
@@ -123,7 +167,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Botón solo icono: cuadrado y con el mismo área táctil. */
 .btn-icon {
   @apply inline-flex items-center justify-center
-         min-h-[48px] min-w-[48px] rounded-base
+         min-h-[3rem] min-w-[3rem] rounded-base
          text-[var(--accent-color)] transition-all ease-out;
   transition-duration: 150ms;
 }
@@ -135,7 +179,7 @@ h1, h2, h3, h4, h5, h6 {
   @apply w-full bg-transparent border-b border-[var(--border-color)] py-md
          outline-none transition-all font-body text-body
          text-[var(--text-primary)] placeholder:opacity-0;
-  min-height: 48px;
+  min-height: 3rem;
   transition-duration: 200ms;
 }
 
@@ -177,7 +221,7 @@ label {
    colores por token, para que funcione en ambos temas.
    ───────────────────────────────────────────────────────── */
 .chip {
-  @apply inline-flex items-center justify-center min-h-[48px] px-md rounded-full
+  @apply inline-flex items-center justify-center min-h-[3rem] px-md rounded-full
          border border-[var(--border-color)] bg-transparent
          font-body text-overline font-bold uppercase tracking-[0.14em]
          text-[var(--text-secondary)] transition-all ease-out;

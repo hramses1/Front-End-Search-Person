@@ -5,6 +5,20 @@ export default {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
+    /*
+     * Puntos de ruptura declarados, no heredados por defecto. Se anade xs a
+     * 480 para cubrir el salto entre movil pequeno y grande, que es donde
+     * caian la mayoria de los ajustes. El resto coincide con la escala
+     * habitual: 768 tablet, 1024 portatil, 1280 escritorio.
+     */
+    screens: {
+      xs: '480px',
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px',
+    },
     extend: {
       /**
        * Una sola familia. La jerarquia la marcan tamano y peso, no un cambio
@@ -22,17 +36,26 @@ export default {
        * Interlineado 1.5-1.6 en cuerpo y 1.1-1.2 en titulos.
        * El cuerpo nunca baja de 16px; 14 queda reservado a etiquetas y pies.
        */
+      /*
+       * Escala fluida. Cada paso interpola con clamp entre su valor en movil
+       * y el de escritorio, de modo que el texto crece de forma continua en
+       * lugar de saltar en cada punto de ruptura.
+       *
+       * El maximo de cada paso es el de la escala 1.25 de siempre, asi que en
+       * pantallas anchas se ve exactamente igual que antes; lo que cambia es
+       * que en 320px deja de ir sobredimensionado.
+       *
+       * El cuerpo nunca baja de 1rem: ese minimo no se negocia.
+       */
       fontSize: {
-        // Paso inferior de la misma razon 1.25 (14 / 1.25). Reservado a
-        // rotulos en mayusculas y sobretitulos. Nunca para cuerpo de texto.
-        overline: ['0.75rem', { lineHeight: '1.4' }],   // 12
-        caption: ['0.875rem', { lineHeight: '1.5' }],   // 14
-        body:    ['1rem',     { lineHeight: '1.6' }],   // 16
-        lead:    ['1.25rem',  { lineHeight: '1.5' }],   // 20
-        h4:      ['1.5625rem', { lineHeight: '1.2' }],  // 25
-        h3:      ['1.9375rem', { lineHeight: '1.2' }],  // 31
-        h2:      ['2.4375rem', { lineHeight: '1.15' }], // 39
-        h1:      ['3.0625rem', { lineHeight: '1.1' }],  // 49
+        overline: ['clamp(0.6875rem, 0.67rem + 0.09vw, 0.75rem)', { lineHeight: '1.4' }],   // 11 → 12
+        caption:  ['clamp(0.8125rem, 0.79rem + 0.12vw, 0.875rem)', { lineHeight: '1.5' }],  // 13 → 14
+        body:     ['clamp(1rem, 0.98rem + 0.1vw, 1.0625rem)',      { lineHeight: '1.6' }],  // 16 → 17
+        lead:     ['clamp(1.125rem, 1.05rem + 0.35vw, 1.25rem)',   { lineHeight: '1.5' }],  // 18 → 20
+        h4:       ['clamp(1.25rem, 1.09rem + 0.78vw, 1.5625rem)',  { lineHeight: '1.25' }], // 20 → 25
+        h3:       ['clamp(1.5rem, 1.28rem + 1.1vw, 1.9375rem)',    { lineHeight: '1.2' }],  // 24 → 31
+        h2:       ['clamp(1.75rem, 1.4rem + 1.75vw, 2.4375rem)',   { lineHeight: '1.15' }], // 28 → 39
+        h1:       ['clamp(2rem, 1.46rem + 2.7vw, 3.0625rem)',      { lineHeight: '1.1' }],  // 32 → 49
       },
 
       /**

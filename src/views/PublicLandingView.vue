@@ -1,5 +1,7 @@
 <template>
   <div class="font-primary min-h-screen relative selection:bg-[var(--accent-color)]/30" style="background-color: var(--bg-color); color: var(--text-primary);">
+    <a href="#contenido" class="salto-contenido">Saltar al contenido</a>
+
     <div class="absolute inset-0 pointer-events-none noise-overlay z-0 text-[var(--text-muted)]"></div>
     <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
       <div class="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-[var(--accent-color)]/5 blur-[120px] rounded-full"></div>
@@ -25,7 +27,7 @@
       </header>
 
       <!-- Portada -->
-      <section class="py-2xl sm:py-3xl sm:py-3xl text-center">
+      <section id="contenido" class="py-2xl sm:py-3xl text-center">
         <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-lg">Datos públicos del Ecuador</p>
         <h1 class="text-h3 sm:text-h2 font-light leading-[1.15] tracking-tight max-w-3xl mx-auto">
           Verifica identidad, RUC, licencias y vehículos

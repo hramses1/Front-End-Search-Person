@@ -1,5 +1,8 @@
 <template>
   <div class="dashboard-wrapper font-primary min-h-screen flex overflow-hidden relative selection:bg-[var(--accent-color)]/30">
+    <!-- Primer elemento enfocable: permite saltarse la barra lateral. -->
+    <a href="#contenido" class="salto-contenido">Saltar al contenido</a>
+
     <!-- Capas Atmosféricas -->
     <div class="absolute inset-0 pointer-events-none noise-overlay z-0 text-[var(--text-muted)]"></div>
     <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -49,7 +52,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-screen h-[100dvh] relative z-10 p-lg sm:p-xl overflow-y-auto custom-scrollbar animate-fade-in">
+    <main id="contenido" class="flex-1 flex flex-col h-screen h-[100dvh] relative z-10 p-lg sm:p-xl overflow-y-auto custom-scrollbar animate-fade-in">
       <header class="mb-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-md pr-3xl lg:pr-0">
         <div>
           <p class="text-overline font-black tracking-[0.14em] text-[var(--accent-color)] uppercase mb-xs">Panel de Control</p>

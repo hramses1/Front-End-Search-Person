@@ -1,5 +1,8 @@
 <template>
   <div class="dashboard-wrapper font-primary min-h-screen flex overflow-hidden relative selection:bg-[var(--accent-color)]/30">
+    <!-- Primer elemento enfocable: permite saltarse la barra lateral. -->
+    <a href="#contenido" class="salto-contenido">Saltar al contenido</a>
+
     <!-- Capas Atmosféricas -->
     <div class="absolute inset-0 pointer-events-none noise-overlay z-0 text-[var(--text-muted)]"></div>
     <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -74,7 +77,7 @@
       alto realmente visible y los navegadores que no lo soportan se quedan
       con h-screen.
     -->
-    <main class="flex-1 flex flex-col h-screen h-[100dvh] relative z-10 p-lg sm:p-xl overflow-y-auto custom-scrollbar animate-fade-in">
+    <main id="contenido" class="flex-1 flex flex-col h-screen h-[100dvh] relative z-10 p-lg sm:p-xl overflow-y-auto custom-scrollbar animate-fade-in">
       <!--
         pr-3xl en movil: el boton de menu va fixed arriba a la derecha y el
         titulo se le metia debajo. En lg desaparece el boton y sobra el hueco.
