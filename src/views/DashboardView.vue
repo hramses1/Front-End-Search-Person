@@ -68,16 +68,26 @@
     </aside>
 
     <!-- Main -->
-    <main class="flex-1 flex flex-col h-screen relative z-10 p-lg sm:p-xl overflow-y-auto custom-scrollbar animate-fade-in">
-      <header class="mb-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+    <!--
+      h-[100dvh] ademas de h-screen: en moviles 100vh incluye la barra de
+      direcciones, asi que el contenido queda cortado por abajo. dvh mide el
+      alto realmente visible y los navegadores que no lo soportan se quedan
+      con h-screen.
+    -->
+    <main class="flex-1 flex flex-col h-screen h-[100dvh] relative z-10 p-lg sm:p-xl overflow-y-auto custom-scrollbar animate-fade-in">
+      <!--
+        pr-3xl en movil: el boton de menu va fixed arriba a la derecha y el
+        titulo se le metia debajo. En lg desaparece el boton y sobra el hueco.
+      -->
+      <header class="mb-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-md pr-3xl lg:pr-0">
         <div>
           <p class="text-overline font-black tracking-[0.14em] text-[var(--accent-color)] uppercase mb-xs">Sección Actual</p>
-          <h1 class="text-h3 font-light tracking-tight text-[var(--text-primary)]">
+          <h1 class="text-h4 sm:text-h3 font-light tracking-tight text-[var(--text-primary)] text-balance">
             {{ sections[currentSection] }}
           </h1>
         </div>
 
-        <div class="flex items-center gap-md self-end md:self-auto">
+        <div class="flex flex-wrap items-center justify-end gap-sm w-full md:w-auto md:gap-md self-end md:self-auto">
           <!--
             Plan y cuota vivian en una tarjeta de la barra lateral que ocupaba
             demasiado para lo que dice. Aqui van en una linea, junto al resto
@@ -98,7 +108,7 @@
           </div>
 
           <DonationMenu />
-          <div class="h-10 w-[0.5px] bg-[var(--border-color)] mx-sm hidden sm:block"></div>
+          <div class="h-10 w-px bg-[var(--border-color)] mx-sm hidden lg:block"></div>
           <div class="flex items-center gap-md">
             <button @click="toggleTheme" class="p-md glass-panel rounded-base hover:bg-white/5 transition-all text-[var(--accent-color)] active:scale-90">
                 <svg v-if="isDark" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>

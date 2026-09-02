@@ -9,7 +9,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-lg items-start">
       
       <!-- FORMULARIO DE CONSULTA (Sidebar) -->
-      <div class="lg:col-span-5 xl:col-span-4 glass-panel p-xl flex flex-col overflow-hidden lg:sticky lg:top-0 lg:max-h-[85vh]">
+      <div class="lg:col-span-5 xl:col-span-4 glass-panel p-lg sm:p-xl flex flex-col overflow-hidden lg:sticky lg:top-0 lg:max-h-[85vh]">
         <div class="flex items-center gap-md mb-2xl pb-md border-b border-[var(--border-color)] flex-shrink-0">
           <div class="w-10 h-10 rounded-base bg-[var(--accent-color)] text-[var(--accent-inverse)] flex items-center justify-center shadow-lg shadow-[var(--accent-color)]/10">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -54,7 +54,7 @@
 
           <!-- RESULTS STATE -->
           <div v-else-if="results" class="glass-card overflow-hidden flex flex-col">
-            <div class="px-2xl py-lg border-b border-[var(--border-color)] flex justify-between items-center bg-[var(--surface-color)]/80 backdrop-blur-sm flex-shrink-0 sticky top-0 z-10">
+            <div class="px-lg sm:px-2xl py-md sm:py-lg border-b border-[var(--border-color)] flex flex-wrap gap-sm justify-between items-center bg-[var(--surface-color)]/80 backdrop-blur-sm flex-shrink-0 sticky top-0 z-10">
               <div class="flex items-center gap-md">
                 <span class="flex h-2 w-2 relative">
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -71,17 +71,17 @@
             </div>
             
             <!-- Sin scroll propio: la pagina entera es la que se desplaza -->
-            <div class="p-2xl">
+            <div class="p-lg sm:p-2xl">
               <slot name="results" :data="results"></slot>
             </div>
           </div>
 
           <!-- EMPTY STATE -->
-          <div v-else class="h-full min-h-[500px] flex flex-col items-center justify-center glass-card border-dashed">
+          <div v-else class="min-h-[320px] sm:min-h-[500px] flex flex-col items-center justify-center glass-card border-dashed p-lg">
             <div class="w-24 h-24 rounded-full bg-[var(--accent-color)]/5 flex items-center justify-center mb-lg">
                 <svg class="w-10 h-10 text-[var(--accent-color)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             </div>
-            <p class="text-body font-bold tracking-[0.14em] uppercase text-[var(--text-muted)] text-center px-2xl">
+            <p class="text-body font-bold tracking-[0.14em] uppercase text-[var(--text-muted)] text-center">
                 Sistema listo para recibir consultas oficiales
             </p>
           </div>
