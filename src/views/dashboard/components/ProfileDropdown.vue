@@ -15,13 +15,18 @@
         @click="toggle" 
         @keydown.enter.prevent="toggle"
         @keydown.space.prevent="toggle"
-        class="flex items-center gap-sm sm:gap-md cursor-pointer glass-panel py-sm sm:py-sm px-md sm:px-md rounded-base hover:bg-white/5 transition-all group active:scale-95"
+        class="control-encabezado cursor-pointer glass-panel hover:bg-white/5 transition-all group active:scale-95"
     >
-        <div class="flex flex-col items-end hidden xs:flex">
-            <span class="text-caption sm:text-body font-bold tracking-[0.14em] text-[var(--text-primary)] group-hover:text-[var(--accent-color)] transition-colors uppercase truncate max-w-[100px]">{{ userName }}</span>
-            <span class="text-caption sm:text-caption font-black tracking-[0.14em] text-[var(--text-muted)]">SYSTEM</span>
+        <!--
+          Dos lineas dentro de una fila de 44px: sm:text-body trae interlineado
+          1.6 y, sumado a SYSTEM, pasaba de la altura del control. Ambas van con
+          leading-none y la secundaria un paso mas abajo en la escala.
+        -->
+        <div class="flex flex-col items-end hidden xs:flex leading-none">
+            <span class="text-caption font-bold tracking-[0.14em] leading-none text-[var(--text-primary)] group-hover:text-[var(--accent-color)] transition-colors uppercase truncate max-w-[100px]">{{ userName }}</span>
+            <span class="text-overline font-black tracking-[0.14em] leading-none text-[var(--text-muted)] mt-xs">SYSTEM</span>
         </div>
-        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-base bg-gradient-to-br from-[var(--accent-color)] to-violet-400 flex items-center justify-center text-caption sm:text-body font-black text-white shadow-lg shadow-[var(--accent-color)]/20 rotate-3 group-hover:rotate-0 transition-transform">
+        <div class="w-8 h-8 shrink-0 rounded-base bg-gradient-to-br from-[var(--accent-color)] to-violet-400 flex items-center justify-center text-caption font-black text-white shadow-lg shadow-[var(--accent-color)]/20 rotate-3 group-hover:rotate-0 transition-transform">
             {{ userName.substring(0, 2).toUpperCase() }}
         </div>
     </div>

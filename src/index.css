@@ -251,6 +251,24 @@ label {
   color: var(--accent-inverse);
 }
 
+/* ─── Controles del encabezado ───────────────────────────
+   La fila de cuenta reunia piezas de cuatro alturas distintas: la
+   cuota rondaba los 60px, donacion 40, el tema 48 y el perfil 52.
+   Cada una era razonable por separado y el conjunto se leia como
+   piezas sueltas.
+
+   Una sola altura para todas, 44px, que es ademas el minimo tactil.
+   El tamano lo fija el contenedor; dentro, el contenido se centra.
+   ───────────────────────────────────────────────────────── */
+.control-encabezado {
+  @apply inline-flex items-center gap-sm h-11 px-md rounded-base;
+}
+
+/* Variante cuadrada, para los que solo llevan icono. */
+.control-encabezado-icono {
+  @apply control-encabezado justify-center w-11 px-0;
+}
+
 /* ─── Distintivos de estado ──────────────────────────────
    El color nunca comunica solo: cada variante lleva icono o texto
    junto a él en el componente Badge.

@@ -5,7 +5,7 @@
       :aria-expanded="isOpen"
       aria-haspopup="dialog"
       @click="toggle"
-      class="flex items-center gap-sm px-md sm:px-md py-sm bg-amber-500/5 border border-amber-500/20 rounded-base text-amber-500 text-caption sm:text-body font-bold tracking-[0.14em] hover:bg-amber-500/10 transition-all active:scale-95 shadow-lg shadow-amber-500/5"
+      class="control-encabezado bg-amber-500/5 border border-amber-500/20 text-amber-500 text-caption font-bold tracking-[0.14em] hover:bg-amber-500/10 transition-all active:scale-95 shadow-lg shadow-amber-500/5"
     >
       <span class="animate-bounce">☕</span>
       <span class="hidden xs:inline">DONACIÓN</span>
