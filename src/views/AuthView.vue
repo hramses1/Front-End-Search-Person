@@ -307,7 +307,7 @@
     <transition name="fade-slide">
       <div v-if="showTerms" class="fixed inset-0 z-50 flex items-center justify-center p-md">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="showTerms = false"></div>
-        <div class="relative w-full max-w-lg p-lg sm:p-xl rounded-base shadow-2xl overflow-y-auto custom-scrollbar border max-h-[80vh] flex flex-col max-h-[85vh]" style="background-color: var(--card-bg); border-color: var(--border-color);">
+        <div role="dialog" aria-modal="true" aria-label="Aviso importante" class="relative w-full max-w-lg p-lg sm:p-xl rounded-base shadow-2xl overflow-y-auto custom-scrollbar border max-h-[85vh] flex flex-col" style="background-color: var(--card-bg); border-color: var(--border-color);">
           <div class="mb-lg flex justify-between items-center">
             <h2 class="text-body tracking-[0.14em] font-medium" style="color: var(--text-primary);">⚠️ AVISO IMPORTANTE</h2>
             <button @click="showTerms = false" class="p-sm text-[var(--text-secondary)] transition-opacity">
@@ -481,14 +481,21 @@ const handleOAuthCallback = async () => {
   }
 };
 
+/* Escape cierra el aviso de terminos, como cualquier dialogo. */
+const alPulsarTecla = (e: KeyboardEvent) => {
+  if (e.key === 'Escape' && showTerms.value) showTerms.value = false;
+};
+
 onMounted(() => {
   window.addEventListener('mousemove', handleMouseMove, { passive: true });
+  window.addEventListener('keydown', alPulsarTecla);
   // Verificar si venimos desde google
   handleOAuthCallback();
 });
 
 onUnmounted(() => {
   window.removeEventListener('mousemove', handleMouseMove);
+  window.removeEventListener('keydown', alPulsarTecla);
 });
 
 const initiateGoogleLogin = async () => {

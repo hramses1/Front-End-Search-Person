@@ -155,7 +155,7 @@
       leave-active-class="transition duration-150 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
     >
       <div v-if="muro" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md" @click.self="muro = null">
-        <div class="w-full max-w-md glass-card p-lg sm:p-xl animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
+        <div role="dialog" aria-modal="true" :aria-label="muro.titulo" class="w-full max-w-md glass-card p-lg sm:p-xl animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
           <h3 class="text-lead font-light tracking-tight mb-sm">{{ muro.titulo }}</h3>
           <p class="text-body leading-relaxed text-[var(--text-secondary)] mb-lg">{{ muro.texto }}</p>
 
@@ -194,7 +194,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import BrandMark from '../ui/components/BrandMark.vue';
 import { useAuth } from '../composables/useAuth';
@@ -435,4 +435,11 @@ const enlacesLegales: { texto: string; href?: string; ruta?: string }[] = [
   { texto: 'Términos', ruta: '/terminos' },
   { texto: 'Privacidad', ruta: '/privacidad' }
 ];
+
+/* Escape cierra el muro de registro, como cualquier dialogo. */
+const alPulsarTecla = (e: KeyboardEvent) => {
+  if (e.key === 'Escape' && muro.value) muro.value = null;
+};
+onMounted(() => window.addEventListener('keydown', alPulsarTecla));
+onUnmounted(() => window.removeEventListener('keydown', alPulsarTecla));
 </script>
