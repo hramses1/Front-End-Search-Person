@@ -25,7 +25,7 @@
       </header>
 
       <!-- Portada -->
-      <section class="py-3xl sm:py-3xl text-center">
+      <section class="py-2xl sm:py-3xl sm:py-3xl text-center">
         <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-lg">Datos públicos del Ecuador</p>
         <h1 class="text-h3 sm:text-h2 font-light leading-[1.15] tracking-tight max-w-3xl mx-auto">
           Verifica identidad, RUC, licencias y vehículos
@@ -120,7 +120,7 @@
 
       <!-- Cierre -->
       <section class="pb-3xl">
-        <div class="glass-card p-2xl text-center">
+        <div class="glass-card p-lg sm:p-2xl text-center">
           <h2 class="text-lead sm:text-h4 font-light tracking-tight mb-md">Crea tu cuenta y empieza a consultar</h2>
           <p class="text-body text-[var(--text-secondary)] max-w-md mx-auto mb-xl">
             El registro es gratuito y no pide tarjeta. Cada cuenta trae su cuota diaria de
@@ -153,7 +153,7 @@
       leave-active-class="transition duration-150 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
     >
       <div v-if="muro" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md" @click.self="muro = null">
-        <div class="w-full max-w-md glass-card p-xl animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
+        <div class="w-full max-w-md glass-card p-lg sm:p-xl animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
           <h3 class="text-lead font-light tracking-tight mb-sm">{{ muro.titulo }}</h3>
           <p class="text-body leading-relaxed text-[var(--text-secondary)] mb-lg">{{ muro.texto }}</p>
 

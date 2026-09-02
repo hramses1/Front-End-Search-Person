@@ -26,7 +26,7 @@
 
     <!-- Contenedor Principal (Soft Neumorphism & Glassmorphism) -->
     <div 
-      class="w-full max-w-[440px] p-xl sm:p-2xl rounded-base bg-obsidian-soft border-[0.5px] relative z-10 shadow-negative"
+      class="w-full max-w-[440px] p-lg sm:p-xl sm:p-2xl rounded-base bg-obsidian-soft border-[0.5px] relative z-10 shadow-negative"
       style="border-color: var(--border-color);"
     >
       <div class="text-center mb-2xl mask-reveal delay-100 relative">
@@ -307,7 +307,7 @@
     <transition name="fade-slide">
       <div v-if="showTerms" class="fixed inset-0 z-50 flex items-center justify-center p-md">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="showTerms = false"></div>
-        <div class="relative w-full max-w-lg p-xl rounded-base shadow-2xl overflow-hidden border max-h-[80vh] flex flex-col" style="background-color: var(--card-bg); border-color: var(--border-color);">
+        <div class="relative w-full max-w-lg p-lg sm:p-xl rounded-base shadow-2xl overflow-y-auto custom-scrollbar border max-h-[80vh] flex flex-col max-h-[85vh]" style="background-color: var(--card-bg); border-color: var(--border-color);">
           <div class="mb-lg flex justify-between items-center">
             <h2 class="text-body tracking-[0.14em] font-medium" style="color: var(--text-primary);">⚠️ AVISO IMPORTANTE</h2>
             <button @click="showTerms = false" class="p-sm text-[var(--text-secondary)] transition-opacity">

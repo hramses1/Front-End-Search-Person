@@ -17,7 +17,7 @@
         </button>
       </header>
 
-      <article class="py-3xl">
+      <article class="py-2xl sm:py-3xl">
         <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">{{ doc.rotulo || 'Legal' }}</p>
         <h1 class="text-h3 sm:text-4xl font-light tracking-tight mb-md">{{ doc.titulo }}</h1>
         <p class="text-caption uppercase tracking-[0.15em] text-[var(--text-muted)] mb-2xl">

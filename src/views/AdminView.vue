@@ -158,7 +158,57 @@
               </div>
             </div>
 
-            <div class="overflow-x-auto custom-scrollbar">
+            <!--
+              En movil la tabla se sustituye por tarjetas. Cinco columnas con
+              scroll horizontal se leen mal en una pantalla estrecha: obligan a
+              desplazar para ver el plan o pulsar una accion.
+            -->
+            <div class="md:hidden divide-y divide-[var(--border-color)]">
+              <p v-if="!isLoading && usuariosFiltrados.length === 0" class="px-lg py-2xl text-center text-body text-[var(--text-muted)]">
+                {{ users.length === 0 ? 'No hay usuarios que mostrar.' : 'Ningún usuario coincide con los filtros.' }}
+              </p>
+
+              <article v-for="userItem in usuariosVisibles" :key="userItem.userId" class="p-lg space-y-md">
+                <div class="min-w-0">
+                  <p class="text-body font-bold truncate">{{ userItem.userName }}</p>
+                  <p class="text-caption text-[var(--text-secondary)] truncate">
+                    {{ correoDe(userItem) || userItem.userId }}
+                  </p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-sm">
+                  <span
+                    class="text-overline font-black px-sm py-xs rounded-base border border-[var(--border-color)] tracking-[0.14em] uppercase"
+                    :style="{ color: userItem.planDescription?.includes('ADMIN') ? 'var(--accent-color)' : 'var(--text-secondary)' }"
+                  >
+                    {{ userItem.planDescription || 'SIN PLAN' }}
+                  </span>
+
+                  <span class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                    {{ userItem.consumoDesconocido ? 'Sin dato' : (sinTope(userItem.limite) ? `${userItem.number_requests ?? 0} · sin límite` : `${userItem.number_requests ?? 0} / ${userItem.limite}`) }}
+                  </span>
+
+                  <span v-if="userItem.registro" class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                    {{ fechaCorta(userItem.registro) }}
+                  </span>
+                </div>
+
+                <div class="flex flex-wrap gap-sm">
+                  <button type="button" class="btn-secondary flex-1" @click="openEditModal(userItem)">Editar</button>
+                  <button
+                    type="button"
+                    class="btn-base border flex-1"
+                    style="color: var(--estado-error); border-color: color-mix(in srgb, var(--estado-error) 30%, transparent);"
+                    :disabled="userItem.number_requests === 0 || isResetting === userItem.userId"
+                    @click="resetRequests(userItem)"
+                  >
+                    {{ isResetting === userItem.userId ? 'Reiniciando…' : 'Reiniciar' }}
+                  </button>
+                </div>
+              </article>
+            </div>
+
+            <div class="hidden md:block overflow-x-auto custom-scrollbar">
               <table class="w-full text-left border-collapse border-b border-[var(--border-color)]">
                 <thead>
                   <tr class="border-b border-[var(--border-color)] bg-black/5">
@@ -301,7 +351,7 @@
         leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
       >
         <div v-if="planEditando !== null" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md" @click.self="cerrarPlan">
-          <div class="w-full max-w-md glass-card p-xl animate-fade-in shadow-2xl">
+          <div class="w-full max-w-md glass-card p-lg sm:p-xl animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
             <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-xs">
               {{ planEditando?.id ? 'Editar plan' : 'Nuevo plan' }}
             </p>
@@ -409,7 +459,7 @@
         leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
       >
         <div v-if="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md">
-          <div class="w-full max-w-md glass-card p-xl relative animate-fade-in shadow-2xl">
+          <div class="w-full max-w-md glass-card p-lg sm:p-xl relative animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
             <h3 class="text-lead font-bold tracking-tight mb-xl flex items-center gap-md">
                 <span class="w-2 h-8 bg-[var(--accent-color)] rounded-full"></span>
                 EDITAR USUARIO
