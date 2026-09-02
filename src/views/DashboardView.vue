@@ -77,7 +77,7 @@
       alto realmente visible y los navegadores que no lo soportan se quedan
       con h-screen.
     -->
-    <main id="contenido" class="flex-1 flex flex-col h-screen h-[100dvh] relative z-10 p-lg sm:p-xl overflow-y-auto custom-scrollbar animate-fade-in">
+    <main id="contenido" class="flex-1 flex flex-col h-screen h-[100dvh] relative z-10 p-lg sm:p-xl overflow-y-auto custom-scrollbar animate-aparecer">
       <!--
         pr-3xl en movil: el boton de menu va fixed arriba a la derecha y el
         titulo se le metia debajo. En lg desaparece el boton y sobra el hueco.

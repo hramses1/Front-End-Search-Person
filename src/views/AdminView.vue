@@ -52,7 +52,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main id="contenido" class="flex-1 flex flex-col h-screen h-[100dvh] relative z-10 p-lg sm:p-xl overflow-y-auto custom-scrollbar animate-fade-in">
+    <main id="contenido" :class="['flex-1 flex flex-col h-screen h-[100dvh] relative z-10 p-lg sm:p-xl custom-scrollbar animate-aparecer', hayModal ? 'overflow-hidden' : 'overflow-y-auto']">
       <header class="mb-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-md pr-3xl lg:pr-0">
         <div>
           <p class="text-overline font-black tracking-[0.14em] text-[var(--accent-color)] uppercase mb-xs">Panel de Control</p>
@@ -348,13 +348,20 @@
       <!-- Footer en Admin -->
       <MainFooter />
 
+      <!--
+        Teleport a body: dentro de <main> el modal heredaba su bloque
+        contenedor y se posicionaba respecto al contenido desplazado, de
+        modo que al abrirlo desde el final de la lista quedaba arriba,
+        fuera de la vista. En body se ancla al viewport.
+      -->
+      <Teleport to="body">
       <!-- Alta y edicion de planes -->
       <transition
         enter-active-class="duration-base ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100"
         leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
       >
         <div v-if="planEditando !== null" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md" @click.self="cerrarPlan">
-          <div class="w-full max-w-md glass-card p-lg sm:p-xl animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
+          <div role="dialog" aria-modal="true" :aria-label="planEditando?.id ? 'Editar plan' : 'Nuevo plan'" class="w-full max-w-md glass-card p-lg sm:p-xl animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
             <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-xs">
               {{ planEditando?.id ? 'Editar plan' : 'Nuevo plan' }}
             </p>
@@ -455,14 +462,16 @@
           </div>
         </div>
       </transition>
+      </Teleport>
 
+      <Teleport to="body">
       <!-- Edit Modal -->
       <transition 
         enter-active-class="duration-base ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100"
         leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
       >
         <div v-if="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md">
-          <div class="w-full max-w-md glass-card p-lg sm:p-xl relative animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
+          <div role="dialog" aria-modal="true" aria-label="Editar usuario" class="w-full max-w-md glass-card p-lg sm:p-xl relative animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
             <h3 class="text-lead font-bold tracking-tight mb-xl flex items-center gap-md">
                 <span class="w-2 h-8 bg-[var(--accent-color)] rounded-full"></span>
                 EDITAR USUARIO
@@ -580,12 +589,13 @@
           </div>
         </div>
       </transition>
+      </Teleport>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, reactive } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import BrandMark from '../ui/components/BrandMark.vue';
 import SecuritySeals from '../ui/components/SecuritySeals.vue';
@@ -636,6 +646,20 @@ const cerrarPlan = () => {
   planEditando.value = null;
   errorPlan.value = '';
   confirmandoBorrado.value = false;
+};
+
+/**
+ * Hay un modal abierto. Se usa para congelar el desplazamiento del <main>
+ * mientras dura: el modal vive en body, asi que sin esto la rueda seguia
+ * moviendo la lista de fondo.
+ */
+const hayModal = computed(() => planEditando.value !== null || showModal.value);
+
+/** Escape cierra el modal que este abierto. */
+const alPulsarTecla = (e: KeyboardEvent) => {
+  if (e.key !== 'Escape') return;
+  if (planEditando.value !== null) cerrarPlan();
+  else if (showModal.value) showModal.value = false;
 };
 
 /**
@@ -881,6 +905,7 @@ const editForm = reactive({
 });
 
 onMounted(() => {
+  window.addEventListener('keydown', alPulsarTecla);
   if (!isAdmin.value) {
     router.push('/dashboard');
     return;
@@ -888,6 +913,8 @@ onMounted(() => {
   fetchUsers();
   fetchPlanes();
 });
+
+onUnmounted(() => window.removeEventListener('keydown', alPulsarTecla));
 
 /**
  * Catalogo de planes para el desplegable de edicion.

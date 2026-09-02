@@ -270,6 +270,25 @@ label {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/*
+   Variante sin transform, para contenedores de página.
+   fadeIn termina en translateY(0) y, con forwards, ese transform queda
+   aplicado para siempre. Un transform distinto de none convierte al
+   elemento en bloque contenedor de sus descendientes position:fixed:
+   los modales dejaban de anclarse al viewport y se anclaban al <main>,
+   que está desplazado, así que aparecían fuera de la pantalla.
+
+   Los contenedores a pantalla completa usan esta, que solo anima opacidad.
+*/
+.animate-aparecer {
+  animation: aparecer 200ms ease-out forwards;
+}
+
+@keyframes aparecer {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
