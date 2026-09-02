@@ -38,6 +38,20 @@ const readRoleClaim = (jwt: string | null): string => {
 };
 
 let inactivityTimer: ReturnType<typeof setTimeout> | null = null;
+
+/*
+ * Los listeners de actividad viven a nivel de modulo.
+ *
+ * resetInactivityTimer se define dentro de useAuth(), asi que cada llamada al
+ * composable creaba una funcion nueva: registrar sin mas anadia otro juego de
+ * cuatro listeners sobre window, con referencia distinta, y ninguno se
+ * retiraba jamas. Entre main.ts y las dos rutas de acceso de AuthView se
+ * acumulaban en cada entrada.
+ *
+ * Guardando aqui la baja del registro anterior, la operacion es idempotente.
+ */
+let quitarListenersActividad: (() => void) | null = null;
+let ultimaActividad = 0;
 const INACTIVITY_LIMIT_MS = 10 * 60 * 1000; // 10 minutos
 
 export function useAuth() {
@@ -71,6 +85,9 @@ export function useAuth() {
     // módulo: sin esto, el siguiente usuario de la pestaña los vería.
     clearCache();
     if (inactivityTimer) clearTimeout(inactivityTimer);
+    // Sin sesion no hay nada que vigilar: se retiran los listeners en vez de
+    // dejarlos girando en vacio hasta que se recargue la pestana.
+    quitarListenersActividad?.();
   };
 
   const setUserRecord = (record: {
@@ -145,6 +162,12 @@ export function useAuth() {
 
   const resetInactivityTimer = () => {
     if (!token.value) return;
+    // mousemove y scroll disparan decenas de veces por segundo. Reprogramar el
+    // temporizador en cada uno es trabajo tirado; con un margen de un segundo
+    // el cierre por inactividad no pierde precision apreciable.
+    const ahora = Date.now();
+    if (ahora - ultimaActividad < 1000) return;
+    ultimaActividad = ahora;
     if (inactivityTimer) clearTimeout(inactivityTimer);
     inactivityTimer = setTimeout(() => {
       logout();
@@ -152,12 +175,21 @@ export function useAuth() {
     }, INACTIVITY_LIMIT_MS);
   };
 
+  const EVENTOS_ACTIVIDAD = ['mousemove', 'keydown', 'click', 'scroll'] as const;
+
   const setupActivityListeners = () => {
     if (typeof window === 'undefined') return;
-    window.addEventListener('mousemove', resetInactivityTimer);
-    window.addEventListener('keydown', resetInactivityTimer);
-    window.addEventListener('click', resetInactivityTimer);
-    window.addEventListener('scroll', resetInactivityTimer);
+    quitarListenersActividad?.();
+    // passive: ninguno de los cuatro llama a preventDefault, y decirselo al
+    // navegador le evita esperar por si acaso antes de desplazar.
+    EVENTOS_ACTIVIDAD.forEach(ev => window.addEventListener(ev, resetInactivityTimer, { passive: true }));
+    quitarListenersActividad = () => {
+      // removeEventListener solo mira capture; passive no forma parte de la
+      // identidad del listener, asi que no se le pasa.
+      EVENTOS_ACTIVIDAD.forEach(ev => window.removeEventListener(ev, resetInactivityTimer));
+      quitarListenersActividad = null;
+    };
+    ultimaActividad = 0;
     resetInactivityTimer();
   };
 
