@@ -130,8 +130,9 @@
                 required
                 @input="validateField('name')"
                 :class="registerErrors.name ? 'border-red-500/50 focus:border-red-500' : ''"
-                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input"
+                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input placeholder-transparent"
                 style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
+                placeholder="NOMBRE COMPLETO"
               />
               <label 
                 for="name" 
@@ -152,8 +153,9 @@
                 required
                 @input="validateField('username')"
                 :class="registerErrors.username ? 'border-red-500/50 focus:border-red-500' : ''"
-                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input"
+                class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input placeholder-transparent"
                 style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
+                placeholder="USUARIO"
               />
               <label 
                 for="username" 

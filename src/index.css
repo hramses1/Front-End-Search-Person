@@ -218,6 +218,13 @@ label {
   transition-duration: 200ms;
 }
 
+/*
+   OJO: todo .custom-input necesita un atributo placeholder, aunque sea " ".
+   :placeholder-shown solo coincide si el campo declara uno, asi que sin el
+   :not(:placeholder-shown) se cumple siempre y la etiqueta queda flotando de
+   forma permanente, invadiendo el campo de encima. Le paso ya a <select>, a
+   <input type="date"> y a los campos de nombre y usuario del registro.
+*/
 .custom-input:focus ~ label,
 .custom-input:not(:placeholder-shown) ~ label {
   @apply -translate-y-8 scale-[0.9];
