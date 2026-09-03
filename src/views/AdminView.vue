@@ -43,7 +43,7 @@
       </div>
 
       <div class="p-md border-t border-[var(--border-color)] bg-black/10">
-        <button @click="handleLogout" class="w-full py-sm text-red-400 hover:bg-red-500/5 text-overline font-bold tracking-[0.14em] rounded-base border border-red-500/10 hover:border-red-500/20 transition-all uppercase mb-md">
+        <button @click="handleLogout" class="w-full min-h-[2.75rem] text-red-400 hover:bg-red-500/5 text-overline font-bold tracking-[0.14em] rounded-base border border-red-500/10 hover:border-red-500/20 transition-all uppercase mb-md">
           Cerrar Sesión Admin
         </button>
 
@@ -86,7 +86,7 @@
               <button
                 @click="pestana === 'usuarios' ? fetchUsers() : fetchPlanes()"
                 :disabled="isLoading"
-                class="flex items-center gap-sm text-caption font-bold tracking-[0.14em] uppercase hover:text-[var(--accent-color)] transition-all disabled:text-[var(--text-muted)]"
+                class="inline-flex items-center gap-sm min-h-[2.75rem] px-sm text-caption font-bold tracking-[0.14em] uppercase hover:text-[var(--accent-color)] transition-all disabled:text-[var(--text-muted)]"
               >
                 <span v-if="isLoading" class="w-3 h-3 border-2 border-t-transparent rounded-full animate-spin border-[var(--accent-color)]"></span>
                 <span v-else>↻</span>
@@ -152,8 +152,14 @@
               </div>
 
               <div class="flex items-center justify-between gap-md">
+                <!--
+                  "con plan": el listado sale de plan_users, no de la coleccion
+                  de usuarios, asi que quien no tenga plan asignado no aparece
+                  aqui. Decir "39 usuarios" a secas daba a entender que ese era
+                  el total de la base, y no lo es.
+                -->
                 <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
-                  {{ usuariosFiltrados.length }} de {{ plural(users.length, 'usuario') }}
+                  {{ usuariosFiltrados.length }} de {{ plural(users.length, 'usuario') }} con plan
                 </p>
                 <button v-if="hayFiltros" type="button" class="btn-tertiary" @click="limpiarFiltros">
                   Quitar filtros
@@ -277,14 +283,14 @@
                       <div class="flex justify-end gap-sm">
                         <button 
                           @click="openEditModal(userItem)"
-                          class="px-md py-sm rounded-base text-caption font-black tracking-[0.14em] border border-[var(--border-color)] hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-all uppercase"
+                          class="inline-flex items-center justify-center px-md min-h-[2.75rem] rounded-base text-caption font-black tracking-[0.14em] border border-[var(--border-color)] hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-all uppercase"
                         >
                           Editar
                         </button>
                         <button 
                           @click="resetRequests(userItem)"
                           :disabled="userItem.number_requests === 0 || isResetting === userItem.userId"
-                          class="px-md py-sm rounded-base text-caption font-black tracking-[0.14em] border border-red-500/20 text-red-500/60 hover:text-red-500 hover:border-red-500/50 transition-all uppercase disabled:text-[var(--text-muted)]"
+                          class="inline-flex items-center justify-center px-md min-h-[2.75rem] rounded-base text-caption font-black tracking-[0.14em] border border-red-500/20 text-red-500/60 hover:text-red-500 hover:border-red-500/50 transition-all uppercase disabled:text-[var(--text-muted)]"
                         >
                           <span v-if="isResetting === userItem.userId">...</span>
                           <span v-else>Reset</span>
@@ -763,7 +769,9 @@ const PASO_FILAS = 100;
 const visibles = ref(PASO_FILAS);
 const filtroPlan = ref('');
 const minPeticiones = ref<number | null>(null);
-const orden = ref<'nombre' | 'mas' | 'menos' | 'nuevos' | 'antiguos'>('nombre');
+// Predeterminado: lo ultimo que ha entrado, que es lo que se suele venir a
+// mirar. A-Z sirve para buscar a alguien concreto, y para eso esta el buscador.
+const orden = ref<'nombre' | 'mas' | 'menos' | 'nuevos' | 'antiguos'>('nuevos');
 const desde = ref('');
 const hasta = ref('');
 
@@ -774,6 +782,13 @@ const fechaCorta = (v: string) => {
     ? '—'
     : d.toLocaleDateString('es-EC', { day: '2-digit', month: 'short', year: 'numeric' });
 };
+
+/**
+ * Instante completo, para ordenar. soloFecha recorta al dia, asi que todos
+ * los registrados en la misma jornada empataban y el orden entre ellos
+ * quedaba al azar. Sin fecha va al final: se devuelve NaN y se trata aparte.
+ */
+const instante = (v: any) => new Date(String(v ?? '').replace(' ', 'T')).getTime();
 
 /** Solo la parte de fecha, para comparar contra los input type=date. */
 const soloFecha = (v: any) => {
@@ -797,11 +812,11 @@ const campos = [
 ];
 
 const ordenes = [
+  { valor: 'nuevos' as const, texto: 'Más recientes' },
+  { valor: 'antiguos' as const, texto: 'Más antiguos' },
   { valor: 'nombre' as const, texto: 'A-Z' },
   { valor: 'mas' as const, texto: 'Más peticiones' },
-  { valor: 'menos' as const, texto: 'Menos peticiones' },
-  { valor: 'nuevos' as const, texto: 'Más recientes' },
-  { valor: 'antiguos' as const, texto: 'Más antiguos' }
+  { valor: 'menos' as const, texto: 'Menos peticiones' }
 ];
 
 /**
@@ -856,7 +871,14 @@ const usuariosFiltrados = computed(() => {
 
   if (orden.value === 'nuevos' || orden.value === 'antiguos') {
     const signo = orden.value === 'nuevos' ? -1 : 1;
-    lista.sort((a, b) => signo * (soloFecha(a.registro).localeCompare(soloFecha(b.registro))));
+    lista.sort((a, b) => {
+      const ta = instante(a.registro), tb = instante(b.registro);
+      // Las filas sin fecha valida van siempre al final, se ordene como se ordene.
+      if (Number.isNaN(ta) && Number.isNaN(tb)) return 0;
+      if (Number.isNaN(ta)) return 1;
+      if (Number.isNaN(tb)) return -1;
+      return signo * (ta - tb);
+    });
   } else if (orden.value === 'mas') {
     lista.sort((a, b) => (b.number_requests ?? 0) - (a.number_requests ?? 0));
   } else if (orden.value === 'menos') {
