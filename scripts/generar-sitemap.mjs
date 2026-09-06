@@ -43,6 +43,7 @@ const paginas = [
   { ruta: '', prioridad: '1.0', frecuencia: 'weekly' },
   ...slugs.map(slug => ({ ruta: `/${slug}`, prioridad: '0.9', frecuencia: 'weekly' })),
   { ruta: '/guias', prioridad: '0.8', frecuencia: 'monthly' },
+  { ruta: '/estado', prioridad: '0.6', frecuencia: 'daily' },
   ...guias.map(slug => ({ ruta: `/guias/${slug}`, prioridad: '0.7', frecuencia: 'monthly' })),
   { ruta: '/auth', prioridad: '0.8', frecuencia: 'monthly' },
   { ruta: '/contacto', prioridad: '0.5', frecuencia: 'monthly' },

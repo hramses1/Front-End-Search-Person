@@ -173,9 +173,14 @@
               desplazar para ver el plan o pulsar una accion.
             -->
             <div class="md:hidden divide-y divide-[var(--border-color)]">
-              <p v-if="!isLoading && usuariosFiltrados.length === 0" class="px-lg py-2xl text-center text-body text-[var(--text-muted)]">
-                {{ users.length === 0 ? 'No hay usuarios que mostrar.' : 'Ningún usuario coincide con los filtros.' }}
-              </p>
+              <EstadoVacio
+                v-if="!isLoading && usuariosFiltrados.length === 0"
+                compacto
+                :titulo="vacioTitulo"
+                :detalle="vacioDetalle"
+                :accion="hayFiltros ? 'Quitar filtros' : undefined"
+                @accion="limpiarFiltros"
+              />
 
               <article v-for="userItem in usuariosVisibles" :key="userItem.userId" class="p-lg space-y-md">
                 <div class="min-w-0">
@@ -230,8 +235,14 @@
                 </thead>
                 <tbody class="divide-y divide-[var(--border-color)]">
                   <tr v-if="!isLoading && usuariosFiltrados.length === 0">
-                    <td colspan="5" class="px-lg py-2xl text-center text-body text-[var(--text-muted)]">
-                      {{ users.length === 0 ? 'No hay usuarios que mostrar.' : 'Ningún usuario coincide con los filtros.' }}
+                    <td colspan="5">
+                      <EstadoVacio
+                        compacto
+                        :titulo="vacioTitulo"
+                        :detalle="vacioDetalle"
+                        :accion="hayFiltros ? 'Quitar filtros' : undefined"
+                        @accion="limpiarFiltros"
+                      />
                     </td>
                   </tr>
                   <tr v-for="userItem in usuariosVisibles" :key="userItem.userId" class="hover:bg-white/[0.02] transition-colors group">
@@ -612,6 +623,7 @@ import { useAuth } from '../composables/useAuth';
 import { authService } from '../api/authService';
 import { plural } from '../utils/plural';
 import MainFooter from '../ui/components/MainFooter.vue';
+import EstadoVacio from '../ui/components/EstadoVacio.vue';
 
 const router = useRouter();
 const { logout, userName, isAdmin } = useAuth();
@@ -826,6 +838,20 @@ const ordenes = [
  * real no era el esperado. En vez de fijar una clave se busca cualquiera que
  * contenga mail o correo, asi da igual como se llame.
  */
+/*
+ * El texto del vacio se escribia igual en dos sitios, y ninguno ofrecia salida:
+ * si el filtro no encontraba nada, el administrador tenia que deducir que
+ * habia que quitarlo.
+ */
+const vacioTitulo = computed(() =>
+  users.value.length === 0 ? 'Todavía no hay usuarios' : 'Ningún usuario coincide'
+);
+const vacioDetalle = computed(() =>
+  users.value.length === 0
+    ? 'Cuando alguien cree una cuenta aparecerá aquí.'
+    : 'Prueba con otros filtros o quítalos para ver la lista completa.'
+);
+
 const correoDe = (u: any): string => {
   if (!u) return '';
   const clave = Object.keys(u).find(k => /mail|correo/i.test(k));

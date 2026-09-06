@@ -241,6 +241,16 @@ label {
   color: var(--accent-color);
 }
 
+/* ─── Tabla desplazable ──────────────────────────────────
+   El contenedor se desplaza, nunca el cuerpo de la pagina. Sin esto
+   una tabla ancha empuja el ancho del documento y aparece scroll
+   horizontal en toda la vista.
+   ───────────────────────────────────────────────────────── */
+.tabla-desplazable {
+  @apply overflow-x-auto rounded-base border border-[var(--border-color)];
+  -webkit-overflow-scrolling: touch;
+}
+
 /* ─── Superficies ────────────────────────────────────────── */
 .glass-card {
   @apply rounded-base border border-[var(--border-color)] bg-[var(--surface-color)] shadow-sm;

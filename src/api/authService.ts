@@ -63,6 +63,21 @@ export const authService = {
 
 
   /**
+   * Metricas publicas del servicio: disponibilidad, latencia mediana y total
+   * servido en los ultimos siete dias.
+   *
+   * Pendiente en el backend (B-03). Hasta que exista, la vista de estado
+   * muestra que todavia no publicamos metricas en lugar de inventarse una
+   * cifra, que en una pagina de transparencia seria lo peor posible.
+   *
+   * Va sin Bearer a proposito: es informacion publica.
+   */
+  async getEstadoServicio(): Promise<{ disponibilidad: number; latencia: number; servidas: number } | null> {
+    const response = await apiClient.get('/api/main/status/');
+    return response.data ?? null;
+  },
+
+  /**
    * Cuota diaria del usuario autenticado. Consultarla no la consume.
    *
    * Va sin cache de forma explicita: es un GET que cambia con cada consulta,

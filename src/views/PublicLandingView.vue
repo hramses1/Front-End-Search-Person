@@ -274,6 +274,7 @@ const faq = [
 const enlacesLegales: { texto: string; href?: string; ruta?: string }[] = [
   { texto: 'Precio', href: '#precio' },
   { texto: 'Guías', ruta: '/guias' },
+  { texto: 'Estado', ruta: '/estado' },
   { texto: 'Preguntas frecuentes', href: '#faq' },
   { texto: 'Contacto', ruta: '/contacto' },
   { texto: 'Términos', ruta: '/terminos' },

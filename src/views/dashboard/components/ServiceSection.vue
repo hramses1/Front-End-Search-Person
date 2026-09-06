@@ -89,16 +89,15 @@
           </div>
 
           <!-- EMPTY STATE -->
-          <div v-else class="min-h-[320px] sm:min-h-[500px] flex flex-col items-center justify-center glass-card border-dashed p-lg">
-            <div class="w-24 h-24 rounded-full bg-[var(--accent-color)]/5 flex items-center justify-center mb-lg">
-                <svg class="w-10 h-10 text-[var(--accent-color)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-            </div>
-            <p class="text-body text-[var(--text-muted)] text-center">
-                Sistema listo para recibir consultas oficiales
-            </p>
-          </div>
+          <EstadoVacio
+            v-else
+            class="glass-card border-dashed"
+            titulo="Sistema listo para recibir consultas"
+            detalle="Escribe el dato que quieres consultar y pulsa Ejecutar consulta."
+          />
         </transition>
       </div>
+
     </div>
   </div>
 </template>
@@ -106,6 +105,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import SkeletonResult from '../../../components/SkeletonResult.vue';
+import EstadoVacio from '../../../ui/components/EstadoVacio.vue';
 
 const props = defineProps<{
   isLoading: boolean;

@@ -12,6 +12,7 @@ import { GUIAS } from '../datos/guias'
 const LegalView = () => import('../views/LegalView.vue')
 const ConsultaView = () => import('../views/ConsultaView.vue')
 const GuiaView = () => import('../views/GuiaView.vue')
+const EstadoView = () => import('../views/EstadoView.vue')
 const AuthView = () => import('../views/AuthView.vue')
 const DashboardView = () => import('../views/DashboardView.vue')
 const AdminView = () => import('../views/AdminView.vue')
@@ -61,6 +62,15 @@ const router = createRouter({
      * hay slug. Vivian dentro de un acordeon de la portada, sin URL, asi que
      * ninguna podia posicionar por su cuenta.
      */
+    {
+      path: '/estado',
+      name: 'estado',
+      component: EstadoView,
+      meta: {
+        titulo: 'Estado del servicio',
+        descripcion: 'Disponibilidad, latencia y consultas servidas en los últimos siete días, calculadas desde nuestros propios registros de peticiones.'
+      }
+    },
     {
       path: '/guias',
       name: 'guias',

@@ -29,20 +29,10 @@
         </button>
       </header>
 
-      <!--
-        Migas visibles, no solo en el JSON-LD: el visitante que llega desde el
-        buscador aterriza aqui sin haber pasado por la portada y necesita saber
-        donde esta.
-      -->
-      <nav aria-label="Migas de pan" class="pt-lg">
-        <ol class="flex flex-wrap items-center gap-xs text-caption text-[var(--text-muted)]">
-          <li><RouterLink to="/" class="hover:text-[var(--accent-color)] transition-colors">Inicio</RouterLink></li>
-          <li aria-hidden="true" class="opacity-50">/</li>
-          <li>{{ consulta.grupo }}</li>
-          <li aria-hidden="true" class="opacity-50">/</li>
-          <li aria-current="page" class="text-[var(--text-secondary)]">{{ consulta.titulo }}</li>
-        </ol>
-      </nav>
+      <MigasDePan
+        class="pt-lg"
+        :pasos="[{ texto: consulta.grupo }, { texto: consulta.titulo }]"
+      />
 
       <main id="contenido">
         <section class="py-xl sm:py-2xl">
@@ -169,6 +159,7 @@
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter, RouterLink } from 'vue-router';
 import { POR_SLUG, CONSULTAS } from '../datos/consultas';
+import MigasDePan from '../ui/components/MigasDePan.vue';
 import { useAuth } from '../composables/useAuth';
 import { useDatosEstructurados, migas, preguntas, repintarAlCambiar } from '../composables/useDatosEstructurados';
 

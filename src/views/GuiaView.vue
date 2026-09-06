@@ -29,20 +29,12 @@
         </button>
       </header>
 
-      <nav aria-label="Migas de pan" class="pt-lg">
-        <ol class="flex flex-wrap items-center gap-xs text-caption text-[var(--text-muted)]">
-          <li><RouterLink to="/" class="hover:text-[var(--accent-color)] transition-colors">Inicio</RouterLink></li>
-          <li aria-hidden="true" class="opacity-50">/</li>
-          <li v-if="guia">
-            <RouterLink to="/guias" class="hover:text-[var(--accent-color)] transition-colors">Guías</RouterLink>
-          </li>
-          <li v-else aria-current="page" class="text-[var(--text-secondary)]">Guías</li>
-          <template v-if="guia">
-            <li aria-hidden="true" class="opacity-50">/</li>
-            <li aria-current="page" class="text-[var(--text-secondary)]">{{ guia.categoria }}</li>
-          </template>
-        </ol>
-      </nav>
+      <MigasDePan
+        class="pt-lg"
+        :pasos="guia
+          ? [{ texto: 'Guías', ruta: '/guias' }, { texto: guia.categoria }]
+          : [{ texto: 'Guías' }]"
+      />
 
       <main id="contenido">
         <!-- Índice de guías -->
@@ -143,6 +135,7 @@
 import { computed } from 'vue';
 import { useRoute, useRouter, RouterLink } from 'vue-router';
 import { GUIAS, GUIA_POR_SLUG } from '../datos/guias';
+import MigasDePan from '../ui/components/MigasDePan.vue';
 import { POR_SLUG } from '../datos/consultas';
 import { useAuth } from '../composables/useAuth';
 import { useDatosEstructurados, migas, repintarAlCambiar } from '../composables/useDatosEstructurados';
