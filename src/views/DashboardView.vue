@@ -176,6 +176,8 @@ import VehiclesSection from './dashboard/sections/VehiclesSection.vue';
 import ComplaintSection from './dashboard/sections/ComplaintSection.vue';
 import JudgementSection from './dashboard/sections/JudgementSection.vue';
 import ProfileSection from './dashboard/sections/ProfileSection.vue';
+import HistorySection from './dashboard/sections/HistorySection.vue';
+import AccountSection from './dashboard/sections/AccountSection.vue';
 
 const router = useRouter();
 const { logout, isDark, toggleTheme, userPlan, userRole, userRequests, tokenLimit, isAdmin, userId, setPlanData, setQuota } = useAuth();
@@ -243,7 +245,11 @@ const sectionGroups = [
     label: 'Cuenta',
     items: [
       { key: 'profile', label: 'Mi perfil', titulo: 'Actualizar perfil',
-        icon: ['M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'] }
+        icon: ['M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'] },
+      { key: 'history', label: 'Mi actividad', titulo: 'Mi actividad',
+        icon: ['M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'] },
+      { key: 'account', label: 'Mis datos', titulo: 'Mis datos',
+        icon: ['M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7C5 4 4 5 4 7z', 'M9 12h6'] }
     ]
   }
 ];
@@ -273,7 +279,9 @@ const activeComponent = computed(() => {
     vehicles: VehiclesSection,
     complaint: ComplaintSection,
     judgement: JudgementSection,
-    profile: ProfileSection
+    profile: ProfileSection,
+    history: HistorySection,
+    account: AccountSection
   };
   return markRaw(components[currentSection.value] || IdentitySection);
 });

@@ -42,39 +42,67 @@
         </section>
 
         <!--
-          Mientras el backend no exponga las metricas, la pagina dice que no
-          las tiene en vez de inventarse un numero. Publicar una cifra falsa en
-          una pagina cuyo proposito es la transparencia seria lo peor que
-          podriamos hacer aqui.
+          Si la medicion no llega, la pagina lo dice en vez de inventarse un
+          numero. Publicar una cifra falsa en una pagina cuyo proposito es la
+          transparencia seria lo peor que podriamos hacer aqui.
         -->
-        <section v-if="!metricas" class="pb-2xl">
+        <section v-if="cargando" class="pb-2xl">
+          <EstadoVacio class="glass-card border-dashed" titulo="Consultando la medición…" />
+        </section>
+
+        <section v-else-if="!metricas" class="pb-2xl">
           <EstadoVacio
             class="glass-card border-dashed"
-            titulo="Todavía no publicamos métricas"
-            detalle="Estamos preparando la medición. En cuanto esté, aquí aparecerán la disponibilidad, la latencia y el total de consultas servidas de los últimos siete días."
+            titulo="No pudimos leer la medición"
+            detalle="Vuelve a intentarlo en unos minutos. Si el problema sigue, escríbenos."
+            accion="Reintentar"
+            @accion="cargar"
           />
         </section>
 
-        <section v-else class="pb-2xl grid gap-md sm:grid-cols-3">
-          <FilaMetrica
-            etiqueta="Disponibilidad"
-            :valor="metricas.disponibilidad"
-            unidad="%"
-            :estado="metricas.disponibilidad >= 99 ? 'bueno' : metricas.disponibilidad >= 95 ? 'aviso' : 'malo'"
-            detalle="Peticiones sin error de servidor, últimos 7 días."
-          />
-          <FilaMetrica
-            etiqueta="Latencia típica"
-            :valor="metricas.latencia"
-            unidad="ms"
-            detalle="Mediana del tiempo de respuesta."
-          />
-          <FilaMetrica
-            etiqueta="Consultas servidas"
-            :valor="metricas.servidas.toLocaleString('es-EC')"
-            detalle="Respuestas correctas, últimos 7 días."
-          />
-        </section>
+        <template v-else>
+          <!--
+            Dos disponibilidades separadas, no una media. Una caida del Registro
+            Civil no es una caida nuestra, y juntarlas daria una cifra que no
+            significa nada para quien la lee.
+          -->
+          <section class="pb-lg grid gap-md sm:grid-cols-2">
+            <FilaMetrica
+              etiqueta="Nuestro servicio"
+              :valor="formatoPorcentaje(metricas.availability)"
+              unidad="%"
+              :estado="nivel(metricas.availability)"
+              :detalle="`${metricas.our_failures} ${metricas.our_failures === 1 ? 'fallo' : 'fallos'} propios en ${metricas.window_days} días.`"
+            />
+            <FilaMetrica
+              etiqueta="Fuentes oficiales"
+              :valor="formatoPorcentaje(metricas.source_availability)"
+              unidad="%"
+              :estado="nivel(metricas.source_availability)"
+              :detalle="`${metricas.source_failures} ${metricas.source_failures === 1 ? 'vez' : 'veces'} que la fuente no respondió.`"
+            />
+          </section>
+
+          <section class="pb-2xl grid gap-md sm:grid-cols-3">
+            <FilaMetrica
+              etiqueta="Respuesta típica"
+              :valor="metricas.latency_p50_ms"
+              unidad="ms"
+              detalle="Mediana: el tiempo de la consulta corriente."
+            />
+            <FilaMetrica
+              etiqueta="Las más lentas"
+              :valor="formatoLatencia(metricas.latency_p95_ms)"
+              :unidad="metricas.latency_p95_ms >= 1000 ? 's' : 'ms'"
+              detalle="Percentil 95. Una de cada veinte tarda esto o más."
+            />
+            <FilaMetrica
+              etiqueta="Consultas servidas"
+              :valor="metricas.total_queries.toLocaleString('es-EC')"
+              :detalle="`Últimos ${metricas.window_days} días.`"
+            />
+          </section>
+        </template>
 
         <section class="pb-2xl">
           <h2 class="text-h4 font-light tracking-tight mb-lg">Cómo lo medimos</h2>
@@ -108,7 +136,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter, RouterLink } from 'vue-router';
 import { useAuth } from '../composables/useAuth';
-import { authService } from '../api/authService';
+import { authService, type EstadoServicio } from '../api/authService';
 import { useDatosEstructurados, migas } from '../composables/useDatosEstructurados';
 import MigasDePan from '../ui/components/MigasDePan.vue';
 import FilaMetrica from '../ui/components/FilaMetrica.vue';
@@ -118,41 +146,54 @@ const router = useRouter();
 const { isDark, toggleTheme } = useAuth();
 const anio = new Date().getFullYear();
 
-interface Metricas {
-  disponibilidad: number;
-  latencia: number;
-  servidas: number;
-}
+const metricas = ref<EstadoServicio | null>(null);
+const cargando = ref(true);
 
-const metricas = ref<Metricas | null>(null);
+/** Un entero se enseña sin decimales: "100 %" se lee mejor que "100,0 %". */
+const formatoPorcentaje = (v: number) =>
+  Number.isInteger(v) ? String(v) : v.toFixed(2).replace('.', ',');
+
+/** Por encima del segundo, los milisegundos dejan de decir nada. */
+const formatoLatencia = (ms: number) =>
+  ms >= 1000 ? (ms / 1000).toFixed(1).replace('.', ',') : String(ms);
+
+const nivel = (pct: number): 'bueno' | 'aviso' | 'malo' =>
+  pct >= 99 ? 'bueno' : pct >= 95 ? 'aviso' : 'malo';
 
 const metodologia = [
   {
-    q: 'Disponibilidad',
-    r: 'Porcentaje de peticiones que no terminaron en un error de servidor, sobre una ventana de siete días. Un fallo de la fuente oficial cuenta aparte.'
+    q: 'Por qué hay dos disponibilidades',
+    r: 'Una mide nuestro servicio y la otra las fuentes oficiales. Son cosas distintas: si el Registro Civil no responde, la consulta falla aunque nuestra infraestructura esté en pie. Juntarlas en una sola cifra la volvería inútil.'
   },
   {
-    q: 'Latencia típica',
+    q: 'Respuesta típica',
     r: 'La mediana, no el promedio. El promedio se dispara con unas pocas consultas lentas y deja de describir lo que le pasa a la mayoría.'
   },
   {
+    q: 'Las más lentas',
+    r: 'El percentil 95: una de cada veinte consultas tarda eso o más. Es la cifra que enseña el peor caso realista, no el caso bonito.'
+  },
+  {
     q: 'Consultas servidas',
-    r: 'Solo las que devolvieron respuesta correcta. Las que fallaron no se cuentan aquí.'
+    r: 'Todas las que se atendieron en la ventana, con éxito o sin él. Los fallos se detallan aparte, en cada disponibilidad.'
   }
 ];
 
-/*
- * El endpoint todavia no existe: es B-03 del plan. Si falla o no responde, la
- * pagina se queda en su estado vacio, que es lo honesto.
- */
-onMounted(async () => {
+const cargar = async () => {
+  cargando.value = true;
   try {
     const datos = await authService.getEstadoServicio();
-    if (datos && typeof datos.disponibilidad === 'number') metricas.value = datos;
+    // Se comprueba un campo concreto: una respuesta vacia o con otra forma no
+    // debe pintarse como si fueran metricas.
+    metricas.value = datos && typeof datos.availability === 'number' ? datos : null;
   } catch {
     metricas.value = null;
+  } finally {
+    cargando.value = false;
   }
-});
+};
+
+onMounted(cargar);
 
 useDatosEstructurados(() => migas('/estado', 'Estado del servicio'));
 </script>

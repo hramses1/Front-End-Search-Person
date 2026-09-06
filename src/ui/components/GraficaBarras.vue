@@ -65,11 +65,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-export interface PuntoDia {
-  /** Fecha en formato ISO, solo la parte del día. */
-  fecha: string;
-  valor: number;
-}
+import type { PuntoDia } from '../../types/graficas';
 
 const props = withDefaults(defineProps<{
   datos: PuntoDia[];

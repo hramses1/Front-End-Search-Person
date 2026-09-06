@@ -2,6 +2,20 @@ import { apiClient } from './client';
 import type { Quota } from '../utils/quota';
 import type { UserCreate } from '../types/api';
 
+/** Respuesta de /api/status/. Los nombres son los que devuelve el backend. */
+export interface EstadoServicio {
+  window_days: number;
+  total_queries: number;
+  /** Porcentaje de peticiones sin error propio. */
+  availability: number;
+  /** Porcentaje en el que la fuente oficial respondio. */
+  source_availability: number;
+  latency_p50_ms: number;
+  latency_p95_ms: number;
+  our_failures: number;
+  source_failures: number;
+}
+
 export const authService = {
   /**
    * Registra un nuevo usuario.
@@ -66,15 +80,78 @@ export const authService = {
    * Metricas publicas del servicio: disponibilidad, latencia mediana y total
    * servido en los ultimos siete dias.
    *
-   * Pendiente en el backend (B-03). Hasta que exista, la vista de estado
-   * muestra que todavia no publicamos metricas en lugar de inventarse una
-   * cifra, que en una pagina de transparencia seria lo peor posible.
+   * Separa lo que falla por nuestra parte de lo que falla en la fuente
+   * oficial, que es la distincion honesta: una caida del Registro Civil no es
+   * una caida nuestra, y mezclarlas daria una cifra que no significa nada.
    *
    * Va sin Bearer a proposito: es informacion publica.
    */
-  async getEstadoServicio(): Promise<{ disponibilidad: number; latencia: number; servidas: number } | null> {
-    const response = await apiClient.get('/api/main/status/');
+  async getEstadoServicio(): Promise<EstadoServicio | null> {
+    const response = await apiClient.get('/api/status/');
     return response.data ?? null;
+  },
+
+  /**
+   * Historial de consultas del propio usuario, paginado.
+   *
+   * `codigo` solo lo acepta un administrador, para ver el de otra persona.
+   * Desde el panel nunca se envia: cada usuario ve lo suyo.
+   */
+  async getHistorial(page = 1, perPage = 30, codigo?: string) {
+    const response = await apiClient.get('/api/users/history/', {
+      headers: { 'Cache-Control': 'no-cache' },
+      params: { page, perPage, ...(codigo ? { codigo } : {}), _t: Date.now() }
+    });
+    return response.data;
+  },
+
+  /** Descarga de todos los datos del usuario. Derecho de portabilidad. */
+  async exportarCuenta() {
+    const response = await apiClient.get('/api/users/export/');
+    return response.data;
+  },
+
+  /**
+   * Borrado de cuenta. Irreversible.
+   *
+   * `confirmar` es obligatorio y va explicito: sin el, el backend no procede.
+   * La confirmacion de la interfaz es una segunda barrera, no la unica.
+   */
+  async eliminarCuenta() {
+    const response = await apiClient.delete('/api/users/delete/', {
+      params: { confirmar: true }
+    });
+    return response.data;
+  },
+
+  /** Conteo real de usuarios, incluidos los que no tienen plan asignado. */
+  async getResumenUsuarios() {
+    const response = await apiClient.get('/api/plan/users_summary/', {
+      headers: { 'Cache-Control': 'no-cache' },
+      params: { _t: Date.now() }
+    });
+    return response.data;
+  },
+
+  /** Mensaje de contacto. Publico, limitado por IP en el backend. */
+  async enviarContacto(datos: { nombre: string; email: string; asunto?: string; mensaje: string; website?: string }) {
+    const response = await apiClient.post('/api/contact', datos);
+    return response.data;
+  },
+
+  /** Solicitud de bloqueo LOPDP. Publica. */
+  async solicitarBloqueo(datos: { tipo: string; valor: string; solicitante_email: string; prueba?: string }) {
+    const response = await apiClient.post('/api/lopdp/request', datos);
+    return response.data;
+  },
+
+  /**
+   * Demo publica de cedula: 5 al dia por IP, con los campos enmascarados
+   * salvo nombre y cedula. No exige sesion.
+   */
+  async consultaDemo(ci: string) {
+    const response = await apiClient.get('/api/main/demo/id_card/', { params: { ci } });
+    return response.data;
   },
 
   /**
