@@ -91,22 +91,23 @@
         <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-sm">Guías</p>
         <h2 class="text-h4 font-light tracking-tight mb-xl">Cómo se leen los documentos ecuatorianos</h2>
 
-        <div class="space-y-md">
-          <article v-for="(g, i) in guias" :key="g.titulo" class="glass-card overflow-hidden">
-            <button @click="guiaAbierta = guiaAbierta === i ? -1 : i" class="w-full flex items-start justify-between gap-md p-lg text-left">
-              <div>
-                <h3 class="text-body font-bold tracking-wide mb-xs">{{ g.titulo }}</h3>
-                <p class="text-body text-[var(--text-secondary)]">{{ g.resumen }}</p>
-              </div>
-              <svg class="w-4 h-4 shrink-0 mt-xs text-[var(--text-muted)] transition-transform duration-base" :class="guiaAbierta === i ? 'rotate-180 text-[var(--accent-color)]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div v-if="guiaAbierta === i" class="px-lg pb-lg space-y-md border-t border-[var(--border-color)] pt-md">
-              <p v-for="(par, j) in g.cuerpo" :key="j" class="text-body leading-relaxed text-[var(--text-secondary)]">{{ par }}</p>
-            </div>
-          </article>
+        <!--
+          Las guias enlazan a su pagina en vez de desplegarse aqui. En un
+          acordeon no tenian URL, asi que ninguna podia posicionar sola.
+        -->
+        <div class="grid gap-sm sm:grid-cols-2">
+          <RouterLink
+            v-for="g in guiasDestacadas" :key="g.slug"
+            :to="`/guias/${g.slug}`"
+            class="glass-card p-lg block hover:border-[var(--accent-color)]/40 hover:-translate-y-0.5 transition-all duration-base"
+          >
+            <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mb-xs">{{ g.categoria }}</p>
+            <h3 class="text-body font-bold tracking-wide mb-xs">{{ g.titulo }}</h3>
+            <p class="text-caption leading-relaxed text-[var(--text-secondary)]">{{ g.resumen }}</p>
+          </RouterLink>
         </div>
+
+        <RouterLink to="/guias" class="btn-secondary mt-lg">Ver las {{ GUIAS.length }} guías</RouterLink>
       </section>
 
       <!-- Preguntas frecuentes -->
@@ -164,14 +165,17 @@ import { useRouter } from 'vue-router';
 import BrandMark from '../ui/components/BrandMark.vue';
 import { useAuth } from '../composables/useAuth';
 import { GRUPOS, porGrupo } from '../datos/consultas';
+import { GUIAS } from '../datos/guias';
 import { useDatosEstructurados, preguntas } from '../composables/useDatosEstructurados';
 
 const router = useRouter();
 const { isAuthenticated, isDark, toggleTheme } = useAuth();
 
 const anio = new Date().getFullYear();
-const guiaAbierta = ref(-1);
 const faqAbierta = ref(-1);
+
+/** Cuatro guias en la portada; el resto, en el indice. */
+const guiasDestacadas = GUIAS.slice(0, 4);
 
 
 
@@ -200,35 +204,7 @@ const ventajas = [
 
 
 
-const guias = [
-  {
-    titulo: 'Qué información contiene la cédula',
-    resumen: 'Los diez dígitos no son un número correlativo: codifican datos.',
-    cuerpo: [
-      'Los dos primeros dígitos corresponden a la provincia de emisión, del 01 al 24 siguiendo el orden alfabético oficial. Pichincha es 17, Guayas 09 y Azuay 01. Un número fuera de ese rango no pertenece a una cédula válida.',
-      'El tercer dígito distingue el tipo de identificación. Para personas naturales siempre es menor que seis; los valores seis y nueve quedan reservados para entidades del sector público y sociedades privadas, que aparecen en el RUC pero nunca en una cédula.',
-      'El último dígito es un verificador que se calcula con el algoritmo de módulo diez sobre los nueve anteriores. Por eso un error de tecleo casi siempre produce un número inválido, en lugar de la cédula de otra persona.'
-    ]
-  },
-  {
-    titulo: 'Cédula y RUC: en qué se diferencian',
-    resumen: 'Uno identifica a la persona; el otro, a su actividad económica.',
-    cuerpo: [
-      'La cédula identifica a la persona ante el Registro Civil. El RUC la identifica ante el SRI como contribuyente, y por eso solo lo tiene quien ejerce una actividad económica registrada.',
-      'En una persona natural el RUC se construye sobre su cédula: los mismos diez dígitos más el sufijo 001, que numera el establecimiento. De ahí que trece dígitos terminados en 001 correspondan casi siempre a un profesional o comerciante individual.',
-      'Las sociedades no parten de ninguna cédula. Su RUC lleva un nueve en la tercera posición y se asigna al constituirse. Buscar esa persona jurídica por cédula no devuelve nada, porque no existe como persona natural.'
-    ]
-  },
-  {
-    titulo: 'Para qué sirve verificar una identidad',
-    resumen: 'Casos habituales y qué conviene comprobar en cada uno.',
-    cuerpo: [
-      'Antes de firmar un contrato o arrendar un inmueble, contrastar que el nombre coincide con la cédula presentada evita el caso más común de suplantación: un documento ajeno con la foto cambiada.',
-      'En procesos de contratación, la consulta de licencia y multas es relevante cuando el puesto implica conducir. Los puntos disponibles y los bloqueos activos dicen bastante más que la simple existencia de la licencia.',
-      'Para operaciones comerciales conviene revisar el estado del RUC. Un contribuyente suspendido o con la actividad cesada no debería emitir facturas válidas, y eso se ve en la consulta antes de cerrar el trato.'
-    ]
-  }
-];
+
 
 const faq = [
   {
@@ -258,7 +234,7 @@ const faq = [
 ];
 
 const enlacesLegales: { texto: string; href?: string; ruta?: string }[] = [
-  { texto: 'Guías', href: '#guias' },
+  { texto: 'Guías', ruta: '/guias' },
   { texto: 'Preguntas frecuentes', href: '#faq' },
   { texto: 'Contacto', ruta: '/contacto' },
   { texto: 'Términos', ruta: '/terminos' },

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
 import PublicLandingView from '../views/PublicLandingView.vue'
 import { CONSULTAS } from '../datos/consultas'
+import { GUIAS } from '../datos/guias'
 
 /**
  * La portada se carga de forma sincrona porque es la puerta de entrada y su
@@ -10,6 +11,7 @@ import { CONSULTAS } from '../datos/consultas'
  */
 const LegalView = () => import('../views/LegalView.vue')
 const ConsultaView = () => import('../views/ConsultaView.vue')
+const GuiaView = () => import('../views/GuiaView.vue')
 const AuthView = () => import('../views/AuthView.vue')
 const DashboardView = () => import('../views/DashboardView.vue')
 const AdminView = () => import('../views/AdminView.vue')
@@ -53,6 +55,27 @@ const router = createRouter({
         descripcion: c.descripcion,
         slug: c.slug
       }
+    })),
+    /*
+     * Guias. El indice y cada guia comparten componente: la diferencia es si
+     * hay slug. Vivian dentro de un acordeon de la portada, sin URL, asi que
+     * ninguna podia posicionar por su cuenta.
+     */
+    {
+      path: '/guias',
+      name: 'guias',
+      component: GuiaView,
+      meta: {
+        titulo: 'Guías sobre los datos públicos del Ecuador',
+        descripcion: 'Explicaciones cortas para entender qué significa cada dato antes de consultarlo: cédula, RUC, multas de tránsito, licencia y vehículos.'
+      }
+    },
+    ...GUIAS.map(g => ({
+      path: `/guias/${g.slug}`,
+      name: `guia-${g.slug}`,
+      component: GuiaView,
+      // slug por meta: la ruta es estatica, asi que params llega vacio.
+      meta: { titulo: g.tituloSeo, descripcion: g.descripcion, slug: g.slug }
     })),
     {
       // Documentos legales: mismo componente, distinto contenido segun el

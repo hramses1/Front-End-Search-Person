@@ -22,14 +22,19 @@ const DOMINIO = 'https://devzio.site';
  * importarlo: añadir un compilador solo para esto no compensa, y si el formato
  * cambiara la comprobación de abajo lo detecta.
  */
-const fuente = readFileSync(resolve(raiz, 'src/datos/consultas.ts'), 'utf8');
-const slugs = [...fuente.matchAll(/^\s*slug:\s*'([a-z0-9-]+)'/gm)].map(m => m[1]);
+const leerSlugs = (fichero) => {
+  const fuente = readFileSync(resolve(raiz, fichero), 'utf8');
+  const encontrados = [...fuente.matchAll(/^\s*slug:\s*'([a-z0-9-]+)'/gm)].map(m => m[1]);
+  if (encontrados.length === 0) {
+    console.error(`[sitemap] No se encontró ningún slug en ${fichero}.`);
+    console.error('[sitemap] Si cambió el formato del catálogo, hay que actualizar este script.');
+    process.exit(1);
+  }
+  return encontrados;
+};
 
-if (slugs.length === 0) {
-  console.error('[sitemap] No se encontró ningún slug en src/datos/consultas.ts.');
-  console.error('[sitemap] Si cambió el formato del catálogo, hay que actualizar este script.');
-  process.exit(1);
-}
+const slugs = leerSlugs('src/datos/consultas.ts');
+const guias = leerSlugs('src/datos/guias.ts');
 
 const hoy = new Date().toISOString().slice(0, 10);
 
@@ -37,6 +42,8 @@ const hoy = new Date().toISOString().slice(0, 10);
 const paginas = [
   { ruta: '', prioridad: '1.0', frecuencia: 'weekly' },
   ...slugs.map(slug => ({ ruta: `/${slug}`, prioridad: '0.9', frecuencia: 'weekly' })),
+  { ruta: '/guias', prioridad: '0.8', frecuencia: 'monthly' },
+  ...guias.map(slug => ({ ruta: `/guias/${slug}`, prioridad: '0.7', frecuencia: 'monthly' })),
   { ruta: '/auth', prioridad: '0.8', frecuencia: 'monthly' },
   { ruta: '/contacto', prioridad: '0.5', frecuencia: 'monthly' },
   { ruta: '/terminos', prioridad: '0.3', frecuencia: 'yearly' },
@@ -59,4 +66,4 @@ const xml = [
 ].join('\n');
 
 writeFileSync(resolve(raiz, 'public/sitemap.xml'), xml, 'utf8');
-console.log(`[sitemap] ${paginas.length} URLs (${slugs.length} consultas).`);
+console.log(`[sitemap] ${paginas.length} URLs (${slugs.length} consultas, ${guias.length} guías).`);
