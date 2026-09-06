@@ -43,7 +43,7 @@
       </div>
 
       <div class="p-md border-t border-[var(--border-color)] bg-black/10">
-        <button @click="handleLogout" class="w-full min-h-[2.75rem] text-red-400 hover:bg-red-500/5 text-overline font-bold tracking-[0.14em] rounded-base border border-red-500/10 hover:border-red-500/20 transition-all uppercase mb-md">
+        <button @click="handleLogout" class="w-full min-h-[2.75rem] text-red-400 hover:bg-red-500/5 text-caption font-medium rounded-base border border-red-500/10 hover:border-red-500/20 transition-all mb-md">
           Cerrar Sesión Admin
         </button>
 
@@ -283,14 +283,14 @@
                       <div class="flex justify-end gap-sm">
                         <button 
                           @click="openEditModal(userItem)"
-                          class="inline-flex items-center justify-center px-md min-h-[2.75rem] rounded-base text-caption font-black tracking-[0.14em] border border-[var(--border-color)] hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-all uppercase"
+                          class="inline-flex items-center justify-center px-md min-h-[2.75rem] rounded-base text-caption font-medium border border-[var(--border-color)] hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-all"
                         >
                           Editar
                         </button>
                         <button 
                           @click="resetRequests(userItem)"
                           :disabled="userItem.number_requests === 0 || isResetting === userItem.userId"
-                          class="inline-flex items-center justify-center px-md min-h-[2.75rem] rounded-base text-caption font-black tracking-[0.14em] border border-red-500/20 text-red-500/60 hover:text-red-500 hover:border-red-500/50 transition-all uppercase disabled:text-[var(--text-muted)]"
+                          class="inline-flex items-center justify-center px-md min-h-[2.75rem] rounded-base text-caption font-medium border border-red-500/20 text-red-500/60 hover:text-red-500 hover:border-red-500/50 transition-all disabled:text-[var(--text-muted)]"
                         >
                           <span v-if="isResetting === userItem.userId">...</span>
                           <span v-else>Reset</span>
@@ -582,13 +582,13 @@
                 <button 
                   type="button" 
                   @click="showModal = false"
-                  class="flex-1 py-md rounded-base text-caption font-black tracking-[0.14em] border border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-white/5 transition-all uppercase"
+                  class="flex-1 min-h-[2.75rem] rounded-base text-caption font-medium border border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-white/5 transition-all"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit" 
-                  class="flex-1 py-md btn-primary text-caption font-black tracking-[0.14em] uppercase"
+                  class="flex-1 btn-primary text-caption font-medium"
                   :disabled="isSaving"
                 >
                   {{ isSaving ? 'Guardando...' : 'Confirmar Cambios' }}

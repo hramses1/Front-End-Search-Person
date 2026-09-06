@@ -115,7 +115,7 @@ h1, h2, h3, h4, h5, h6 {
    ───────────────────────────────────────────────────────────── */
 .enlace-menor {
   @apply inline-flex items-center min-h-[2.75rem]
-         text-caption uppercase tracking-[0.15em] transition-all;
+         text-caption transition-all;
   color: var(--text-muted);
   transition-duration: 200ms;
 }
@@ -161,9 +161,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 .btn-primary:hover:not(:disabled) {
   @apply shadow-md;
-  transform: scale(1.02);
+  transform: translateY(-1px);
 }
-.btn-primary:active:not(:disabled) { transform: scale(0.98); }
+/*
+   Al pulsar, el boton se hunde un pixel en vez de encogerse. scale(.98)
+   reescalaba el texto y en botones anchos se notaba el temblor; un
+   desplazamiento vertical no deforma nada.
+*/
+.btn-primary:active:not(:disabled) { transform: translateY(1px); }
 
 /* Secundario: contorno. */
 .btn-secondary {
@@ -173,7 +178,7 @@ h1, h2, h3, h4, h5, h6 {
   border-color: var(--accent-color);
   color: var(--accent-color);
 }
-.btn-secondary:active:not(:disabled) { transform: scale(0.98); }
+.btn-secondary:active:not(:disabled) { transform: translateY(1px); }
 
 /* Terciario: texto. */
 .btn-tertiary {
@@ -189,7 +194,7 @@ h1, h2, h3, h4, h5, h6 {
   transition-duration: 150ms;
 }
 .btn-icon:hover:not(:disabled) { background-color: color-mix(in srgb, var(--accent-color) 10%, transparent); }
-.btn-icon:active:not(:disabled) { transform: scale(0.96); }
+.btn-icon:active:not(:disabled) { transform: translateY(1px); }
 
 /* ─── Campos de formulario ───────────────────────────────── */
 .custom-input {

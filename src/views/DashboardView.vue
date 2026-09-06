@@ -62,8 +62,8 @@
       </div>
 
       <div class="p-md border-t border-[var(--border-color)]">
-        <button @click="handleLogout" class="w-full min-h-[2.75rem] bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 hover:border-red-500/20 rounded-base text-red-500 text-overline font-bold tracking-[0.14em] transition-all duration-base flex items-center justify-center gap-sm uppercase">
-          DESCONECTAR
+        <button @click="handleLogout" class="w-full min-h-[2.75rem] bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 hover:border-red-500/20 rounded-base text-red-500 text-caption font-medium transition-all duration-base flex items-center justify-center gap-sm">
+          Cerrar sesión
         </button>
 
         <SecuritySeals class="mt-md" />

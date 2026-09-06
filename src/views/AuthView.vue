@@ -296,9 +296,9 @@
 
         <!-- Términos y condiciones Link -->
         <div v-if="!successToken" class="text-center mt-lg mask-reveal delay-700">
-          <p class="text-caption tracking-[0.14em] uppercase text-[var(--text-secondary)]" style="color: var(--text-secondary);">
-            AL CONTINUAR, ACEPTAS NUESTROS
-            <button type="button" @click="showTerms = true" class="underline hover:text-current transition-colors ml-1" style="color: var(--text-primary);">TÉRMINOS Y CONDICIONES</button>
+          <p class="text-caption text-[var(--text-secondary)]" style="color: var(--text-secondary);">
+            Al continuar, aceptas nuestros
+            <button type="button" @click="showTerms = true" class="underline hover:text-current transition-colors ml-1" style="color: var(--text-primary);">términos y condiciones</button>
           </p>
         </div>
 

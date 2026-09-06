@@ -64,9 +64,9 @@
               </div>
               <button 
                 @click="copyResults" 
-                class="px-lg py-sm rounded-base text-caption font-medium tracking-[0.15em] border border-[var(--border-color)] hover:bg-[var(--accent-color)] hover:text-[var(--accent-inverse)] transition-all duration-base uppercase"
+                class="inline-flex items-center px-lg min-h-[2.75rem] rounded-base text-caption font-medium border border-[var(--border-color)] hover:bg-[var(--accent-color)] hover:text-[var(--accent-inverse)] transition-all duration-base"
               >
-                {{ copied ? 'COPIADO' : 'Exportar JSON' }}
+                {{ copied ? 'Copiado' : 'Exportar JSON' }}
               </button>
             </div>
             

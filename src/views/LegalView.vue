@@ -5,7 +5,7 @@
     <div class="relative z-10 max-w-3xl mx-auto px-lg sm:px-xl">
 
       <header class="flex items-center justify-between py-lg border-b border-[var(--border-color)]">
-        <button @click="router.push('/')" class="inline-flex items-center min-h-[2.75rem] gap-sm text-caption uppercase tracking-[0.15em] text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-all">
+        <button @click="router.push('/')" class="inline-flex items-center min-h-[2.75rem] gap-sm text-caption text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-all">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
@@ -20,7 +20,7 @@
       <article class="py-2xl sm:py-3xl">
         <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">{{ doc.rotulo || 'Legal' }}</p>
         <h1 class="text-h3 sm:text-4xl font-light tracking-tight mb-md">{{ doc.titulo }}</h1>
-        <p class="text-caption uppercase tracking-[0.15em] text-[var(--text-muted)] mb-2xl">
+        <p class="text-caption text-[var(--text-muted)] mb-2xl">
           Última actualización: {{ doc.actualizado }}
         </p>
 
