@@ -1,5 +1,6 @@
 <template>
-  <ServiceSection 
+  <ServiceSection
+    fuente="Registro Civil"
     :isLoading="isLoading" 
     :errorMsg="errorMsg" 
     :results="resultsData"

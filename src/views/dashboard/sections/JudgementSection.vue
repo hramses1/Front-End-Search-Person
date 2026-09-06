@@ -1,5 +1,5 @@
 <template>
-  <ServiceSection :isLoading="isLoading" :errorMsg="errorMsg" :results="resultsData" @search="executeSearch" @copy="copyResults">
+  <ServiceSection fuente="Función Judicial" :isLoading="isLoading" :errorMsg="errorMsg" :results="resultsData" @search="executeSearch" @copy="copyResults">
     <template #fields>
       <div class="relative group input-container">
         <input 

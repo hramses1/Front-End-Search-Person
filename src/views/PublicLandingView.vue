@@ -111,6 +111,37 @@
       </section>
 
       <!-- Preguntas frecuentes -->
+      <!--
+        Bloque de precio. La cuota diaria gratuita es la ventaja real frente a
+        quien cobra por consulta, y no se contaba en ninguna parte visible: el
+        visitante tenia que registrarse para descubrir cuanto costaba.
+      -->
+      <section id="precio" class="pb-3xl scroll-mt-xl">
+        <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-sm">Precio</p>
+        <h2 class="text-h4 font-light tracking-tight mb-xl">Gratis, con cuota diaria</h2>
+
+        <div class="glass-card p-lg sm:p-xl">
+          <div class="flex flex-wrap items-baseline gap-md mb-lg">
+            <span class="text-h2 font-light tracking-tight text-[var(--accent-color)]">Gratis</span>
+            <span class="text-body text-[var(--text-secondary)]">sin tarjeta y sin permanencia</span>
+          </div>
+
+          <ul class="grid gap-sm sm:grid-cols-2 mb-lg">
+            <li v-for="v in ventajasPrecio" :key="v" class="flex items-start gap-sm text-body text-[var(--text-secondary)]">
+              <svg class="w-4 h-4 shrink-0 mt-xs text-[var(--accent-color)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+              </svg>
+              {{ v }}
+            </li>
+          </ul>
+
+          <p class="text-caption leading-relaxed text-[var(--text-muted)] prose-limit">
+            No cobramos por consulta ni vendemos paquetes de saldo. Tu cuota vuelve a cero cada
+            medianoche, hora de Ecuador, y el dia que no consultas no pierdes nada.
+          </p>
+        </div>
+      </section>
+
       <section id="faq" class="pb-3xl scroll-mt-xl">
         <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-sm">Preguntas frecuentes</p>
         <h2 class="text-h4 font-light tracking-tight mb-xl">Dudas habituales</h2>
@@ -177,6 +208,13 @@ const faqAbierta = ref(-1);
 /** Cuatro guias en la portada; el resto, en el indice. */
 const guiasDestacadas = GUIAS.slice(0, 4);
 
+const ventajasPrecio = [
+  'Cuota diaria que se renueva cada medianoche',
+  'Acceso a las ocho consultas del catálogo',
+  'Sin tarjeta de crédito ni permanencia',
+  'Sin saldo que recargar ni consultas que caduquen'
+];
+
 
 
 const ventajas = [
@@ -234,6 +272,7 @@ const faq = [
 ];
 
 const enlacesLegales: { texto: string; href?: string; ruta?: string }[] = [
+  { texto: 'Precio', href: '#precio' },
   { texto: 'Guías', ruta: '/guias' },
   { texto: 'Preguntas frecuentes', href: '#faq' },
   { texto: 'Contacto', ruta: '/contacto' },

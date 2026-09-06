@@ -1,5 +1,5 @@
 <template>
-  <ServiceSection :isLoading="isLoading" :errorMsg="errorMsg" :results="resultsData" @search="executeSearch" @copy="copyResults">
+  <ServiceSection fuente="SRI" :isLoading="isLoading" :errorMsg="errorMsg" :results="resultsData" @search="executeSearch" @copy="copyResults">
     <template #fields>
       <div class="relative group input-container">
         <input v-model="ruc" type="text" id="ruc" placeholder=" " maxlength="13" class="custom-input peer" />

@@ -34,7 +34,7 @@
           >
             <span v-if="isLoading" class="w-4 h-4 border-[1.5px] border-current border-t-transparent rounded-full animate-spin"></span>
             <span v-else class="text-body">⚡</span>
-            {{ isLoading ? 'PROCESANDO...' : 'EJECUTAR CONSULTA' }}
+            {{ isLoading ? 'Consultando…' : 'Ejecutar consulta' }}
           </button>
         </form>
 
@@ -60,7 +60,19 @@
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                 </span>
-                <h3 class="text-overline font-medium tracking-[0.14em] uppercase text-[var(--text-secondary)]">Registros Encontrados</h3>
+                <div class="min-w-0">
+                  <h3 class="text-overline font-medium tracking-[0.14em] uppercase text-[var(--text-secondary)] leading-none">Registros encontrados</h3>
+                  <!--
+                    Fuente y tiempo real. Decir de donde sale el dato y cuanto
+                    tardo transmite solvencia, y ademas deja claro que la
+                    consulta va contra el organismo, no contra una copia nuestra.
+                  -->
+                  <p v-if="fuente || duracion" class="text-caption text-[var(--text-muted)] mt-xs leading-none">
+                    <span v-if="fuente">{{ fuente }}</span>
+                    <span v-if="fuente && duracion" aria-hidden="true"> · </span>
+                    <span v-if="duracion">Respuesta en {{ duracion }}</span>
+                  </p>
+                </div>
               </div>
               <button 
                 @click="copyResults" 
@@ -92,17 +104,38 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import SkeletonResult from '../../../components/SkeletonResult.vue';
 
-defineProps<{
+const props = defineProps<{
   isLoading: boolean;
   errorMsg: string;
   results: any;
+  /** Organismo del que sale el dato. Se muestra junto al resultado. */
+  fuente?: string;
 }>();
 
 const emit = defineEmits(['search', 'copy']);
 const copied = ref(false);
+
+/*
+ * Tiempo de respuesta. Se cronometra aqui, en el componente que ya conoce el
+ * ciclo de la consulta, en vez de pedirselo a cada seccion: son ocho y todas
+ * lo harian distinto.
+ */
+const inicio = ref(0);
+const duracion = ref('');
+
+watch(() => props.isLoading, (cargando, antes) => {
+  if (cargando) {
+    inicio.value = performance.now();
+    duracion.value = '';
+  } else if (antes && inicio.value) {
+    const s = (performance.now() - inicio.value) / 1000;
+    // Menos de una decima se lee raro; a partir de ahi, una decimal basta.
+    duracion.value = s < 0.1 ? 'menos de 0,1 s' : `${s.toFixed(1).replace('.', ',')} s`;
+  }
+});
 
 const handleSearch = () => emit('search');
 
