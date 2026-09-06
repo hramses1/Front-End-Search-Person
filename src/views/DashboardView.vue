@@ -153,7 +153,7 @@
 
 <script setup lang="ts">
 import { ref, computed, markRaw, onMounted, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import BrandMark from '../ui/components/BrandMark.vue';
 import SecuritySeals from '../ui/components/SecuritySeals.vue';
 import { useAuth } from '../composables/useAuth';
@@ -253,7 +253,15 @@ const sections = Object.fromEntries(
   sectionGroups.flatMap(g => g.items.map(i => [i.key, i.titulo]))
 ) as Record<string, string>;
 
-const currentSection = ref<string>('identity');
+/**
+ * Seccion inicial. Las paginas publicas de consulta enlazan aqui con
+ * ?seccion=, para que quien venga de /consultar-ruc aterrice en esa consulta
+ * y no en la de cedula.
+ */
+const seccionPedida = String(useRoute().query.seccion || '');
+const currentSection = ref<string>(
+  seccionPedida && seccionPedida in sections ? seccionPedida : 'identity'
+);
 
 const activeComponent = computed(() => {
   const components: any = {

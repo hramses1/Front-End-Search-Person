@@ -350,7 +350,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { authService } from '../api/authService';
 import { useAuth } from '../composables/useAuth';
 import SecuritySeals from '../ui/components/SecuritySeals.vue';
@@ -373,6 +373,27 @@ const registerErrors = reactive({
 });
 
 const router = useRouter();
+const route = useRoute();
+
+/**
+ * A donde ir despues de entrar.
+ *
+ * El guard guarda el destino en ?next cuando echa a alguien al login. Solo se
+ * aceptan rutas internas: un valor con esquema o con // apuntaria fuera del
+ * sitio, y seria un redirect abierto de manual.
+ */
+const esRutaInterna = (v: unknown): v is string =>
+  typeof v === 'string' && v.startsWith('/') && !v.startsWith('//');
+
+const destinoTrasEntrar = (): string =>
+  esRutaInterna(route.query.next) ? route.query.next : '/dashboard';
+
+/** Igual, pero para la vuelta de OAuth, donde la query ya no existe. */
+const destinoTrasOAuth = (): string => {
+  const guardado = sessionStorage.getItem('oauth_next');
+  sessionStorage.removeItem('oauth_next');
+  return esRutaInterna(guardado) ? guardado : '/dashboard';
+};
 const { setToken, setupActivityListeners, setUserRecord, setPlanData, setQuota, userRole, toggleTheme, isDark } = useAuth();
 
 /**
@@ -450,7 +471,7 @@ const handleOAuthCallback = async () => {
 
           await loadAccountState(response.record.id);
 
-          router.push('/dashboard');
+          router.push(destinoTrasOAuth());
         } else {
           throw new Error('Fallo la autenticación con el proveedor.');
         }
@@ -513,6 +534,9 @@ const initiateGoogleLogin = async () => {
       
       if (googleProvider) {
         // Guardar valores en sessionStorage para el callback
+        // El redirect_uri no lleva query, asi que ?next se perderia al volver
+        // de Google. Se guarda aparte y se recupera en el callback.
+        sessionStorage.setItem('oauth_next', destinoTrasEntrar());
         sessionStorage.setItem('oauth_provider', googleProvider.name);
         sessionStorage.setItem('oauth_state', googleProvider.state);
         sessionStorage.setItem('oauth_code_verifier', googleProvider.codeVerifier);
@@ -670,7 +694,7 @@ const handleSubmit = async () => {
         // Bearer) se piden después de fijar el token, nunca antes.
         await loadAccountState(response.record.id);
 
-        router.push('/dashboard');
+        router.push(destinoTrasEntrar());
       } else {
         throw new Error('Credenciales inválidas o datos de usuario no encontrados.');
       }

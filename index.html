@@ -61,45 +61,10 @@
     }
     </script>
 
-    <!-- Preguntas frecuentes: coinciden literalmente con las visibles en la portada -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "inLanguage": "es-EC",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "¿Cómo consulto una cédula?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Creas una cuenta, entras al panel y escribes los diez dígitos en la sección de identidad. La respuesta llega en segundos, con los datos tal como los devuelve la fuente oficial." }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Puedo buscar por nombres y apellidos?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Sí. La sección de búsqueda por nombre acepta nombres y apellidos y devuelve las coincidencias. Cuantos más datos aportes, menos resultados ambiguos obtendrás." }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Qué datos devuelve la consulta de cédula?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Nombres y apellidos completos, fecha de nacimiento, edad, género, nacionalidad, estado civil y lugar de nacimiento, cuando la fuente los publica." }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Hace falta registrarse?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Sí. Todas las consultas requieren una cuenta, porque cada una se descuenta de una cuota diaria asociada a tu usuario. El registro es gratuito y no pide tarjeta." }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Cuántas consultas incluye la cuenta gratuita?",
-          "acceptedAnswer": { "@type": "Answer", "text": "La cuota depende de tu plan y se ve siempre en la cabecera del panel, junto al tiempo que falta para que se renueve. El contador vuelve a cero cada medianoche, hora de Ecuador." }
-        },
-        {
-          "@type": "Question",
-          "name": "¿De dónde salen los datos y es legal consultarlos?",
-          "acceptedAnswer": { "@type": "Answer", "text": "De registros públicos del Estado ecuatoriano: Registro Civil, SRI, ANT y Función Judicial. Son consultas que cualquier persona puede hacer en los portales oficiales; aquí se agrupan en un solo sitio para ahorrarte el recorrido. El uso que des a la información obtenida es responsabilidad tuya." }
-        }
-      ]
-    }
-    </script>
+    <!--
+      El FAQPage vive en PublicLandingView, no aqui: estatico se servia en las
+      once rutas, y en las paginas de consulta chocaba con el suyo propio. Dos
+      FAQPage en una misma pagina no son validos.
+    -->
   </body>
 </html>

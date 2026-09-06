@@ -61,13 +61,18 @@
         <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-sm">Consultas disponibles</p>
         <h2 class="text-h4 font-light tracking-tight mb-xl">Qué puedes averiguar</h2>
 
-        <div v-for="grupo in catalogo" :key="grupo.label" class="mb-xl">
-          <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">{{ grupo.label }}</p>
+        <!--
+          Cada tarjeta enlaza a la pagina de su consulta. Antes abria un modal
+          pidiendo cuenta: el visitante no llegaba a ver nada y la portada era
+          la unica URL indexable de las ocho consultas.
+        -->
+        <div v-for="grupo in GRUPOS" :key="grupo" class="mb-xl">
+          <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">{{ grupo }}</p>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
-            <button
-              v-for="item in grupo.items" :key="item.titulo"
-              @click="pedirRegistro(item)"
-              class="glass-card p-lg text-left hover:border-[var(--accent-color)]/40 hover:-translate-y-0.5 transition-all duration-base group"
+            <RouterLink
+              v-for="item in porGrupo(grupo)" :key="item.slug"
+              :to="`/${item.slug}`"
+              class="glass-card p-lg text-left hover:border-[var(--accent-color)]/40 hover:-translate-y-0.5 transition-all duration-base group block"
             >
               <div class="flex items-start justify-between gap-md mb-sm">
                 <h3 class="text-body font-bold tracking-wide">{{ item.titulo }}</h3>
@@ -76,7 +81,7 @@
                 </svg>
               </div>
               <p class="text-body leading-relaxed text-[var(--text-secondary)]">{{ item.texto }}</p>
-            </button>
+            </RouterLink>
           </div>
         </div>
       </section>
@@ -149,55 +154,17 @@
       </footer>
     </div>
 
-    <!-- Muro de registro -->
-    <transition
-      enter-active-class="transition duration-200 ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100"
-      leave-active-class="transition duration-150 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
-    >
-      <div v-if="muro" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md" @click.self="muro = null">
-        <div role="dialog" aria-modal="true" :aria-label="muro.titulo" class="w-full max-w-md glass-card p-lg sm:p-xl animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
-          <h3 class="text-lead font-light tracking-tight mb-sm">{{ muro.titulo }}</h3>
-          <p class="text-body leading-relaxed text-[var(--text-secondary)] mb-lg">{{ muro.texto }}</p>
-
-          <!-- Respuesta de ejemplo: se ve que devuelve antes de pedir la cuenta -->
-          <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">Ejemplo de respuesta</p>
-          <div class="rounded-base border border-[var(--border-color)] bg-[var(--accent-color)]/[0.03] divide-y divide-[var(--border-color)] mb-md">
-            <div v-for="([campo, valor]) in muro.ejemplo" :key="campo" class="flex items-baseline justify-between gap-md px-md py-sm">
-              <span class="text-caption uppercase tracking-wider text-[var(--text-muted)] shrink-0">{{ campo }}</span>
-              <span class="text-body font-medium text-right break-words">{{ valor }}</span>
-            </div>
-          </div>
-          <p class="text-caption leading-relaxed text-[var(--text-muted)] mb-xl">
-            Datos ilustrativos. No corresponden a ninguna persona real.
-          </p>
-
-          <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">Requiere cuenta</p>
-          <ul class="space-y-sm mb-xl">
-            <li v-for="b in beneficios" :key="b" class="flex items-start gap-sm text-body text-[var(--text-secondary)]">
-              <svg class="w-3.5 h-3.5 shrink-0 mt-xs text-[var(--accent-color)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-              </svg>
-              {{ b }}
-            </li>
-          </ul>
-
-          <div class="flex gap-md">
-            <button @click="muro = null" class="flex-1 py-md rounded-base border border-[var(--border-color)] text-caption uppercase tracking-[0.1em] font-medium hover:bg-white/5 transition-all">
-              Ahora no
-            </button>
-            <button @click="router.push('/auth')" class="flex-1 btn-primary">Crear cuenta</button>
-          </div>
-        </div>
-      </div>
-    </transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import { useRouter } from 'vue-router';
 import BrandMark from '../ui/components/BrandMark.vue';
 import { useAuth } from '../composables/useAuth';
+import { GRUPOS, porGrupo } from '../datos/consultas';
+import { useDatosEstructurados, preguntas } from '../composables/useDatosEstructurados';
 
 const router = useRouter();
 const { isAuthenticated, isDark, toggleTheme } = useAuth();
@@ -205,18 +172,8 @@ const { isAuthenticated, isDark, toggleTheme } = useAuth();
 const anio = new Date().getFullYear();
 const guiaAbierta = ref(-1);
 const faqAbierta = ref(-1);
-const muro = ref<{ titulo: string; texto: string; ejemplo: string[][] } | null>(null);
 
-/** Cualquier consulta desde la portada exige cuenta: no hay modo demo. */
-const pedirRegistro = (item: { titulo: string; texto: string; ejemplo: string[][] }) => {
-  muro.value = item;
-};
 
-const beneficios = [
-  'Cuota diaria que vuelve a cero cada medianoche',
-  'Acceso a las nueve consultas del catálogo',
-  'Sin tarjeta de crédito ni permanencia'
-];
 
 const ventajas = [
   {
@@ -241,135 +198,7 @@ const ventajas = [
   }
 ];
 
-const catalogo = [
-  {
-    label: 'Identidad',
-    items: [
-      {
-        titulo: 'Buscar por cédula',
-        texto: 'Nombres, apellidos, fecha de nacimiento, estado civil y lugar de nacimiento.',
-        ejemplo: [
-          ['Cédula', '0912345678'],
-          ['Nombres', 'MARIA FERNANDA'],
-          ['Apellidos', 'LOPEZ TORRES'],
-          ['Fecha de nacimiento', '14/03/1991'],
-          ['Edad', '35'],
-          ['Género', 'FEMENINO'],
-          ['Estado civil', 'CASADA'],
-          ['Nacionalidad', 'ECUATORIANA'],
-          ['Lugar de nacimiento', 'GUAYAS / GUAYAQUIL']
-        ]
-      },
-      {
-        titulo: 'Buscar por nombre',
-        texto: 'Localiza a una persona a partir de sus nombres y apellidos completos.',
-        ejemplo: [
-          ['Coincidencias', '3'],
-          ['Cédula', '0912345678'],
-          ['Nombres', 'MARIA FERNANDA'],
-          ['Apellidos', 'LOPEZ TORRES'],
-          ['Ciudad', 'GUAYAQUIL'],
-          ['Tipo de identificación', 'CEDULA']
-        ]
-      }
-    ]
-  },
-  {
-    label: 'Judicial',
-    items: [
-      {
-        titulo: 'Denuncias',
-        texto: 'Causas en las que la cédula figura como demandado, con materia y judicatura.',
-        ejemplo: [
-          ['N.º de juicio', '09332-2024-01875'],
-          ['Delito', 'INCUMPLIMIENTO DE CONTRATO'],
-          ['Fecha', '22/07/2024'],
-          ['Materia', 'CIVIL'],
-          ['Tipo de acción', 'PROCEDIMIENTO ORDINARIO'],
-          ['Judicatura', 'UNIDAD JUDICIAL CIVIL DE GUAYAQUIL'],
-          ['Ciudad', 'GUAYAQUIL']
-        ]
-      },
-      {
-        titulo: 'Juicios como demandante',
-        texto: 'Procesos en los que la persona actúa como actor, no como demandado.',
-        ejemplo: [
-          ['N.º de juicio', '17203-2023-00941'],
-          ['Delito', 'COBRO DE DINERO'],
-          ['Fecha', '09/11/2023'],
-          ['Materia', 'CIVIL'],
-          ['Tipo de acción', 'PROCEDIMIENTO MONITORIO'],
-          ['Demandante', 'LOPEZ TORRES MARIA FERNANDA'],
-          ['Judicatura', 'UNIDAD JUDICIAL CIVIL DE QUITO']
-        ]
-      }
-    ]
-  },
-  {
-    label: 'Tránsito',
-    items: [
-      {
-        titulo: 'Licencia',
-        texto: 'Tipos de licencia, vigencia, puntos disponibles y bloqueos según la ANT.',
-        ejemplo: [
-          ['Cédula', '0912345678'],
-          ['Nombre', 'LOPEZ TORRES MARIA FERNANDA'],
-          ['Puntos', '30 de 30'],
-          ['Tipo de licencia', 'B'],
-          ['Validez', 'VIGENTE HASTA 2029'],
-          ['Citaciones pendientes', '0']
-        ]
-      },
-      {
-        titulo: 'Multas e infracciones',
-        texto: 'Citaciones con entidad, artículo infringido, puntos y total a pagar.',
-        ejemplo: [
-          ['Citación', 'GYE-0091823'],
-          ['Entidad', 'ATM GUAYAQUIL'],
-          ['Placa', 'GSN1234'],
-          ['Fecha de emisión', '03/05/2026'],
-          ['Artículo', 'ART. 386 COIP'],
-          ['Puntos', '-6'],
-          ['Multa', '235,00'],
-          ['Total a pagar', '247,50']
-        ]
-      },
-      {
-        titulo: 'Datos del vehículo',
-        texto: 'Marca, modelo, año, clase y servicio a partir del número de placa.',
-        ejemplo: [
-          ['Placa', 'GSN1234'],
-          ['Marca', 'CHEVROLET'],
-          ['Modelo', 'SAIL 1.5'],
-          ['Año', '2019'],
-          ['Clase', 'AUTOMOVIL'],
-          ['Servicio', 'PARTICULAR'],
-          ['País de fabricación', 'ECUADOR'],
-          ['Propietario', 'LOPEZ TORRES MARIA FERNANDA']
-        ]
-      }
-    ]
-  },
-  {
-    label: 'Tributario',
-    items: [
-      {
-        titulo: 'Estado del RUC',
-        texto: 'Razón social, estado del contribuyente, actividad económica y establecimientos.',
-        ejemplo: [
-          ['RUC', '0912345678001'],
-          ['Razón social', 'LOPEZ TORRES MARIA FERNANDA'],
-          ['Estado', 'ACTIVO'],
-          ['Tipo de contribuyente', 'PERSONA NATURAL'],
-          ['Obligado a contabilidad', 'NO'],
-          ['Actividad principal', 'VENTA AL POR MENOR DE PRENDAS DE VESTIR'],
-          ['Inicio de actividades', '18/02/2016'],
-          ['Establecimientos', '1 ABIERTO']
-        ]
-      }
-    ]
-  }
-];
+
 
 const guias = [
   {
@@ -436,10 +265,12 @@ const enlacesLegales: { texto: string; href?: string; ruta?: string }[] = [
   { texto: 'Privacidad', ruta: '/privacidad' }
 ];
 
-/* Escape cierra el muro de registro, como cualquier dialogo. */
-const alPulsarTecla = (e: KeyboardEvent) => {
-  if (e.key === 'Escape' && muro.value) muro.value = null;
-};
-onMounted(() => window.addEventListener('keydown', alPulsarTecla));
-onUnmounted(() => window.removeEventListener('keydown', alPulsarTecla));
+
+/*
+ * FAQPage de la portada. Estaba escrito a mano en index.html, asi que se servia
+ * en las once rutas; en las paginas de consulta chocaba con el suyo. Aqui se
+ * inyecta y se retira con la vista, y sale del mismo array que se pinta abajo:
+ * el marcado y lo visible no pueden desincronizarse.
+ */
+useDatosEstructurados(() => preguntas(faq));
 </script>

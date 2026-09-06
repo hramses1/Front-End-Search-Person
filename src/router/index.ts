@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
 import PublicLandingView from '../views/PublicLandingView.vue'
+import { CONSULTAS } from '../datos/consultas'
 
 /**
  * La portada se carga de forma sincrona porque es la puerta de entrada y su
@@ -8,6 +9,7 @@ import PublicLandingView from '../views/PublicLandingView.vue'
  * la portada no descarga el panel ni la administracion.
  */
 const LegalView = () => import('../views/LegalView.vue')
+const ConsultaView = () => import('../views/ConsultaView.vue')
 const AuthView = () => import('../views/AuthView.vue')
 const DashboardView = () => import('../views/DashboardView.vue')
 const AdminView = () => import('../views/AdminView.vue')
@@ -33,6 +35,25 @@ const router = createRouter({
         descripcion: 'Consulta cédula, RUC, licencias, multas y vehículos del Ecuador en un solo lugar. Datos del Registro Civil, SRI, ANT y Función Judicial. Cuenta gratuita.'
       }
     },
+    /*
+     * Una ruta publica por consulta, generada desde el catalogo.
+     *
+     * Antes las ocho consultas vivian en modales de la portada: una sola URL
+     * intentando posicionar para ocho busquedas distintas, que es como no
+     * competir por ninguna. Ahora cada una tiene su pagina, su titulo y sus
+     * preguntas.
+     */
+    ...CONSULTAS.map(c => ({
+      path: `/${c.slug}`,
+      name: `consulta-${c.slug}`,
+      component: ConsultaView,
+      props: { slug: c.slug },
+      meta: {
+        titulo: c.tituloSeo,
+        descripcion: c.descripcion,
+        slug: c.slug
+      }
+    })),
     {
       // Documentos legales: mismo componente, distinto contenido segun el
       // nombre de ruta. Publicos, sin sesion.
@@ -95,11 +116,18 @@ router.beforeEach((to, _from, next) => {
   const { isAuthenticated, isAdmin } = useAuth();
 
   if (to.meta.requiresAuth && !isAuthenticated.value) {
-    next({ name: 'auth' })
+    // Se guarda el destino para volver despues de entrar. Antes se mandaba
+    // siempre al panel, perdiendo la intencion del usuario: quien pedia /admin
+    // acababa en /dashboard sin saber por que.
+    next({ name: 'auth', query: { next: to.fullPath } })
   } else if (to.meta.requiresAdmin && !isAdmin.value) {
     next({ name: 'dashboard' })
   } else if (to.meta.guestOnly && isAuthenticated.value) {
-    next({ name: 'dashboard' })
+    // Quien ya tiene sesion y aterriza en /auth con un destino pedido va alli,
+    // no al panel.
+    const pedido = to.query.next
+    const interno = typeof pedido === 'string' && pedido.startsWith('/') && !pedido.startsWith('//')
+    next(interno ? (pedido as string) : { name: 'dashboard' })
   } else {
     next()
   }
