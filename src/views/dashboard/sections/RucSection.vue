@@ -3,7 +3,7 @@
     <template #fields>
       <div class="relative group input-container">
         <input v-model="ruc" type="text" id="ruc" placeholder=" " maxlength="13" class="custom-input peer" />
-        <label for="ruc">NÚMERO DE RUC (EJ: 1712345678001)</label>
+        <label for="ruc">Número de RUC (EJ: 1712345678001)</label>
       </div>
     </template>
     <template #results="{ data }">

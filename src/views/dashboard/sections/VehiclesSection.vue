@@ -3,7 +3,7 @@
     <template #fields>
       <div class="relative group input-container">
         <input v-model="plate" type="text" id="plate_input" placeholder=" " maxlength="8" class="custom-input peer" />
-        <label for="plate_input">PLACA DEL VEHÍCULO (EJ: PBQ1234)</label>
+        <label for="plate_input">Placa del vehículo (ej. PBQ1234)</label>
       </div>
     </template>
     <template #results="{ data }">

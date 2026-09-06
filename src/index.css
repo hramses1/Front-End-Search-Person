@@ -216,9 +216,14 @@ h1, h2, h3, h4, h5, h6 {
 
 .custom-input:focus { border-color: var(--accent-color); }
 
+/*
+   Etiqueta flotante. Iba en mayusculas con tracking: en un formulario eso se
+   lee mas despacio y no aporta jerarquia, porque el campo ya esta separado
+   del anterior por su propia linea.
+*/
 label {
-  @apply absolute left-0 top-4 text-caption font-medium tracking-[0.08em]
-         transition-all pointer-events-none uppercase;
+  @apply absolute left-0 top-4 text-caption font-medium
+         transition-all pointer-events-none;
   color: var(--text-muted);
   transition-duration: 200ms;
 }

@@ -55,7 +55,7 @@
     <main id="contenido" :class="['flex-1 flex flex-col h-screen h-[100dvh] relative z-10 p-lg sm:p-xl custom-scrollbar animate-aparecer', hayModal ? 'overflow-hidden' : 'overflow-y-auto']">
       <header class="mb-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-md pr-3xl lg:pr-0">
         <div>
-          <p class="text-overline font-black tracking-[0.14em] text-[var(--accent-color)] uppercase mb-xs">Panel de Control</p>
+          <p class="text-overline font-black tracking-[0.14em] text-[var(--accent-color)] mb-xs">Panel de control</p>
           <h1 class="text-h3 font-light tracking-tight text-[var(--text-primary)] uppercase">Gestión de Usuarios</h1>
         </div>
         
@@ -158,7 +158,7 @@
                   aqui. Decir "39 usuarios" a secas daba a entender que ese era
                   el total de la base, y no lo es.
                 -->
-                <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                <p class="text-caption text-[var(--text-muted)]">
                   {{ usuariosFiltrados.length }} de {{ plural(users.length, 'usuario') }} con plan
                 </p>
                 <button v-if="hayFiltros" type="button" class="btn-tertiary" @click="limpiarFiltros">
@@ -187,17 +187,17 @@
 
                 <div class="flex flex-wrap items-center gap-sm">
                   <span
-                    class="text-overline font-black px-sm py-xs rounded-base border border-[var(--border-color)] tracking-[0.14em] uppercase"
+                    class="text-caption font-medium px-sm py-xs rounded-base border border-[var(--border-color)]"
                     :style="{ color: userItem.planDescription?.includes('ADMIN') ? 'var(--accent-color)' : 'var(--text-secondary)' }"
                   >
                     {{ userItem.planDescription || 'SIN PLAN' }}
                   </span>
 
-                  <span class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                  <span class="text-caption text-[var(--text-muted)]">
                     {{ userItem.consumoDesconocido ? 'Sin dato' : (sinTope(userItem.limite) ? `${userItem.number_requests ?? 0} · sin límite` : `${userItem.number_requests ?? 0} / ${userItem.limite}`) }}
                   </span>
 
-                  <span v-if="userItem.registro" class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                  <span v-if="userItem.registro" class="text-caption text-[var(--text-muted)]">
                     {{ fechaCorta(userItem.registro) }}
                   </span>
                 </div>
@@ -252,7 +252,7 @@
                       </div>
                     </td>
                     <td class="px-lg py-md">
-                      <span class="inline-block text-caption font-black px-md py-xs rounded-base border border-[var(--border-color)] tracking-[0.14em] uppercase" :style="{ color: userItem.planDescription?.includes('ADMIN') ? 'var(--accent-color)' : 'var(--text-secondary)' }">
+                      <span class="inline-block text-caption font-medium px-md py-xs rounded-base border border-[var(--border-color)]" :style="{ color: userItem.planDescription?.includes('ADMIN') ? 'var(--accent-color)' : 'var(--text-secondary)' }">
                         {{ userItem.planDescription || 'SIN PLAN' }}
                       </span>
                     </td>
@@ -302,7 +302,7 @@
               </table>
 
               <div v-if="usuariosVisibles.length < usuariosFiltrados.length" class="flex items-center justify-center gap-md py-lg">
-                <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                <p class="text-caption text-[var(--text-muted)]">
                   {{ usuariosVisibles.length }} de {{ usuariosFiltrados.length }}
                 </p>
                 <button type="button" class="btn-secondary" @click="visibles += PASO_FILAS">
@@ -316,7 +316,7 @@
             <template v-else>
               <div class="p-lg space-y-md">
                 <div class="flex items-center justify-between gap-md">
-                  <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                  <p class="text-caption text-[var(--text-muted)]">
                     {{ planes.length }} {{ planes.length === 1 ? 'plan' : 'planes' }}
                   </p>
                   <button type="button" class="btn-primary" @click="abrirPlan(null)">Crear plan</button>
@@ -326,13 +326,13 @@
                   <div v-for="pl in planes" :key="pl.id" class="glass-card p-lg space-y-md">
                     <div>
                       <p class="text-body font-semibold">{{ pl.description }}</p>
-                      <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mt-xs">
+                      <p class="text-caption text-[var(--text-muted)] mt-xs">
                         {{ pl.daily_limit != null ? `${pl.daily_limit} consultas al día` : 'Sin cupo definido' }}
                       </p>
                     </div>
 
                     <div class="flex items-center justify-between gap-md">
-                      <span class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                      <span class="text-caption text-[var(--text-muted)]">
                         {{ plural(usuariosPorPlan[pl.description] ?? 0, 'usuario') }}
                       </span>
                       <button type="button" class="btn-secondary" @click="abrirPlan(pl)">Editar</button>

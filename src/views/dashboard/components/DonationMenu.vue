@@ -35,7 +35,7 @@
           
           <div class="flex justify-between items-center mb-lg">
             <div class="flex flex-col">
-                <span class="text-overline font-black text-amber-500 tracking-[0.14em] uppercase">Apoyo Voluntario</span>
+                <span class="text-overline font-bold text-amber-500 tracking-[0.14em] uppercase">Apoyo</span>
                 <span class="text-body font-bold uppercase">Invítame un café</span>
             </div>
             <button @click="close" class="p-sm rounded-base hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
@@ -75,7 +75,7 @@
           class="w-full h-auto object-contain max-w-[140px] sm:max-w-[160px]"
         />
       </picture>
-      <p v-if="!isQrZoomed" class="text-caption font-black text-center mt-sm text-[var(--text-muted)] uppercase tracking-tighter">Clic para ampliar</p>
+      <p v-if="!isQrZoomed" class="text-caption font-black text-center mt-sm text-[var(--text-muted)] ">Clic para ampliar</p>
   </div>
 
   <!-- El contenido de abajo se desplazará automáticamente por el margen del QR -->

@@ -3,7 +3,7 @@
     <template #fields>
       <div class="relative group input-container">
         <input v-model="ci" type="text" id="ci_citation" placeholder=" " maxlength="10" class="custom-input peer" />
-        <label for="ci_citation">CÉDULA INFRACTOR (EJ: 1712345678)</label>
+        <label for="ci_citation">Cédula del infractor (ej. 1712345678)</label>
       </div>
     </template>
     <template #results="{ data }">

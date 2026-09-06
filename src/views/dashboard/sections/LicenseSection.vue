@@ -3,7 +3,7 @@
     <template #fields>
       <div class="relative group input-container">
         <input v-model="ci" type="text" id="ci_license" placeholder=" " maxlength="10" class="custom-input peer" />
-        <label for="ci_license">CÉDULA CONDUCTOR (EJ: 1712345678)</label>
+        <label for="ci_license">Cédula del conductor (ej. 1712345678)</label>
       </div>
     </template>
     <template #results="{ data }">

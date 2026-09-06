@@ -18,7 +18,7 @@
           class="custom-input peer"
         />
         <label for="ci">
-          CÉDULA (EJ: 1712345678)
+          Cédula (ej. 1712345678)
         </label>
       </div>
     </template>

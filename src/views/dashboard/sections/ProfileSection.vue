@@ -8,7 +8,7 @@
         </div>
         <div>
           <h3 class="text-overline font-bold uppercase tracking-[0.14em] text-[var(--text-muted)] leading-none">Mi Cuenta</h3>
-          <p class="text-body font-semibold text-[var(--accent-color)] mt-xs uppercase tracking-[0.14em]">Ajustes de Perfil</p>
+          <p class="text-body font-semibold text-[var(--accent-color)] mt-xs">Ajustes de perfil</p>
         </div>
       </div>
       

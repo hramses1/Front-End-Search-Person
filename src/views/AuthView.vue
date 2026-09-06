@@ -31,7 +31,7 @@
     >
       <div class="text-center mb-2xl mask-reveal delay-100 relative">
         <h1 class="text-lead tracking-[0.14em] font-light mb-sm drop-shadow-md" style="color: var(--text-primary);">PORTAL</h1>
-        <p class="text-caption uppercase tracking-[0.4em]" style="color: var(--text-secondary);">Acesso Restringido</p>
+        <p class="text-caption tracking-[0.14em]" style="color: var(--text-secondary);">Acceso restringido</p>
         <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 w-8 h-[1px] bg-gradient-to-r from-transparent via-pale-blue/30 to-transparent"></div>
       </div>
 
@@ -42,7 +42,7 @@
           :style="{ color: isLogin ? 'var(--accent-color)' : 'var(--text-secondary)' }"
           class="inline-flex items-end justify-center min-h-[2.75rem] pb-sm transition-all duration-base relative group"
         >
-          INICIAR
+          Iniciar sesión
           <span class="absolute bottom-0 left-0 w-full h-[1px] transform scale-x-0 transition-transform duration-base origin-left" :class="isLogin ? 'scale-x-100' : 'group-hover:scale-x-50'" style="background-color: var(--accent-color);"></span>
         </button>
         <button 
@@ -50,7 +50,7 @@
           :style="{ color: !isLogin ? 'var(--accent-color)' : 'var(--text-secondary)' }"
           class="inline-flex items-end justify-center min-h-[2.75rem] pb-sm transition-all duration-base relative group"
         >
-          REGISTRO
+          Registro
           <span class="absolute bottom-0 left-0 w-full h-[1px] transform scale-x-0 transition-transform duration-base origin-left" :class="!isLogin ? 'scale-x-100' : 'group-hover:scale-x-50'" style="background-color: var(--accent-color);"></span>
         </button>
       </div>
@@ -87,14 +87,14 @@
                 required
                 class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input placeholder-transparent"
                 style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
-                placeholder="USUARIO O EMAIL"
+                placeholder="Usuario o correo"
               />
               <label 
                 for="identity" 
                 class="absolute left-0 top-0 text-caption tracking-[0.14em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
                 style="color: var(--text-secondary);"
               >
-                USUARIO O EMAIL
+                Usuario o correo
               </label>
               <div class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-base origin-center" style="background-color: var(--accent-color);"></div>
             </div>
@@ -107,14 +107,14 @@
                 required
                 class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input placeholder-transparent"
                 style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
-                placeholder="CONTRASEÑA"
+                placeholder="Contraseña"
               />
               <label 
                 for="login_password" 
                 class="absolute left-0 top-0 text-caption tracking-[0.14em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
                 style="color: var(--text-secondary);"
               >
-                CONTRASEÑA
+                Contraseña
               </label>
               <div class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-base origin-center" style="background-color: var(--accent-color);"></div>
             </div>
@@ -132,16 +132,16 @@
                 :class="registerErrors.name ? 'border-red-500/50 focus:border-red-500' : ''"
                 class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input placeholder-transparent"
                 style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
-                placeholder="NOMBRE COMPLETO"
+                placeholder="Nombre completo"
               />
               <label 
                 for="name" 
                 class="absolute left-0 top-0 text-caption tracking-[0.14em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
                 style="color: var(--text-secondary);"
               >
-                NOMBRE COMPLETO
+                Nombre completo
               </label>
-              <div v-if="registerErrors.name" class="text-red-400 text-caption mt-xs tracking-wider uppercase">{{ registerErrors.name }}</div>
+              <div v-if="registerErrors.name" class="text-red-400 text-caption mt-xs">{{ registerErrors.name }}</div>
               <div v-else class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-base origin-center" style="background-color: var(--accent-color);"></div>
             </div>
 
@@ -155,16 +155,16 @@
                 :class="registerErrors.username ? 'border-red-500/50 focus:border-red-500' : ''"
                 class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input placeholder-transparent"
                 style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
-                placeholder="USUARIO"
+                placeholder="Usuario"
               />
               <label 
                 for="username" 
                 class="absolute left-0 top-0 text-caption tracking-[0.14em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
                 style="color: var(--text-secondary);"
               >
-                USUARIO
+                Usuario
               </label>
-              <div v-if="registerErrors.username" class="text-red-400 text-caption mt-xs tracking-wider uppercase">{{ registerErrors.username }}</div>
+              <div v-if="registerErrors.username" class="text-red-400 text-caption mt-xs">{{ registerErrors.username }}</div>
               <div v-else class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-base origin-center" style="background-color: var(--accent-color);"></div>
             </div>
 
@@ -178,16 +178,16 @@
                 :class="registerErrors.email ? 'border-red-500/50 focus:border-red-500' : ''"
                 class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input placeholder-transparent"
                 style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
-                placeholder="CORREO ELECTRÓNICO"
+                placeholder="Correo electrónico"
               />
               <label 
                 for="email" 
                 class="absolute left-0 top-0 text-caption tracking-[0.14em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
                 style="color: var(--text-secondary);"
               >
-                CORREO ELECTRÓNICO
+                Correo electrónico
               </label>
-              <div v-if="registerErrors.email" class="text-red-400 text-caption mt-xs tracking-wider uppercase">{{ registerErrors.email }}</div>
+              <div v-if="registerErrors.email" class="text-red-400 text-caption mt-xs">{{ registerErrors.email }}</div>
             </div>
 
             <div class="relative group input-container mask-reveal delay-500">
@@ -201,16 +201,16 @@
                 :class="registerErrors.password ? 'border-red-500/50 focus:border-red-500' : ''"
                 class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input placeholder-transparent"
                 style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
-                placeholder="CONTRASEÑA"
+                placeholder="Contraseña"
               />
               <label 
                 for="password" 
                 class="absolute left-0 top-0 text-caption tracking-[0.14em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
                 style="color: var(--text-secondary);"
               >
-                CONTRASEÑA
+                Contraseña
               </label>
-              <div v-if="registerErrors.password" class="text-red-400 text-caption mt-xs tracking-wider uppercase">{{ registerErrors.password }}</div>
+              <div v-if="registerErrors.password" class="text-red-400 text-caption mt-xs">{{ registerErrors.password }}</div>
               <div v-else class="absolute bottom-0 left-0 w-full h-[0.5px] scale-x-0 peer-focus:scale-x-100 transition-transform duration-base origin-center" style="background-color: var(--accent-color);"></div>
             </div>
 
@@ -225,16 +225,16 @@
                 :class="registerErrors.passwordConfirm ? 'border-red-500/50 focus:border-red-500' : ''"
                 class="w-full bg-transparent border-b-[0.5px] font-light outline-none pb-sm transition-all duration-base peer custom-input placeholder-transparent"
                 style="color: var(--text-primary); border-color: var(--input-border); caret-color: var(--accent-color);"
-                placeholder="CONFIRMAR CONTRASEÑA"
+                placeholder="Confirmar contraseña"
               />
               <label 
                 for="passwordConfirm" 
                 class="absolute left-0 top-0 text-caption tracking-[0.14em] transition-all duration-base peer-focus:-translate-y-5 peer-focus:text-caption peer-focus:opacity-100 text-[var(--text-secondary)] peer-valid:-translate-y-5 peer-valid:text-caption"
                 style="color: var(--text-secondary);"
               >
-                CONFIRMAR CONTRASEÑA
+                Confirmar contraseña
               </label>
-              <div v-if="registerErrors.passwordConfirm" class="text-red-400 text-caption mt-xs tracking-wider uppercase">{{ registerErrors.passwordConfirm }}</div>
+              <div v-if="registerErrors.passwordConfirm" class="text-red-400 text-caption mt-xs">{{ registerErrors.passwordConfirm }}</div>
             </div>
           </div>
         </transition>
@@ -250,7 +250,7 @@
         <div v-if="!successToken" class="pt-sm mask-reveal delay-700">
           <button 
             type="submit" 
-            class="w-full py-md border rounded-base text-body tracking-[0.14em] uppercase transition-all duration-base overflow-hidden relative group hover-smoke-glass"
+            class="w-full min-h-[3rem] border rounded-base text-body font-medium transition-all duration-base overflow-hidden relative group hover-smoke-glass"
             style="background-color: var(--glass-bg); border-color: var(--border-color); color: var(--text-primary);"
             :disabled="isLoading"
           >
@@ -259,7 +259,7 @@
             
             <span class="relative z-10 font-medium transition-all duration-base flex items-center justify-center gap-md">
               <span v-if="isLoading && !isGoogleLoading" class="w-3 h-3 border border-t-transparent border-current rounded-full animate-spin"></span>
-              {{ (isLoading && !isGoogleLoading) ? 'PROCESANDO SOLICITUD...' : (isLogin ? 'ACCEDER AL SISTEMA SEGURO' : 'CREAR CUENTA PROTEGIDA') }}
+              {{ (isLoading && !isGoogleLoading) ? 'Accediendo…' : (isLogin ? 'Acceder' : 'Crear cuenta') }}
             </span>
           </button>
         </div>
@@ -288,7 +288,7 @@
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             </svg>
-            {{ isGoogleLoading ? 'CONECTANDO...' : 'CONTINUAR CON GOOGLE' }}
+            {{ isGoogleLoading ? 'Conectando…' : 'Continuar con Google' }}
           </button>
         </div>
 
@@ -718,7 +718,7 @@ const handleSubmit = async () => {
       
       // Tras registro exitoso, volver a login y mostrar mensaje
       setMode(true);
-      successMsg.value = 'USUARIO CREADO, AHORA TE PUEDES LOGEAR CON TU USUARIO Y CONTRASEÑA';
+      successMsg.value = 'Cuenta creada. Ya puedes entrar con tu usuario y contraseña.';
     }
   } catch (error: any) {
     const detail = error.response?.data?.detail;

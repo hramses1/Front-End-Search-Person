@@ -13,7 +13,7 @@
           <h2 class="text-lead font-light tracking-[-0.02em] text-[var(--text-primary)] leading-tight">
             Búsqueda por <span class="font-medium text-[var(--accent-color)]">Nombre</span>
           </h2>
-          <p class="text-body uppercase tracking-[0.15em] text-[var(--text-muted)] mt-xs font-medium">Identificación de Personas Naturales</p>
+          <p class="text-body text-[var(--text-muted)] mt-xs">Identificación de personas naturales</p>
         </div>
 
         <div class="grid grid-cols-1 gap-xl">
@@ -45,13 +45,13 @@
         <div v-if="rawResults && rawResults.length > 0" class="mt-2xl space-y-xl">
           <div class="flex items-end justify-between border-b border-[var(--border-color)] pb-md">
             <div>
-              <span class="text-overline font-bold tracking-[0.14em] uppercase text-[var(--accent-color)]">Filtros Inteligentes</span>
+              <span class="text-overline font-bold tracking-[0.14em] uppercase text-[var(--accent-color)]">Filtros</span>
               <h3 class="text-body font-medium tracking-tight mt-xs">Refinar resultados actuales</h3>
             </div>
             <button
               v-if="hasActiveFilters"
               @click="clearFilters"
-              class="text-caption font-bold tracking-[0.14em] uppercase text-[var(--accent-color)] transition-all border-b border-[var(--accent-color)]/40 pb-xs"
+              class="text-caption font-medium text-[var(--accent-color)] transition-all border-b border-[var(--accent-color)]/40 pb-xs"
             >
               Resetear Filtros
             </button>
@@ -62,7 +62,7 @@
             <div class="glass-panel p-lg rounded-base space-y-md shadow-sm hover:shadow-md transition-shadow duration-base">
                <div class="flex items-center gap-sm mb-xs">
                  <svg class="w-3.5 h-3.5 text-[var(--accent-color)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                 <span class="text-caption font-bold tracking-[0.14em] uppercase text-[var(--text-primary)]">Búsqueda Interna</span>
+                 <span class="text-caption font-medium text-[var(--text-primary)]">Búsqueda interna</span>
                </div>
                <div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
                  <input v-model="filterName" type="text" placeholder="Filtrar nombre..." class="w-full bg-transparent border-b border-[var(--border-color)] py-sm text-caption outline-none focus:border-[var(--accent-color)] text-[var(--text-primary)] transition-colors placeholder:text-[var(--text-muted)]" />
@@ -72,18 +72,18 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
               <div class="glass-panel p-lg rounded-base flex flex-col justify-between shadow-sm">
-                <span class="text-caption font-bold tracking-[0.14em] uppercase text-[var(--text-primary)] mb-md">Cédula / RUC</span>
+                <span class="text-caption font-medium text-[var(--text-primary)] mb-md">Cédula / RUC</span>
                 <input v-model="filterCedula" type="text" placeholder="0000000000" class="bg-transparent border-b border-[var(--border-color)] py-sm text-caption outline-none focus:border-[var(--accent-color)] text-[var(--text-primary)] transition-colors placeholder:text-[var(--text-muted)]" />
               </div>
               <div class="glass-panel p-lg rounded-base flex flex-col justify-between shadow-sm">
-                <span class="text-caption font-bold tracking-[0.14em] uppercase text-[var(--text-primary)] mb-md">Localidad</span>
+                <span class="text-caption font-medium text-[var(--text-primary)] mb-md">Localidad</span>
                 <input v-model="filterCity" type="text" placeholder="Ciudad..." class="bg-transparent border-b border-[var(--border-color)] py-sm text-caption outline-none focus:border-[var(--accent-color)] text-[var(--text-primary)] transition-colors placeholder:text-[var(--text-muted)]" />
               </div>
             </div>
 
             <div class="glass-panel p-lg rounded-base shadow-sm">
               <div class="flex items-center justify-between mb-md">
-                <span class="text-caption font-bold tracking-[0.14em] uppercase text-[var(--text-primary)]">Rango de Edad</span>
+                <span class="text-caption font-medium text-[var(--text-primary)]">Rango de edad</span>
                 <span class="text-caption font-bold text-[var(--accent-color)] bg-[var(--accent-color)]/5 px-sm py-xs rounded-base">{{ filterAgeMin || 0 }} — {{ filterAgeMax || 100 }}</span>
               </div>
               <div class="flex items-center gap-md">
@@ -96,7 +96,7 @@
             <div class="space-y-md">
               <div v-if="availableGenders.length > 0" class="glass-panel p-lg rounded-base shadow-sm">
                 <div class="flex items-center justify-between mb-md">
-                   <span class="text-caption font-bold tracking-[0.14em] uppercase text-[var(--text-primary)]">Género</span>
+                   <span class="text-caption font-medium text-[var(--text-primary)]">Género</span>
                    <span v-if="filterGender" class="text-caption bg-[var(--accent-color)] text-[var(--bg-color)] px-sm py-xs rounded-full font-bold">1 SELECCIONADO</span>
                 </div>
                 <div class="flex flex-wrap gap-sm">
@@ -106,7 +106,7 @@
 
               <div v-if="availableNationalities.length > 0" class="glass-panel p-lg rounded-base shadow-sm">
                 <div class="flex items-center justify-between mb-md">
-                   <span class="text-caption font-bold tracking-[0.14em] uppercase text-[var(--text-primary)]">Nacionalidad</span>
+                   <span class="text-caption font-medium text-[var(--text-primary)]">Nacionalidad</span>
                    <span v-if="filterNationalities.length > 0" class="text-caption bg-[var(--accent-color)] text-[var(--accent-inverse)] px-sm py-xs rounded-full font-bold">{{ filterNationalities.length }} SELECCIONADOS</span>
                 </div>
                 <div class="flex flex-wrap gap-sm">
@@ -116,7 +116,7 @@
 
               <div v-if="availableMaritalStatuses.length > 0" class="glass-panel p-lg rounded-base shadow-sm">
                 <div class="flex items-center justify-between mb-md">
-                   <span class="text-caption font-bold tracking-[0.14em] uppercase text-[var(--text-primary)]">Estado Civil</span>
+                   <span class="text-caption font-medium text-[var(--text-primary)]">Estado civil</span>
                    <span v-if="filterMaritalStatus" class="text-caption bg-[var(--accent-color)] text-[var(--accent-inverse)] px-sm py-xs rounded-full font-bold">1 SELECCIONADO</span>
                 </div>
                 <div class="flex flex-wrap gap-sm">
@@ -129,7 +129,7 @@
           <div class="flex justify-center pt-md">
             <div class="bg-[var(--accent-color)]/5 border border-[var(--accent-color)]/10 px-md py-sm rounded-base flex items-center gap-sm">
               <span class="w-1.5 h-1.5 rounded-full bg-[var(--accent-color)] animate-pulse"></span>
-              <p class="text-overline text-[var(--accent-color)] uppercase tracking-[0.14em] font-bold">
+              <p class="text-caption text-[var(--accent-color)] font-medium">
                 Mostrando {{ filteredResults?.length ?? 0 }} de {{ rawResults.length }} encontrados
               </p>
             </div>
@@ -146,7 +146,7 @@
       -->
       <div v-if="Array.isArray(data)" class="space-y-sm animate-fade-in-up">
         <div class="flex items-center justify-between gap-md pb-sm">
-          <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">
+          <p class="text-caption text-[var(--text-muted)]">
             {{ data.length }} {{ data.length === 1 ? 'coincidencia' : 'coincidencias' }}
           </p>
           <!--
@@ -379,7 +379,7 @@ const filteredResults = computed(() => {
     });
   }
 
-  // 8. Filtro de Estado Civil
+  // 8. Filtro de Estado civil
   if (filterMaritalStatus.value) {
     results = results.filter(item => {
       const val = getValue(item, 'EstadoCivil').toUpperCase();

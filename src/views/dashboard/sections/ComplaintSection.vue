@@ -10,7 +10,7 @@
           maxlength="10"
           class="custom-input peer" 
         />
-        <label for="ci_complaint">CÉDULA DEL IMPLICADO (EJ: 1712345678)</label>
+        <label for="ci_complaint">Cédula del implicado (ej. 1712345678)</label>
       </div>
     </template>
     <template #results="{ data }">

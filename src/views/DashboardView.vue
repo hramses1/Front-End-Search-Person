@@ -25,7 +25,7 @@
     >
       <div class="p-lg border-b border-[var(--border-color)]">
         <BrandMark prefijo="Portal de " titulo="Consulta Ciudadana" apilado />
-        <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mt-sm">Panel de Consultas</p>
+        <p class="text-caption text-[var(--text-muted)] mt-sm">Panel de consultas</p>
       </div>
 
       <div class="flex-1 overflow-y-auto p-md space-y-md custom-scrollbar">
@@ -84,7 +84,7 @@
       -->
       <header class="mb-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-md pr-3xl lg:pr-0">
         <div>
-          <p class="text-overline font-black tracking-[0.14em] text-[var(--accent-color)] uppercase mb-xs">Sección Actual</p>
+          <p class="text-caption text-[var(--accent-color)] mb-xs">Sección actual</p>
           <h1 class="text-h4 sm:text-h3 font-light tracking-tight text-[var(--text-primary)] text-balance">
             {{ sections[currentSection] }}
           </h1>
@@ -97,7 +97,7 @@
             de controles de cuenta.
           -->
           <div class="control-encabezado glass-panel">
-            <span class="text-overline font-black tracking-[0.14em] uppercase px-sm py-xs rounded-full border border-[var(--accent-color)] text-[var(--accent-color)] bg-[var(--accent-color)]/5">
+            <span class="text-caption font-medium px-sm py-xs rounded-full border border-[var(--accent-color)] text-[var(--accent-color)] bg-[var(--accent-color)]/5">
               {{ planMostrado }}
             </span>
             <div class="flex flex-col leading-none">
@@ -108,7 +108,7 @@
               <span class="text-caption font-bold tabular-nums leading-none text-[var(--text-primary)]">
                 {{ cuotaSinTope ? plural(userRequests, 'consulta') : `${userRequests} / ${tokenLimit}` }}
               </span>
-              <span v-if="quotaCountdown" class="text-overline tracking-[0.14em] uppercase leading-none text-[var(--text-muted)] mt-xs hidden sm:block">
+              <span v-if="quotaCountdown" class="text-caption leading-none text-[var(--text-muted)] mt-xs hidden sm:block">
                 Renueva {{ quotaCountdown }}
               </span>
             </div>
@@ -206,43 +206,43 @@ const sectionGroups = [
   {
     label: 'Identidad',
     items: [
-      { key: 'identity', label: 'Buscar por cédula', titulo: 'VERIFICACIÓN DE IDENTIDAD',
+      { key: 'identity', label: 'Buscar por cédula', titulo: 'Verificación de identidad',
         icon: ['M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'] },
-      { key: 'fullname', label: 'Buscar por nombre', titulo: 'BÚSQUEDA POR NOMBRE',
+      { key: 'fullname', label: 'Buscar por nombre', titulo: 'Búsqueda por nombre',
         icon: ['M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'] }
     ]
   },
   {
     label: 'Judicial',
     items: [
-      { key: 'complaint', label: 'Denuncias', titulo: 'REGISTRO DE DENUNCIAS',
+      { key: 'complaint', label: 'Denuncias', titulo: 'Registro de denuncias',
         icon: ['M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'] },
-      { key: 'judgement', label: 'Juicios como demandante', titulo: 'JUICIOS COMO DEMANDANTE',
+      { key: 'judgement', label: 'Juicios como demandante', titulo: 'Juicios como demandante',
         icon: ['M12 3v18m0-18L6 6m6-3l6 3M4 9l3 8a4 4 0 01-6 0l3-8zm16 0l3 8a4 4 0 01-6 0l3-8z'] }
     ]
   },
   {
     label: 'Tránsito',
     items: [
-      { key: 'license', label: 'Licencia', titulo: 'LICENCIAS ACTIVAS',
+      { key: 'license', label: 'Licencia', titulo: 'Licencias activas',
         icon: ['M3 5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5z', 'M7 12h4m-2-3a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM15 10h3m-3 4h3'] },
-      { key: 'citation', label: 'Multas e infracciones', titulo: 'INFRACCIONES DE TRÁNSITO',
+      { key: 'citation', label: 'Multas e infracciones', titulo: 'Infracciones de tránsito',
         icon: ['M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'] },
-      { key: 'vehicles', label: 'Datos del vehículo', titulo: 'CONSULTA DE VEHÍCULOS',
+      { key: 'vehicles', label: 'Datos del vehículo', titulo: 'Consulta de vehículos',
         icon: ['M5 17a2 2 0 104 0 2 2 0 00-4 0zm10 0a2 2 0 104 0 2 2 0 00-4 0zM7 17h8m4 0h2v-4l-3-5H6L3 13v4h2'] }
     ]
   },
   {
     label: 'Tributario',
     items: [
-      { key: 'ruc', label: 'Estado del RUC', titulo: 'ESTADO RUC',
+      { key: 'ruc', label: 'Estado del RUC', titulo: 'Estado del RUC',
         icon: ['M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'] }
     ]
   },
   {
     label: 'Cuenta',
     items: [
-      { key: 'profile', label: 'Mi perfil', titulo: 'ACTUALIZAR PERFIL',
+      { key: 'profile', label: 'Mi perfil', titulo: 'Actualizar perfil',
         icon: ['M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'] }
     ]
   }
