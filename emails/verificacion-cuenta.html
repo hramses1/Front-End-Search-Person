@@ -1,0 +1,145 @@
+<!--
+  Verificación de cuenta — Portal de Consulta Ciudadana
+
+  Dónde pegar esto: panel de PocketBase → Settings → Mail templates →
+  "Verification". El asunto sugerido va debajo; el cuerpo es todo este
+  archivo, tal cual.
+
+  Placeholders que usa PocketBase (no tocar, los rellena el propio backend):
+    {RECORD:name}   nombre que puso la persona al registrarse
+    {ACTION_URL}    enlace de verificación, con el token ya incluido
+
+  Asunto sugerido:
+    Confirma tu correo — Portal de Consulta Ciudadana
+
+  Notas de email HTML, por si hay que tocar algo después:
+  - Todo en tablas y estilos inline: es lo único que renderiza igual en
+    Gmail, Outlook de escritorio y el resto. Un <div> con flexbox se rompe
+    en Outlook.
+  - El botón lleva el respaldo VML para Outlook (los comentarios
+    "[if mso]"): sin eso, Outlook de escritorio dibuja un rectángulo sin
+    forma en vez del botón redondeado.
+  - Los colores son los de devzio.site en modo claro: es el tema en el que
+    se lee casi todo correo, y las variables CSS del sitio no existen aquí.
+-->
+<!doctype html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="color-scheme" content="light">
+<title>Confirma tu correo</title>
+<!--[if mso]>
+<noscript>
+<xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml>
+</noscript>
+<![endif]-->
+<style>
+  body, table, td { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  body { margin: 0; padding: 0; width: 100% !important; background-color: #FAF7F3; }
+  table { border-collapse: collapse; }
+  img { border: 0; display: block; }
+  a { text-decoration: none; }
+  @media screen and (max-width: 600px) {
+    .contenedor { width: 100% !important; }
+    .relleno { padding-left: 20px !important; padding-right: 20px !important; }
+  }
+</style>
+</head>
+<body style="margin:0; padding:0; background-color:#FAF7F3;">
+  <!-- Texto de vista previa: lo que se ve junto al asunto en la bandeja. Oculto en el cuerpo del correo. -->
+  <div style="display:none; max-height:0; overflow:hidden; opacity:0; mso-hide:all;">
+    Un paso más: confirma tu correo para activar tu cuenta y empezar a consultar.
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#FAF7F3;">
+    <tr>
+      <td align="center" style="padding: 40px 16px;">
+
+        <table role="presentation" class="contenedor" width="560" cellpadding="0" cellspacing="0" style="width:560px; max-width:560px; background-color:#FFFFFF; border:1px solid #E4DACE; border-radius:16px;">
+
+          <!-- Cabecera: logotipo -->
+          <tr>
+            <td class="relleno" style="padding: 32px 40px 24px;">
+              <p style="margin:0; font-size:12px; line-height:1.4; letter-spacing:2px; text-transform:uppercase; font-weight:300; color:#241F1B;">
+                Portal de<br>
+                <span style="font-weight:800; color:#9A3F1F;">Consulta Ciudadana</span>
+              </p>
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:8px;">
+                <tr>
+                  <td width="24" height="4" style="background-color:#FFDD00; border-radius:2px; font-size:0; line-height:0;">&nbsp;</td>
+                  <td width="4" style="font-size:0; line-height:0;">&nbsp;</td>
+                  <td width="12" height="4" style="background-color:#0033A0; border-radius:2px; font-size:0; line-height:0;">&nbsp;</td>
+                  <td width="4" style="font-size:0; line-height:0;">&nbsp;</td>
+                  <td width="8" height="4" style="background-color:#ED1C24; border-radius:2px; font-size:0; line-height:0;">&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr><td style="border-top:1px solid #E4DACE; font-size:0; line-height:0;">&nbsp;</td></tr>
+
+          <!-- Cuerpo -->
+          <tr>
+            <td class="relleno" style="padding: 32px 40px 8px;">
+              <h1 style="margin:0 0 16px; font-size:22px; line-height:1.3; font-weight:600; color:#241F1B;">
+                Confirma tu correo
+              </h1>
+              <p style="margin:0 0 16px; font-size:16px; line-height:1.6; color:#5A524A;">
+                Hola, {RECORD:name}. Gracias por registrarte en el Portal de Consulta Ciudadana.
+                Solo falta un paso: confirma tu correo para activar tu cuenta y empezar a
+                consultar cédula, RUC, licencias y vehículos.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Botón: tabla con el respaldo VML para Outlook -->
+          <tr>
+            <td class="relleno" align="left" style="padding: 8px 40px 32px;">
+              <!--[if mso]>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{ACTION_URL}" style="height:48px;v-text-anchor:middle;width:220px;" arcsize="33%" fillcolor="#9A3F1F" stroke="f">
+              <w:anchorlock/>
+              <center style="color:#FFFFFF;font-family:sans-serif;font-size:15px;font-weight:600;">Confirmar mi correo</center>
+              </v:roundrect>
+              <![endif]-->
+              <!--[if !mso]><!-->
+              <a href="{ACTION_URL}" target="_blank" style="display:inline-block; background-color:#9A3F1F; color:#FFFFFF; font-size:15px; font-weight:600; line-height:48px; height:48px; padding:0 28px; border-radius:16px; text-align:center;">
+                Confirmar mi correo
+              </a>
+              <!--<![endif]-->
+            </td>
+          </tr>
+
+          <!-- Enlace alternativo, por si el boton no se ve -->
+          <tr>
+            <td class="relleno" style="padding: 0 40px 32px;">
+              <p style="margin:0; font-size:13px; line-height:1.6; color:#6E655C;">
+                Si el botón no funciona, copia y pega este enlace en tu navegador:<br>
+                <a href="{ACTION_URL}" target="_blank" style="color:#9A3F1F; word-break:break-all;">{ACTION_URL}</a>
+              </p>
+            </td>
+          </tr>
+
+          <tr><td style="border-top:1px solid #E4DACE; font-size:0; line-height:0;">&nbsp;</td></tr>
+
+          <!-- Pie -->
+          <tr>
+            <td class="relleno" style="padding: 24px 40px 32px;">
+              <p style="margin:0 0 8px; font-size:13px; line-height:1.6; color:#6E655C;">
+                Si no creaste esta cuenta, puedes ignorar este correo: no se activará nada sin
+                confirmar el enlace de arriba.
+              </p>
+              <p style="margin:0; font-size:12px; letter-spacing:0.5px; text-transform:uppercase; color:#6E655C;">
+                Devzio · <a href="https://devzio.site" style="color:#6E655C;">devzio.site</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

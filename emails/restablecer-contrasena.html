@@ -1,0 +1,156 @@
+<!--
+  Restablecer contraseña — Portal de Consulta Ciudadana
+
+  Dónde pegar esto: panel de PocketBase → Settings → Mail templates →
+  "Password reset". Asunto sugerido debajo; el cuerpo es todo este archivo.
+
+  Placeholders de PocketBase (sustitución simple, sin condicionales):
+    {RECORD:name}   nombre de la cuenta
+    {ACTION_URL}    enlace para elegir una contraseña nueva, con el token
+
+  Asunto sugerido:
+    Restablece tu contraseña — Portal de Consulta Ciudadana
+
+  Mismas notas de email HTML que verificacion-cuenta.html: todo en tablas
+  y estilos inline, boton con respaldo VML para Outlook, colores fijos en
+  modo claro.
+-->
+<!doctype html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="color-scheme" content="light">
+<title>Restablece tu contraseña</title>
+<!--[if mso]>
+<noscript>
+<xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml>
+</noscript>
+<![endif]-->
+<style>
+  body, table, td { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  body { margin: 0; padding: 0; width: 100% !important; background-color: #FAF7F3; }
+  table { border-collapse: collapse; }
+  img { border: 0; display: block; }
+  a { text-decoration: none; }
+  @media screen and (max-width: 600px) {
+    .contenedor { width: 100% !important; }
+    .relleno { padding-left: 20px !important; padding-right: 20px !important; }
+  }
+</style>
+</head>
+<body style="margin:0; padding:0; background-color:#FAF7F3;">
+  <div style="display:none; max-height:0; overflow:hidden; opacity:0; mso-hide:all;">
+    Pediste restablecer tu contraseña. El enlace vale por un tiempo limitado.
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#FAF7F3;">
+    <tr>
+      <td align="center" style="padding: 40px 16px;">
+
+        <table role="presentation" class="contenedor" width="560" cellpadding="0" cellspacing="0" style="width:560px; max-width:560px; background-color:#FFFFFF; border:1px solid #E4DACE; border-radius:16px;">
+
+          <!-- Cabecera: logotipo -->
+          <tr>
+            <td class="relleno" style="padding: 32px 40px 24px;">
+              <p style="margin:0; font-size:12px; line-height:1.4; letter-spacing:2px; text-transform:uppercase; font-weight:300; color:#241F1B;">
+                Portal de<br>
+                <span style="font-weight:800; color:#9A3F1F;">Consulta Ciudadana</span>
+              </p>
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:8px;">
+                <tr>
+                  <td width="24" height="4" style="background-color:#FFDD00; border-radius:2px; font-size:0; line-height:0;">&nbsp;</td>
+                  <td width="4" style="font-size:0; line-height:0;">&nbsp;</td>
+                  <td width="12" height="4" style="background-color:#0033A0; border-radius:2px; font-size:0; line-height:0;">&nbsp;</td>
+                  <td width="4" style="font-size:0; line-height:0;">&nbsp;</td>
+                  <td width="8" height="4" style="background-color:#ED1C24; border-radius:2px; font-size:0; line-height:0;">&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr><td style="border-top:1px solid #E4DACE; font-size:0; line-height:0;">&nbsp;</td></tr>
+
+          <!-- Cuerpo -->
+          <tr>
+            <td class="relleno" style="padding: 32px 40px 8px;">
+              <h1 style="margin:0 0 16px; font-size:22px; line-height:1.3; font-weight:600; color:#241F1B;">
+                Restablece tu contraseña
+              </h1>
+              <p style="margin:0 0 16px; font-size:16px; line-height:1.6; color:#5A524A;">
+                Hola, {RECORD:name}. Recibimos una solicitud para restablecer la contraseña de tu
+                cuenta. Si fuiste tú, elige una nueva desde el siguiente botón.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Botón: tabla con el respaldo VML para Outlook -->
+          <tr>
+            <td class="relleno" align="left" style="padding: 8px 40px 32px;">
+              <!--[if mso]>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{ACTION_URL}" style="height:48px;v-text-anchor:middle;width:240px;" arcsize="33%" fillcolor="#9A3F1F" stroke="f">
+              <w:anchorlock/>
+              <center style="color:#FFFFFF;font-family:sans-serif;font-size:15px;font-weight:600;">Elegir nueva contraseña</center>
+              </v:roundrect>
+              <![endif]-->
+              <!--[if !mso]><!-->
+              <a href="{ACTION_URL}" target="_blank" style="display:inline-block; background-color:#9A3F1F; color:#FFFFFF; font-size:15px; font-weight:600; line-height:48px; height:48px; padding:0 28px; border-radius:16px; text-align:center;">
+                Elegir nueva contraseña
+              </a>
+              <!--<![endif]-->
+            </td>
+          </tr>
+
+          <!-- Enlace alternativo -->
+          <tr>
+            <td class="relleno" style="padding: 0 40px 32px;">
+              <p style="margin:0; font-size:13px; line-height:1.6; color:#6E655C;">
+                Si el botón no funciona, copia y pega este enlace en tu navegador:<br>
+                <a href="{ACTION_URL}" target="_blank" style="color:#9A3F1F; word-break:break-all;">{ACTION_URL}</a>
+              </p>
+            </td>
+          </tr>
+
+          <!--
+            Aviso de seguridad, con caja propia: en un correo de contrasena
+            es lo primero que alguien busca si no lo pidio. Se destaca aparte
+            del texto normal, no como una nota al pie mas.
+          -->
+          <tr>
+            <td class="relleno" style="padding: 0 40px 32px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#FBF0DC; border-radius:12px;">
+                <tr>
+                  <td style="padding: 16px 20px; font-size:13px; line-height:1.6; color:#8A5A08;">
+                    <strong>¿No pediste esto?</strong> Alguien puede haber escrito mal su correo, o
+                    puede que hayas sido tú desde otra sesión. Puedes ignorar este mensaje: tu
+                    contraseña actual sigue siendo válida y no se cambia nada sin usar el enlace
+                    de arriba.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr><td style="border-top:1px solid #E4DACE; font-size:0; line-height:0;">&nbsp;</td></tr>
+
+          <!-- Pie -->
+          <tr>
+            <td class="relleno" style="padding: 24px 40px 32px;">
+              <p style="margin:0 0 8px; font-size:13px; line-height:1.6; color:#6E655C;">
+                Por seguridad, este enlace deja de funcionar después de usarse o al cabo de un
+                tiempo. Si ya expiró, pide uno nuevo desde la pantalla de acceso.
+              </p>
+              <p style="margin:0; font-size:12px; letter-spacing:0.5px; text-transform:uppercase; color:#6E655C;">
+                Devzio · <a href="https://devzio.site" style="color:#6E655C;">devzio.site</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
