@@ -5,11 +5,11 @@
     <div class="relative z-10 max-w-3xl mx-auto px-lg sm:px-xl">
 
       <header class="flex items-center justify-between py-lg border-b border-[var(--border-color)]">
-        <button @click="router.push('/')" class="inline-flex items-center min-h-[2.75rem] gap-sm text-caption text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-all">
+        <button @click="irAVolver" class="inline-flex items-center min-h-[2.75rem] gap-sm text-caption text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-all">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
-          Volver a la portada
+          {{ etiquetaVolver }}
         </button>
         <button @click="toggleTheme" class="inline-flex items-center justify-center min-h-[2.75rem] min-w-[2.75rem] glass-panel rounded-base text-[var(--accent-color)] active:scale-90 transition-transform">
           <svg v-if="isDark" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.8" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
@@ -158,10 +158,12 @@ import { computed, onMounted, onUnmounted, watch, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuth } from '../composables/useAuth';
 import { authService } from '../api/authService';
+import { useVolver } from '../composables/useVolver';
 
 const route = useRoute();
 const router = useRouter();
 const { isDark, toggleTheme } = useAuth();
+const { etiquetaVolver, irAVolver } = useVolver();
 
 const ACTUALIZADO = '31 de agosto de 2026';
 

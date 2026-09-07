@@ -7,13 +7,13 @@
 
       <header class="flex items-center justify-between gap-md py-lg border-b border-[var(--border-color)]">
         <button
-          @click="router.push('/')"
+          @click="irAVolver"
           class="inline-flex items-center min-h-[2.75rem] gap-sm text-caption text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-all"
         >
           <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
-          Volver a la portada
+          {{ etiquetaVolver }}
         </button>
         <button
           @click="toggleTheme"
@@ -155,15 +155,16 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useRouter, RouterLink } from 'vue-router';
+import { RouterLink } from 'vue-router';
 import { useAuth } from '../composables/useAuth';
 import { authService } from '../api/authService';
 import { useDatosEstructurados, migas } from '../composables/useDatosEstructurados';
+import { useVolver } from '../composables/useVolver';
 import MigasDePan from '../ui/components/MigasDePan.vue';
 
-const router = useRouter();
 const { isDark, toggleTheme } = useAuth();
 const anio = new Date().getFullYear();
+const { etiquetaVolver, irAVolver } = useVolver();
 
 type TipoBloqueo = 'cedula' | 'placa' | 'ruc';
 
