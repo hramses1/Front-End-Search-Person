@@ -45,6 +45,23 @@
         </div>
       </section>
 
+      <!--
+        La demo en vivo, justo bajo el hero: es lo primero interactivo que
+        ve el visitante, antes de pedirle nada. Mismo componente que en
+        /consultar-cedula, aqui con un distintivo "en vivo" porque en la
+        portada compite por atencion con el resto de la pagina.
+      -->
+      <section class="pb-3xl max-w-2xl mx-auto">
+        <div class="flex items-center justify-center gap-sm mb-lg">
+          <span class="relative flex h-2 w-2" aria-hidden="true">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color: var(--estado-exito);"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2" style="background-color: var(--estado-exito);"></span>
+          </span>
+          <p class="text-overline font-black tracking-[0.14em] uppercase" style="color: var(--estado-exito);">En vivo, sin registro</p>
+        </div>
+        <DemoCedula />
+      </section>
+
       <!-- Ventajas -->
       <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md pb-3xl">
         <div v-for="v in ventajas" :key="v.titulo" class="glass-card p-lg">
@@ -197,6 +214,7 @@ import BrandMark from '../ui/components/BrandMark.vue';
 import { useAuth } from '../composables/useAuth';
 import { GRUPOS, porGrupo } from '../datos/consultas';
 import { GUIAS } from '../datos/guias';
+import DemoCedula from '../ui/components/DemoCedula.vue';
 import { useDatosEstructurados, preguntas } from '../composables/useDatosEstructurados';
 
 const router = useRouter();
