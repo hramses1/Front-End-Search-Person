@@ -47,8 +47,16 @@
       class="w-full max-w-[440px] p-lg sm:p-xl sm:p-2xl rounded-base bg-obsidian-soft border-[0.5px] relative z-10 shadow-negative"
       style="border-color: var(--border-color);"
     >
+      <!--
+        Logotipo de marca, ausente hasta ahora: la pantalla no tenia nada que
+        la identificara como parte del sitio, solo el texto generico
+        "PORTAL". Es el mismo BrandMark de la barra lateral y la portada, sin
+        tocarlo; aqui solo se centra con un contenedor flex por fuera.
+      -->
       <div class="text-center mb-2xl mask-reveal delay-100 relative">
-        <h1 class="text-lead tracking-[0.14em] font-light mb-sm drop-shadow-md" style="color: var(--text-primary);">PORTAL</h1>
+        <div class="flex justify-center mb-md">
+          <BrandMark apilado />
+        </div>
         <p class="text-caption tracking-[0.14em]" style="color: var(--text-secondary);">Acceso restringido</p>
         <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 w-8 h-[1px] bg-gradient-to-r from-transparent via-pale-blue/30 to-transparent"></div>
       </div>
@@ -372,6 +380,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { authService } from '../api/authService';
 import { useAuth } from '../composables/useAuth';
 import SecuritySeals from '../ui/components/SecuritySeals.vue';
+import BrandMark from '../ui/components/BrandMark.vue';
 
 const isLoading = ref(false);
 const isGoogleLoading = ref(false);
