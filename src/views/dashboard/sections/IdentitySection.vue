@@ -37,7 +37,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import ServiceSection from '../components/ServiceSection.vue';
 import ResultCard from '../../../components/ResultCard.vue';
 import { apiService } from '../../../api/apiService';
@@ -49,6 +50,17 @@ const errorMsg = ref('');
 const resultsData = ref<any>(null);
 
 const emit = defineEmits(['refresh-stats']);
+
+/*
+ * La demo publica de la portada, para quien ya tiene cuenta, manda aqui con
+ * ?seccion=identity&ci=... en vez de repetir la consulta enmascarada. Se
+ * prellena el campo, pero no se ejecuta la busqueda sola: consultar
+ * descuenta cuota, y eso lo decide quien pulsa el boton, no la navegacion.
+ */
+onMounted(() => {
+  const desdeRuta = String(useRoute().query.ci ?? '');
+  if (/^\d{10}$/.test(desdeRuta)) ci.value = desdeRuta;
+});
 
 const executeSearch = async () => {
   const cleanCi = ci.value.trim();

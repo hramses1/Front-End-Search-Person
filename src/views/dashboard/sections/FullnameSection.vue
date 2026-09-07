@@ -8,14 +8,12 @@
     @copy="copyResults"
   >
     <template #fields>
+      <!--
+        Sin titulo propio: el h1 del panel ya dice "Busqueda por nombre" para
+        esta seccion. Era la unica de las ocho que repetia el titulo dentro
+        de si misma, y quedaba como si le faltara a las otras siete.
+      -->
       <div class="space-y-xl py-md">
-        <div class="mb-sm">
-          <h2 class="text-lead font-light tracking-[-0.02em] text-[var(--text-primary)] leading-tight">
-            Búsqueda por <span class="font-medium text-[var(--accent-color)]">Nombre</span>
-          </h2>
-          <p class="text-body text-[var(--text-muted)] mt-xs">Identificación de personas naturales</p>
-        </div>
-
         <div class="grid grid-cols-1 gap-xl">
           <div class="relative group input-container">
             <input v-model="name" type="text" id="name" placeholder=" " class="custom-input peer" />

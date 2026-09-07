@@ -24,7 +24,7 @@
       </div>
       <button type="submit" class="btn-primary shrink-0" :disabled="cargando">
         <span v-if="cargando" class="w-3 h-3 border-2 border-t-transparent rounded-full animate-spin border-current"></span>
-        {{ cargando ? 'Consultando…' : 'Probar gratis' }}
+        {{ cargando ? 'Consultando…' : (isAuthenticated ? 'Consultar en mi panel' : 'Probar gratis') }}
       </button>
     </form>
 
@@ -68,9 +68,11 @@ import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { authService } from '../../api/authService';
 import { formatCountdown } from '../../utils/quota';
+import { useAuth } from '../../composables/useAuth';
 
 const router = useRouter();
 const route = useRoute();
+const { isAuthenticated } = useAuth();
 
 const ci = ref('');
 const cargando = ref(false);
@@ -110,6 +112,19 @@ const consultar = async () => {
     error.value = 'Escribe los diez dígitos de la cédula, sin espacios ni guiones.';
     return;
   }
+
+  /*
+   * Quien ya tiene cuenta no necesita la demo: le devolvia datos
+   * enmascarados y un boton de "Crear cuenta gratis" a alguien que ya la
+   * tiene, que es justo la confusion que reporto un usuario registrado.
+   * En vez de llamar al endpoint publico, se va directo a la consulta real
+   * del panel con la cedula ya escrita.
+   */
+  if (isAuthenticated.value) {
+    router.push({ name: 'dashboard', query: { seccion: 'identity', ci: limpio } });
+    return;
+  }
+
   cargando.value = true;
   try {
     resultado.value = await authService.consultaDemo(limpio);

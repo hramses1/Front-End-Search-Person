@@ -1,5 +1,23 @@
 <template>
   <div class="auth-wrapper font-primary relative overflow-hidden flex items-center justify-center p-lg">
+    <!--
+      Boton de volver, flotante y en espejo con el de tema: esta pantalla no
+      tiene cabecera como el resto del sitio, y no habia ninguna forma de
+      salir salvo el boton atras del navegador.
+    -->
+    <button
+      type="button"
+      @click="router.push('/')"
+      class="absolute top-6 left-6 z-50 p-md backdrop-blur-md border rounded-base shadow-lg transition-all duration-base hover:scale-105"
+      style="background-color: var(--glass-bg); border-color: var(--border-color); color: var(--accent-color);"
+      aria-label="Volver a la portada"
+      title="Volver a la portada"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+
     <!-- Botón de Tema Flotante -->
     <button 
       type="button"

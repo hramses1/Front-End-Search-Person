@@ -59,6 +59,37 @@
             </nav>
           </div>
         </div>
+
+        <!--
+          Ayuda: contacto, sugerencias y el bloqueo LOPDP viven en paginas
+          publicas propias, no en secciones del panel. Sin este bloque no
+          habia forma de llegar a ellas estando autenticado: quien queria
+          escribir soporte o pedir que se bloquee su dato tenia que cerrar
+          sesion o buscar el enlace en el pie de la portada.
+        -->
+        <div class="px-xs mt-md">
+          <p class="text-overline font-black tracking-[0.14em] mb-sm text-[var(--text-muted)] uppercase">Ayuda</p>
+          <nav class="space-y-xs">
+            <button
+              @click="router.push('/contacto')"
+              class="w-full flex items-center gap-sm text-left px-md min-h-[2.75rem] rounded-base text-caption font-bold tracking-wide transition-all duration-base border border-transparent text-[var(--text-secondary)] hover:bg-[var(--accent-color)]/5 hover:text-[var(--text-primary)]"
+            >
+              <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+              <span class="truncate">Contacto y soporte</span>
+            </button>
+            <button
+              @click="router.push('/bloquear-mi-informacion')"
+              class="w-full flex items-center gap-sm text-left px-md min-h-[2.75rem] rounded-base text-caption font-bold tracking-wide transition-all duration-base border border-transparent text-[var(--text-secondary)] hover:bg-[var(--accent-color)]/5 hover:text-[var(--text-primary)]"
+            >
+              <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <span class="truncate">Bloquear mi información</span>
+            </button>
+          </nav>
+        </div>
       </div>
 
       <div class="p-md border-t border-[var(--border-color)]">
