@@ -458,7 +458,8 @@ const otros = computed(() =>
     { texto: 'Política de privacidad', ruta: '/privacidad' },
     { texto: 'Contacto', ruta: '/contacto' },
     { texto: 'Guías', ruta: '/#guias' },
-    { texto: 'Bloquear mi información', ruta: '/bloquear-mi-informacion' }
+    { texto: 'Bloquear mi información', ruta: '/bloquear-mi-informacion' },
+    { texto: 'Novedades', ruta: '/novedades' }
   ].filter(l => l.ruta !== route.path)
 );
 </script>
