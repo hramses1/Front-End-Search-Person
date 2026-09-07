@@ -52,6 +52,15 @@
           </div>
         </section>
 
+        <!--
+          Demo real, solo para cedula: es el unico endpoint que la tiene.
+          Va antes del ejemplo estatico porque un resultado real, con la
+          propia cedula del visitante, convence mas que un dato de muestra.
+        -->
+        <section v-if="consulta.slug === 'consultar-cedula'" class="pb-2xl">
+          <DemoCedula />
+        </section>
+
         <!-- Qué necesitas y qué recibes -->
         <section class="grid gap-lg md:grid-cols-2 pb-2xl">
           <div class="glass-card p-lg">
@@ -162,6 +171,7 @@ import { POR_SLUG, CONSULTAS } from '../datos/consultas';
 import MigasDePan from '../ui/components/MigasDePan.vue';
 import { useAuth } from '../composables/useAuth';
 import { useDatosEstructurados, migas, preguntas, repintarAlCambiar } from '../composables/useDatosEstructurados';
+import DemoCedula from '../ui/components/DemoCedula.vue';
 
 const route = useRoute();
 const router = useRouter();

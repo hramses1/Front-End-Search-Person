@@ -355,7 +355,6 @@ import { authService } from '../api/authService';
 import { useAuth } from '../composables/useAuth';
 import SecuritySeals from '../ui/components/SecuritySeals.vue';
 
-const isLogin = ref(true);
 const isLoading = ref(false);
 const isGoogleLoading = ref(false);
 const showTerms = ref(false);
@@ -374,6 +373,10 @@ const registerErrors = reactive({
 
 const router = useRouter();
 const route = useRoute();
+
+// Quien llega desde la demo publica ya vio que funciona: se le abre
+// directo en Registro, sin que tenga que encontrar la pestana el mismo.
+const isLogin = ref(route.query.registro !== '1');
 
 /**
  * A donde ir despues de entrar.
