@@ -1,9 +1,11 @@
 <template>
   <!--
-    Demo publica de cedula, contra /api/main/demo/id_card/: sin sesion,
-    5 al dia por IP. Nombre, apellido y cedula llegan en claro; el resto
-    enmascarado. Es lo que convierte esta pagina en un escaparate en vez
-    de en una promesa: el visitante ve que funciona antes de registrarse.
+    Demo publica de cedula, contra /api/main/demo/id_card/: sin sesion, con
+    un cupo diario por IP que cuenta el propio backend (no se fija aqui el
+    numero, para no tener que sincronizarlo si cambia). Nombre, apellido y
+    cedula llegan en claro; el resto enmascarado. Es lo que convierte esta
+    pagina en un escaparate en vez de en una promesa: el visitante ve que
+    funciona antes de registrarse.
   -->
   <div class="glass-card p-lg sm:p-xl">
     <p class="text-overline font-bold tracking-[0.14em] uppercase text-[var(--accent-color)] mb-xs">
@@ -65,6 +67,7 @@
 import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { authService } from '../../api/authService';
+import { formatCountdown } from '../../utils/quota';
 
 const router = useRouter();
 const route = useRoute();
@@ -113,7 +116,26 @@ const consultar = async () => {
   } catch (e: any) {
     const estado = e?.response?.status;
     if (estado === 429) {
-      error.value = 'Ya usaste las 5 pruebas gratis de hoy desde esta conexión. Vuelve mañana, o crea una cuenta para consultar sin ese límite.';
+      /*
+       * Se lee el cuerpo crudo, no e.message: el interceptor global
+       * sustituye cualquier error con code "rate_limited" por un texto
+       * generico de "espera un momento", pensado para un throttle de
+       * segundos. Aqui el limite es diario, y el backend manda su propio
+       * mensaje ("Has agotado tus N consultas gratuitas de hoy...") mas
+       * detail.reset_at, siguiendo el mismo contrato {error, message,
+       * detail} que usa el resto de la API. Leer el original evita
+       * mostrar un texto que dice "un momento" cuando en realidad hay que
+       * esperar hasta manana.
+       */
+      const cuerpo = e?.response?.data;
+      const cuando = formatCountdown(cuerpo?.detail?.reset_at);
+      const base = cuerpo?.message || 'Agotaste las consultas gratuitas de hoy.';
+      error.value = cuando ? `${base} Se renueva ${cuando}.` : base;
+    } else if (estado === 503) {
+      // El backend prefiere no servir la demo antes que dejarla sin limite
+      // si no puede contar el cupo: aqui se explica por que fallo, no se
+      // trata como un error generico.
+      error.value = e?.response?.data?.message || 'La demo no está disponible en este momento. Intenta de nuevo en unos minutos.';
     } else if (estado === 404) {
       error.value = 'No encontramos esa cédula.';
     } else {
