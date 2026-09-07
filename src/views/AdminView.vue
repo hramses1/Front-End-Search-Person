@@ -161,6 +161,16 @@
                 <p class="text-caption text-[var(--text-muted)]">
                   {{ usuariosFiltrados.length }} de {{ plural(users.length, 'usuario') }} con plan
                 </p>
+                <!--
+                  Este listado sale de plan_users: quien no tiene fila ahi no
+                  aparece arriba. /api/plan/users_summary/ cuenta la coleccion
+                  de usuarios completa, asi que la diferencia entre los dos
+                  numeros son cuentas sin plan asignado, invisibles en la
+                  tabla de arriba.
+                -->
+                <p v-if="usuariosSinPlan > 0" class="text-caption text-[var(--estado-aviso)] mt-xs">
+                  {{ plural(usuariosSinPlan, 'usuario') }} sin plan asignado, no aparece{{ usuariosSinPlan === 1 ? '' : 'n' }} en esta lista.
+                </p>
                 <button v-if="hayFiltros" type="button" class="btn-tertiary" @click="limpiarFiltros">
                   Quitar filtros
                 </button>
@@ -956,15 +966,48 @@ const editForm = reactive({
   number_requests: 0
 });
 
-onMounted(() => {
+onMounted(async () => {
   window.addEventListener('keydown', alPulsarTecla);
   if (!isAdmin.value) {
     router.push('/dashboard');
     return;
   }
-  fetchUsers();
   fetchPlanes();
+  // Se espera a que la lista este cargada antes de calcular la diferencia:
+  // si se piden a la vez, la resta se haria contra 0 usuarios todavia.
+  await fetchUsers();
+  cargarResumenUsuarios();
 });
+
+/**
+ * Cuantos usuarios existen sin plan asignado.
+ *
+ * El endpoint declara su respuesta como objeto vacio en el OpenAPI, asi que
+ * se busca el total por patron de nombre en vez de asumir una clave fija:
+ * es el mismo motivo por el que el historial y el correo se leen igual.
+ * Si la forma no trae nada reconocible, se prefiere no mostrar el aviso a
+ * mostrar un numero inventado.
+ */
+const usuariosSinPlan = ref(0);
+
+const cargarResumenUsuarios = async () => {
+  try {
+    const r = await authService.getResumenUsuarios();
+    const buscar = (patron: RegExp) => {
+      const k = Object.keys(r ?? {}).find(x => patron.test(x));
+      return k ? Number(r[k]) : undefined;
+    };
+    const total = buscar(/^total|all|todos/i);
+    const sinPlan = buscar(/sin.?plan|without.?plan|no.?plan|huerfan/i);
+    if (typeof sinPlan === 'number' && Number.isFinite(sinPlan)) {
+      usuariosSinPlan.value = sinPlan;
+    } else if (typeof total === 'number' && Number.isFinite(total)) {
+      usuariosSinPlan.value = Math.max(0, total - users.value.length);
+    }
+  } catch {
+    // Silencioso: es un aviso adicional, no algo de lo que dependa la vista.
+  }
+};
 
 onUnmounted(() => window.removeEventListener('keydown', alPulsarTecla));
 

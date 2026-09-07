@@ -13,6 +13,7 @@ const LegalView = () => import('../views/LegalView.vue')
 const ConsultaView = () => import('../views/ConsultaView.vue')
 const GuiaView = () => import('../views/GuiaView.vue')
 const EstadoView = () => import('../views/EstadoView.vue')
+const BloqueoView = () => import('../views/BloqueoView.vue')
 const AuthView = () => import('../views/AuthView.vue')
 const DashboardView = () => import('../views/DashboardView.vue')
 const AdminView = () => import('../views/AdminView.vue')
@@ -105,6 +106,15 @@ const router = createRouter({
       meta: {
         titulo: 'Política de privacidad',
         descripcion: 'Qué datos tratamos y para qué: cuenta, cuota y sesión. Sin cookies, sin analítica y sin rastreo. Cómo ejercer tus derechos de acceso y eliminación.'
+      }
+    },
+    {
+      path: '/bloquear-mi-informacion',
+      name: 'bloqueo',
+      component: BloqueoView,
+      meta: {
+        titulo: 'Bloquear mi información',
+        descripcion: 'Solicita que tu cédula, placa o RUC dejen de aparecer en nuestras consultas. Derecho de oposición conforme a la LOPDP, con verificación de titularidad.'
       }
     },
     {

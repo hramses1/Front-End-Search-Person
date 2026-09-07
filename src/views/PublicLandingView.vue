@@ -278,7 +278,8 @@ const enlacesLegales: { texto: string; href?: string; ruta?: string }[] = [
   { texto: 'Preguntas frecuentes', href: '#faq' },
   { texto: 'Contacto', ruta: '/contacto' },
   { texto: 'Términos', ruta: '/terminos' },
-  { texto: 'Privacidad', ruta: '/privacidad' }
+  { texto: 'Privacidad', ruta: '/privacidad' },
+  { texto: 'Bloquear mi información', ruta: '/bloquear-mi-informacion' }
 ];
 
 

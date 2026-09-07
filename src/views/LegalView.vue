@@ -42,9 +42,86 @@
           </div>
         </section>
 
+        <!--
+          Formulario real, solo en /contacto: antes solo habia enlaces a
+          WhatsApp y correo, y quien no queria dar su numero no tenia
+          alternativa comoda.
+        -->
+        <div v-if="route.name === 'contacto'" class="glass-card p-lg mt-2xl">
+          <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">
+            Enviar un mensaje
+          </p>
+
+          <form v-if="!enviado" @submit.prevent="enviarMensaje" class="space-y-lg" novalidate>
+            <div>
+              <label for="c_nombre" class="block text-caption font-medium mb-xs" style="color: var(--text-muted);">Nombre</label>
+              <input
+                id="c_nombre" v-model.trim="formContacto.nombre" type="text" required
+                minlength="2" maxlength="80" autocomplete="name"
+                class="w-full min-h-[2.75rem] px-md bg-transparent border-b border-[var(--border-color)] outline-none font-body text-body text-[var(--text-primary)] transition-colors focus:border-[var(--accent-color)]"
+              />
+            </div>
+
+            <div>
+              <label for="c_email" class="block text-caption font-medium mb-xs" style="color: var(--text-muted);">Correo</label>
+              <input
+                id="c_email" v-model.trim="formContacto.email" type="email" required
+                maxlength="120" autocomplete="email"
+                class="w-full min-h-[2.75rem] px-md bg-transparent border-b border-[var(--border-color)] outline-none font-body text-body text-[var(--text-primary)] transition-colors focus:border-[var(--accent-color)]"
+              />
+            </div>
+
+            <div>
+              <label for="c_asunto" class="block text-caption font-medium mb-xs" style="color: var(--text-muted);">Asunto (opcional)</label>
+              <input
+                id="c_asunto" v-model.trim="formContacto.asunto" type="text" maxlength="120"
+                class="w-full min-h-[2.75rem] px-md bg-transparent border-b border-[var(--border-color)] outline-none font-body text-body text-[var(--text-primary)] transition-colors focus:border-[var(--accent-color)]"
+              />
+            </div>
+
+            <div>
+              <label for="c_mensaje" class="block text-caption font-medium mb-xs" style="color: var(--text-muted);">Mensaje</label>
+              <textarea
+                id="c_mensaje" v-model.trim="formContacto.mensaje" required
+                minlength="10" maxlength="2000" rows="5"
+                class="w-full px-md py-sm bg-transparent border border-[var(--border-color)] rounded-base outline-none font-body text-body text-[var(--text-primary)] transition-colors focus:border-[var(--accent-color)] resize-y"
+              ></textarea>
+            </div>
+
+            <!--
+              Campo trampa para bots: invisible para una persona, con
+              aria-hidden y tabindex -1 para que tampoco lo anuncie un lector
+              de pantalla ni el tabulador se detenga en él. Si llega relleno,
+              el backend descarta el mensaje sin decir por qué al remitente.
+            -->
+            <div class="absolute -left-[9999px]" aria-hidden="true">
+              <label for="c_website">Sitio web</label>
+              <input id="c_website" v-model="formContacto.website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <p v-if="errorContacto" class="text-caption text-[var(--estado-error)]">{{ errorContacto }}</p>
+
+            <button type="submit" class="btn-primary" :disabled="enviando">
+              <span v-if="enviando" class="w-3 h-3 border-2 border-t-transparent rounded-full animate-spin border-current"></span>
+              {{ enviando ? 'Enviando…' : 'Enviar mensaje' }}
+            </button>
+          </form>
+
+          <!-- Confirmacion: nada de recargar ni de perder de vista que se envio -->
+          <div v-else class="flex items-start gap-md">
+            <svg class="w-5 h-5 shrink-0 mt-xs" style="color: var(--estado-exito);" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <div>
+              <p class="text-body font-medium text-[var(--text-primary)]">Mensaje enviado</p>
+              <p class="text-caption text-[var(--text-muted)] mt-xs">Te responderemos al correo que dejaste.</p>
+            </div>
+          </div>
+        </div>
+
         <div class="glass-card p-lg mt-2xl">
           <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">
-            {{ route.name === 'contacto' ? 'Escríbenos' : 'Contacto' }}
+            {{ route.name === 'contacto' ? 'O escríbenos directo' : 'Contacto' }}
           </p>
           <div class="flex flex-col sm:flex-row flex-wrap gap-sm">
             <a
@@ -77,15 +154,44 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, watch } from 'vue';
+import { computed, onMounted, onUnmounted, watch, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuth } from '../composables/useAuth';
+import { authService } from '../api/authService';
 
 const route = useRoute();
 const router = useRouter();
 const { isDark, toggleTheme } = useAuth();
 
 const ACTUALIZADO = '31 de agosto de 2026';
+
+const formContacto = reactive({ nombre: '', email: '', asunto: '', mensaje: '', website: '' });
+const enviando = ref(false);
+const enviado = ref(false);
+const errorContacto = ref('');
+
+const enviarMensaje = async () => {
+  errorContacto.value = '';
+  if (formContacto.nombre.length < 2 || formContacto.mensaje.length < 10 || !formContacto.email) {
+    errorContacto.value = 'Revisa los campos: nombre, correo y un mensaje de al menos 10 caracteres.';
+    return;
+  }
+  enviando.value = true;
+  try {
+    await authService.enviarContacto({
+      nombre: formContacto.nombre,
+      email: formContacto.email,
+      asunto: formContacto.asunto || undefined,
+      mensaje: formContacto.mensaje,
+      website: formContacto.website || undefined
+    });
+    enviado.value = true;
+  } catch (e: any) {
+    errorContacto.value = e?.response?.data?.message || e?.message || 'No se pudo enviar el mensaje. Intenta de nuevo.';
+  } finally {
+    enviando.value = false;
+  }
+};
 
 /**
  * Canales de contacto. wa.me exige el numero en formato internacional, sin
@@ -351,7 +457,8 @@ const otros = computed(() =>
     { texto: 'Términos de servicio', ruta: '/terminos' },
     { texto: 'Política de privacidad', ruta: '/privacidad' },
     { texto: 'Contacto', ruta: '/contacto' },
-    { texto: 'Guías', ruta: '/#guias' }
+    { texto: 'Guías', ruta: '/#guias' },
+    { texto: 'Bloquear mi información', ruta: '/bloquear-mi-informacion' }
   ].filter(l => l.ruta !== route.path)
 );
 </script>
