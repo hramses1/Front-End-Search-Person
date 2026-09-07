@@ -90,5 +90,27 @@ export const apiService = {
     return fetchWithCache('/api/main/vehicles/by-plate/', { plate: cleanPlate });
   },
 
+  /**
+   * Multas e infracciones asociadas a una placa.
+   *
+   * Complementa getCitation (que busca por cédula): permite ver las multas
+   * directamente desde la sección de vehículos, sin necesidad de conocer la
+   * cédula del propietario.
+   */
+  async getCitationsByPlate(plate: string) {
+    const cleanPlate = plate.replace(/[-\s]/g, '').toUpperCase();
+    return fetchWithCache('/api/main/citations/by-plate/', { plate: cleanPlate });
+  },
+
+  /**
+   * Citas médicas del titular de la cédula.
+   *
+   * Consulta nueva del catálogo: devuelve el listado de citas registradas
+   * en el sistema público de salud.
+   */
+  async getMedicalAppointments(ci: string) {
+    return fetchWithCache('/api/main/medical_appointments/', { ci });
+  },
+
   clearCache
 };

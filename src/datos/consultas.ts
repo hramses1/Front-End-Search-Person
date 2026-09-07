@@ -130,6 +130,43 @@ export const CONSULTAS: Consulta[] = [
     ]
   },
   {
+    slug: 'consultar-citas-medicas',
+    seccion: 'medical',
+    grupo: 'Identidad',
+    titulo: 'Citas médicas',
+    tituloSeo: 'Consultar citas médicas por cédula en Ecuador',
+    descripcion:
+      'Consulta las citas médicas registradas en el sistema público de salud de Ecuador a partir del número de cédula del paciente.',
+    encabezado: 'Consultar citas médicas por cédula',
+    entradilla:
+      'Revisa las citas registradas en el sistema público de salud a partir de la cédula del paciente.',
+    texto: 'Citas registradas en el sistema público de salud a partir de la cédula.',
+    requisito: 'El número de cédula del paciente, diez dígitos.',
+    fuente: 'Sistema Público de Salud',
+    ejemplo: [
+      ['Cédula', '0912345678'],
+      ['Fecha de cita', '2026-10-15'],
+      ['Hora', '09:30'],
+      ['Especialidad', 'MEDICINA GENERAL'],
+      ['Establecimiento', 'CENTRO DE SALUD NORTE'],
+      ['Estado', 'CONFIRMADA']
+    ],
+    faq: [
+      {
+        p: '¿Qué citas aparecen en la consulta?',
+        r: 'Las registradas en el sistema público de salud. Las citas privadas no figuran porque no se publican en ninguna fuente pública.'
+      },
+      {
+        p: '¿Para qué sirve esta consulta?',
+        r: 'Para verificar si hay citas pendientes o confirmar las que ya fueron registradas, sin necesidad de llamar al establecimiento.'
+      },
+      {
+        p: '¿Necesito una cuenta?',
+        r: 'Sí. El registro es gratuito y trae una cuota diaria de consultas que vuelve a cero cada medianoche.'
+      }
+    ]
+  },
+  {
     slug: 'consultar-denuncias',
     seccion: 'complaint',
     grupo: 'Judicial',

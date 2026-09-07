@@ -63,6 +63,16 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/*
+   En pantallas de tamaño medio (tablet, portátil pequeño ≈ 640-1100px)
+   el cuerpo va a 15px para que los clamp tipográficos no arropen la pantalla.
+   En móvil se queda en 16px (legibilidad); en escritorio, también.
+*/
+@media (min-width: 640px) and (max-width: 1100px) {
+  body { font-size: 15px; }
+}
+
+
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 600;
@@ -196,12 +206,12 @@ h1, h2, h3, h4, h5, h6 {
 .btn-icon:hover:not(:disabled) { background-color: color-mix(in srgb, var(--accent-color) 10%, transparent); }
 .btn-icon:active:not(:disabled) { transform: translateY(1px); }
 
-/* ─── Campos de formulario ───────────────────────────────── */
+/* ─── Campos de formulario ───────────────────────────── */
 .custom-input {
-  @apply w-full bg-transparent border-b border-[var(--border-color)] py-md
+  @apply w-full bg-transparent border-b border-[var(--border-color)] py-sm
          outline-none transition-all font-body text-body
-         text-[var(--text-primary)] placeholder:opacity-0;
-  min-height: 3rem;
+         text-[var(--text-primary)];
+  min-height: 2.75rem;
   transition-duration: 200ms;
 }
 
@@ -217,29 +227,23 @@ h1, h2, h3, h4, h5, h6 {
 .custom-input:focus { border-color: var(--accent-color); }
 
 /*
-   Etiqueta flotante. Iba en mayusculas con tracking: en un formulario eso se
-   lee mas despacio y no aporta jerarquia, porque el campo ya esta separado
-   del anterior por su propia linea.
+   Cuando el input tiene foco, el label hermano anterior cambia de color.
+   :has() es compatible con todos los navegadores modernos (2023+).
 */
-label {
-  @apply absolute left-0 top-4 text-caption font-medium
-         transition-all pointer-events-none;
-  color: var(--text-muted);
-  transition-duration: 200ms;
+.input-container:has(.custom-input:focus) label {
+  color: var(--accent-color);
 }
 
 /*
-   OJO: todo .custom-input necesita un atributo placeholder, aunque sea " ".
-   :placeholder-shown solo coincide si el campo declara uno, asi que sin el
-   :not(:placeholder-shown) se cumple siempre y la etiqueta queda flotando de
-   forma permanente, invadiendo el campo de encima. Le paso ya a <select>, a
-   <input type="date"> y a los campos de nombre y usuario del registro.
+   La etiqueta va encima del campo (display:block). Al enfocar, cambia de color
+   mediante .input-container:has(:focus) label definido más arriba.
 */
-.custom-input:focus ~ label,
-.custom-input:not(:placeholder-shown) ~ label {
-  @apply -translate-y-8 scale-[0.9];
-  color: var(--accent-color);
+label {
+  @apply block text-caption font-medium mb-xs;
+  color: var(--text-muted);
+  transition: color 200ms;
 }
+
 
 /* ─── Tabla desplazable ──────────────────────────────────
    El contenedor se desplaza, nunca el cuerpo de la pagina. Sin esto
@@ -340,3 +344,24 @@ label {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ─── Ajuste responsive de espaciado vertical ────────────────────────
+   Las vistas públicas usan py-2xl (48px) y py-3xl (64px) como padding
+   de sección. En pantallas de 640-1100px esos valores son excesivos:
+   el contenido queda demasiado ventilado y los títulos (ya grandes) se
+   ven sobredimensionados. Se reducen globalmente sin tocar cada vista.
+   ──────────────────────────────────────────────────────────────────── */
+@media (min-width: 640px) and (max-width: 1100px) {
+  /* Secciones de página interior (ConsultaView, EstadoView, LegalView…) */
+  .py-2xl   { padding-top: 28px;  padding-bottom: 28px;  }
+  .py-3xl   { padding-top: 40px;  padding-bottom: 40px;  }
+  .pb-2xl   { padding-bottom: 28px; }
+  .pb-3xl   { padding-bottom: 40px; }
+  .pt-2xl   { padding-top: 28px; }
+  .pt-3xl   { padding-top: 40px; }
+  .gap-2xl  { gap: 28px; }
+  .gap-3xl  { gap: 40px; }
+  .space-y-2xl > * + * { margin-top: 28px; }
+  .space-y-3xl > * + * { margin-top: 40px; }
+}
+

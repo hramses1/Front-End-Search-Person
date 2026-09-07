@@ -178,6 +178,7 @@ import JudgementSection from './dashboard/sections/JudgementSection.vue';
 import ProfileSection from './dashboard/sections/ProfileSection.vue';
 import HistorySection from './dashboard/sections/HistorySection.vue';
 import AccountSection from './dashboard/sections/AccountSection.vue';
+import MedicalSection from './dashboard/sections/MedicalSection.vue';
 
 const router = useRouter();
 const { logout, isDark, toggleTheme, userPlan, userRole, userRequests, tokenLimit, isAdmin, userId, setPlanData, setQuota } = useAuth();
@@ -211,7 +212,9 @@ const sectionGroups = [
       { key: 'identity', label: 'Buscar por cédula', titulo: 'Verificación de identidad',
         icon: ['M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'] },
       { key: 'fullname', label: 'Buscar por nombre', titulo: 'Búsqueda por nombre',
-        icon: ['M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'] }
+        icon: ['M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'] },
+      { key: 'medical', label: 'Citas médicas', titulo: 'Citas médicas',
+        icon: ['M4.5 12.75l6 6 9-13.5', 'M9 11l3 3L22 4'] }
     ]
   },
   {
@@ -281,7 +284,8 @@ const activeComponent = computed(() => {
     judgement: JudgementSection,
     profile: ProfileSection,
     history: HistorySection,
-    account: AccountSection
+    account: AccountSection,
+    medical: MedicalSection
   };
   return markRaw(components[currentSection.value] || IdentitySection);
 });

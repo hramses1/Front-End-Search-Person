@@ -48,14 +48,14 @@ export default {
        * El cuerpo nunca baja de 1rem: ese minimo no se negocia.
        */
       fontSize: {
-        overline: ['clamp(0.6875rem, 0.67rem + 0.09vw, 0.75rem)', { lineHeight: '1.4' }],   // 11 → 12
+        overline: ['clamp(0.6875rem, 0.67rem + 0.09vw, 0.75rem)',  { lineHeight: '1.4' }],   // 11 → 12
         caption:  ['clamp(0.8125rem, 0.79rem + 0.12vw, 0.875rem)', { lineHeight: '1.5' }],  // 13 → 14
-        body:     ['clamp(1rem, 0.98rem + 0.1vw, 1.0625rem)',      { lineHeight: '1.6' }],  // 16 → 17
-        lead:     ['clamp(1.125rem, 1.05rem + 0.35vw, 1.25rem)',   { lineHeight: '1.5' }],  // 18 → 20
-        h4:       ['clamp(1.25rem, 1.09rem + 0.78vw, 1.5625rem)',  { lineHeight: '1.25' }], // 20 → 25
-        h3:       ['clamp(1.5rem, 1.28rem + 1.1vw, 1.9375rem)',    { lineHeight: '1.2' }],  // 24 → 31
-        h2:       ['clamp(1.75rem, 1.4rem + 1.75vw, 2.4375rem)',   { lineHeight: '1.15' }], // 28 → 39
-        h1:       ['clamp(2rem, 1.46rem + 2.7vw, 3.0625rem)',      { lineHeight: '1.1' }],  // 32 → 49
+        body:     ['clamp(0.9375rem, 0.91rem + 0.14vw, 1.0625rem)', { lineHeight: '1.6' }], // 15 → 17
+        lead:     ['clamp(1rem, 0.95rem + 0.25vw, 1.25rem)',        { lineHeight: '1.5' }], // 16 → 20
+        h4:       ['clamp(1.125rem, 0.95rem + 0.85vw, 1.5625rem)',  { lineHeight: '1.25' }], // 18 → 25
+        h3:       ['clamp(1.25rem, 0.95rem + 1.5vw, 1.9375rem)',    { lineHeight: '1.2' }],  // 20 → 31
+        h2:       ['clamp(1.5rem, 1.1rem + 2vw, 2.4375rem)',        { lineHeight: '1.15' }], // 24 → 39
+        h1:       ['clamp(1.75rem, 1.2rem + 2.75vw, 3.0625rem)',    { lineHeight: '1.1' }],  // 28 → 49
       },
 
       /**
@@ -64,16 +64,16 @@ export default {
        * nombran ademas de forma explicita para poder auditarlos.
        */
       spacing: {
-        xs: '4px',
-        sm: '8px',
-        md: '16px',
-        lg: '24px',
-        xl: '32px',
+        xs:  '4px',
+        sm:  '8px',
+        md:  '16px',
+        lg:  '24px',
+        xl:  '32px',
         '2xl': '48px',
         '3xl': '64px',
       },
 
-      /** Un unico radio base para botones, tarjetas, entradas y paneles. */
+      /** Un único radio base para botones, tarjetas, entradas y paneles. */
       borderRadius: {
         base: '16px',
       },
