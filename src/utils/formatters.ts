@@ -38,6 +38,10 @@ export const mapKey = (key: string): string => {
     aniomodelo: 'Año Modelo', aniomatricula: 'Año de Matrícula',
     fechamatricula: 'Fecha de Matrícula', fechacaducidad: 'Fecha de Caducidad',
     polarizado: 'Polarizado', fechacaducidadpolarizado: 'Caducidad del Polarizado',
+    // El resumen por estado (mismas claves que licencia/citacion: status +
+    // count) llega aqui anidado bajo esta clave; ResultCard ya lo reconoce
+    // por la forma del dato y lo pinta en chips, no hacia falta tocar eso.
+    citaciones: 'Citaciones',
     // Los aporta el proxy de terceros; vuelven cuando este disponible.
     paisfabricacion: 'País de Fabricación', anioultimopago: 'Año del Último Pago',
     camvcpn: 'CAMV/CPN', codigovehiculo: 'Código del Vehículo',
