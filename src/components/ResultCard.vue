@@ -50,7 +50,7 @@
             <template v-else>
               <div class="flex justify-between items-start gap-md text-body">
                 <span class="text-[var(--text-secondary)] uppercase tracking-wider text-caption" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
-                <span class="font-medium text-right break-words max-w-[60%]" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ esRellenoVacio(v) ? '—' : (v ?? '—') }}</span>
+                <span class="font-medium text-right break-words max-w-[60%]" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v ?? '—' }}</span>
               </div>
             </template>
 
@@ -89,7 +89,7 @@
           <template v-else>
             <div class="flex justify-between text-body">
               <span class="text-[var(--text-secondary)] uppercase tracking-wider text-caption" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
-              <span class="font-medium text-right break-words max-w-[60%]" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ esRellenoVacio(v) ? '—' : (v ?? '—') }}</span>
+              <span class="font-medium text-right break-words max-w-[60%]" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v ?? '—' }}</span>
             </div>
           </template>
         </div>
@@ -141,7 +141,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import DOMPurify from 'dompurify';
-import { mapKey, esRellenoVacio } from '../utils/formatters';
+import { mapKey } from '../utils/formatters';
 
 const props = defineProps<{
   label: string;
@@ -154,7 +154,6 @@ const isEmpty = computed(() =>
   props.value === undefined ||
   props.value === '' ||
   props.value === false ||
-  esRellenoVacio(props.value) ||
   (Array.isArray(props.value) && props.value.length === 0)
 );
 
