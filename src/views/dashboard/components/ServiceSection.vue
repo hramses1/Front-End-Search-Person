@@ -46,14 +46,25 @@
         </transition>
       </div>
 
-      <!-- PANEL DE RESULTADOS -->
+      <!--
+        PANEL DE RESULTADOS.
+
+        Sin mode="out-in": ese modo espera a que el estado anterior termine de
+        salir antes de montar el siguiente, y en pruebas con varias consultas
+        seguidas se quedaba trabado a mitad de esa espera, dejando el panel en
+        blanco pese a que la consulta habia funcionado (Vue Devtools mostraba
+        results con datos reales y el panel seguia mostrando solo un
+        comentario vacio). Un fundido simple, sin ese modo, cambia el
+        contenido de inmediato y solo cruza la opacidad por encima: no hay
+        una salida que pueda quedarse a medias.
+      -->
       <div class="lg:col-span-7 xl:col-span-8 flex flex-col">
-        <transition name="fade" mode="out-in">
+        <transition name="fade">
           <!-- LOADING STATE -->
-          <SkeletonResult v-if="isLoading" class="h-full" />
+          <SkeletonResult v-if="isLoading" key="loading" class="h-full" />
 
           <!-- RESULTS STATE -->
-          <div v-else-if="results" class="hoja-card overflow-hidden flex flex-col">
+          <div v-else-if="results" key="resultados" class="hoja-card overflow-hidden flex flex-col">
             <div class="px-lg sm:px-2xl py-md sm:py-lg border-b border-[var(--border-color)] flex flex-wrap gap-sm justify-between items-center bg-[var(--surface-color)]/80 backdrop-blur-sm flex-shrink-0 sticky top-0 z-10">
               <div class="flex items-center gap-md">
                 <span class="flex h-2 w-2 relative">
@@ -91,6 +102,7 @@
           <!-- EMPTY STATE -->
           <EstadoVacio
             v-else
+            key="vacio"
             class="hoja-card border-dashed"
             titulo="Sistema listo para recibir consultas"
             detalle="Escribe el dato que quieres consultar y pulsa Ejecutar consulta."
