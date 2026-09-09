@@ -111,6 +111,13 @@
         $ {{ displayValue }}
       </span>
 
+      <!-- Código oficial: cédula, RUC, placa. Mismo tratamiento (Courier
+           Prime tabular) que la demo pública, para que el dato se lea
+           igual en todo el sitio. -->
+      <span v-else-if="type === 'codigo'" class="dato text-body mt-xs" style="color: var(--text-primary);">
+        {{ displayValue }}
+      </span>
+
       <!-- Contenido HTML de primer nivel -->
       <div v-else-if="isHtmlContent(value)" class="prose prose-sm prose-invert max-w-none w-full opacity-90 mt-sm p-md rounded-base bg-black/20 border border-white/10 overflow-x-auto" v-html="sanitizeHTML(String(value))">
       </div>
@@ -136,7 +143,7 @@ import { mapKey } from '../utils/formatters';
 const props = defineProps<{
   label: string;
   value?: any;
-  type?: 'text' | 'badge' | 'date' | 'currency';
+  type?: 'text' | 'badge' | 'date' | 'currency' | 'codigo';
 }>();
 
 const isEmpty = computed(() =>

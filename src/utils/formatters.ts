@@ -30,7 +30,7 @@ export const mapKey = (key: string): string => {
   return key.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/_/g, ' ').trim();
 };
 
-export const detectType = (key: string, _value: any): 'badge' | 'date' | 'currency' | 'text' => {
+export const detectType = (key: string, _value: any): 'badge' | 'date' | 'currency' | 'codigo' | 'text' => {
   const k = key.toLowerCase();
   if (['estado', 'estado_ruc', 'vigente', 'activo', 'status'].some(s => k.includes(s))) return 'badge';
   // Cubre fecha_nacimiento, fecha_expedicion, fecha_caducidad,
@@ -38,5 +38,12 @@ export const detectType = (key: string, _value: any): 'badge' | 'date' | 'curren
   // devuelven juicios y denuncias.
   if (k.includes('fecha')) return 'date';
   if (['valor', 'valor_a_pagar', 'monto', 'saldo'].some(c => k.includes(c))) return 'currency';
+  /*
+   * Codigo: cedula, RUC, placa y demas identificadores que la persona
+   * verifica caracter a caracter. Van en Courier Prime tabular (.dato),
+   * igual que en la demo publica: el dato oficial siempre se lee igual,
+   * sea en la portada o en el panel.
+   */
+  if (['cedula', 'ci', 'ruc', 'placa', 'plate', 'matricula', 'chasis', 'motor', 'numero_licencia', 'licencia'].some(c => k.includes(c))) return 'codigo';
   return 'text';
 };
