@@ -1,16 +1,19 @@
 <template>
-  <div class="flex flex-col gap-xs py-md border-b last:border-0" style="border-color: var(--border-color);">
+  <!--
+    Si no hay dato real que mostrar, la fila entera desaparece: nada de
+    "NO REGISTRA" ni del relleno suelto que manda la fuente (una comilla
+    sola, un guion) cuando no tiene el campo. Mejor una ficha mas corta
+    que una con basura.
+  -->
+  <div v-if="!isEmpty" class="flex flex-col gap-xs py-md border-b last:border-0" style="border-color: var(--border-color);">
     <span class="text-overline uppercase tracking-[0.14em] font-mono text-[var(--text-secondary)]" style="color: var(--text-secondary);">
       {{ label }}
     </span>
 
     <!-- Slot para contenido personalizado -->
     <slot>
-      <!-- Valor null / vacío -->
-      <span v-if="isEmpty" class="text-body text-[var(--text-muted)] italic" style="color: var(--text-secondary);">NO REGISTRA</span>
-
       <!-- Array de objetos – muestra sub-tarjetas compactas -->
-      <div v-else-if="isArrayOfObjects" class="mt-sm space-y-sm">
+      <div v-if="isArrayOfObjects" class="mt-sm space-y-sm">
         <div
           v-for="(item, i) in (value as any[])"
           :key="i"
@@ -47,7 +50,7 @@
             <template v-else>
               <div class="flex justify-between items-start gap-md text-body">
                 <span class="text-[var(--text-secondary)] uppercase tracking-wider text-caption" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
-                <span class="font-medium text-right break-words max-w-[60%]" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v ?? '—' }}</span>
+                <span class="font-medium text-right break-words max-w-[60%]" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ esRellenoVacio(v) ? '—' : (v ?? '—') }}</span>
               </div>
             </template>
 
@@ -86,7 +89,7 @@
           <template v-else>
             <div class="flex justify-between text-body">
               <span class="text-[var(--text-secondary)] uppercase tracking-wider text-caption" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
-              <span class="font-medium text-right break-words max-w-[60%]" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v ?? '—' }}</span>
+              <span class="font-medium text-right break-words max-w-[60%]" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ esRellenoVacio(v) ? '—' : (v ?? '—') }}</span>
             </div>
           </template>
         </div>
@@ -138,7 +141,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import DOMPurify from 'dompurify';
-import { mapKey } from '../utils/formatters';
+import { mapKey, esRellenoVacio } from '../utils/formatters';
 
 const props = defineProps<{
   label: string;
@@ -151,6 +154,7 @@ const isEmpty = computed(() =>
   props.value === undefined ||
   props.value === '' ||
   props.value === false ||
+  esRellenoVacio(props.value) ||
   (Array.isArray(props.value) && props.value.length === 0)
 );
 

@@ -30,6 +30,18 @@ export const mapKey = (key: string): string => {
   return key.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/_/g, ' ').trim();
 };
 
+/*
+ * Algunas fuentes oficiales, cuando no tienen un dato, no mandan null ni
+ * cadena vacia: mandan un relleno suelto (una comilla sola, un guion, dos
+ * guiones seguidos de dos puntos). Se ve como un campo roto en vez de un
+ * campo sin informacion. Si despues de quitar espacios y signos de
+ * puntuacion no queda ninguna letra ni numero, se trata como vacio.
+ */
+export const esRellenoVacio = (valor: unknown): boolean => {
+  if (typeof valor !== 'string') return false;
+  return valor.trim() !== '' && !/[a-zA-Z0-9À-ɏ]/.test(valor);
+};
+
 export const detectType = (key: string, _value: any): 'badge' | 'date' | 'currency' | 'codigo' | 'text' => {
   const k = key.toLowerCase();
   if (['estado', 'estado_ruc', 'vigente', 'activo', 'status'].some(s => k.includes(s))) return 'badge';
