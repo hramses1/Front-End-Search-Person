@@ -58,7 +58,7 @@
         contenido de inmediato y solo cruza la opacidad por encima: no hay
         una salida que pueda quedarse a medias.
       -->
-      <div class="lg:col-span-7 xl:col-span-8 flex flex-col">
+      <div class="relative lg:col-span-7 xl:col-span-8 flex flex-col">
         <transition name="fade">
           <!-- LOADING STATE -->
           <SkeletonResult v-if="isLoading" key="loading" class="h-full" />
@@ -161,4 +161,20 @@ const copyResults = () => {
 <style scoped>
 .fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
+
+/*
+ * Sin mode="out-in", el saliente y el entrante conviven un instante (a
+ * proposito, es lo que evita el bloqueo de antes). Pero de forma normal
+ * ambos cuentan para el alto del contenedor, y el saliente empujaba al
+ * entrante hacia abajo hasta terminar de desvanecerse: se veia el
+ * resultado aparecer mas abajo de lo debido y luego "subir" de golpe.
+ * Sacando al saliente del flujo (absolute, superpuesto) el entrante ya
+ * ocupa su lugar final desde el primer fotograma.
+ */
+.fade-leave-active {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
 </style>
