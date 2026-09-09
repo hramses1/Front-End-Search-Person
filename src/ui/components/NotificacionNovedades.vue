@@ -94,7 +94,11 @@ import { NOVEDADES } from '../../datos/novedades';
 withDefaults(defineProps<{ variante?: 'panel' | 'publica' }>(), { variante: 'publica' });
 
 const CLAVE = 'novedades_vistas_hasta';
-const ultimaFecha = NOVEDADES[0]?.fecha ?? '';
+// NOVEDADES ya viene ordenado por fecha desc (ver datos/novedades.ts), pero
+// la más reciente se toma con Math.max en vez de asumir la posición 0: si
+// alguna vez cambia esa garantía, esto no muestra una novedad vieja como si
+// fuera la última.
+const ultimaFecha = NOVEDADES.reduce((max, n) => (n.fecha > max ? n.fecha : max), '');
 const recientes = NOVEDADES.slice(0, 5);
 
 const vistaHasta = ref('');

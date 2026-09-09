@@ -17,7 +17,13 @@ export interface Novedad {
   descripcion: string;
 }
 
-export const NOVEDADES: Novedad[] = [
+/*
+ * El orden real es el de fecha, no el de este archivo: si algún día se
+ * agrega una entrada sin fijarse en dónde va (o con la misma fecha que otra),
+ * el ordenamiento de abajo asegura que la más reciente siga siendo siempre
+ * la primera para quien la consuma.
+ */
+const NOVEDADES_SIN_ORDENAR: Novedad[] = [
   {
     fecha: '2026-09-07',
     titulo: 'Multas por placa y consulta de citas médicas',
@@ -61,3 +67,5 @@ export const NOVEDADES: Novedad[] = [
       'Revisión completa de tipografía, espaciados y objetivos táctiles en cinco anchos de pantalla distintos, del teléfono al escritorio, incluida la orientación horizontal en tablet y móvil.'
   }
 ];
+
+export const NOVEDADES: Novedad[] = [...NOVEDADES_SIN_ORDENAR].sort((a, b) => b.fecha.localeCompare(a.fecha));
