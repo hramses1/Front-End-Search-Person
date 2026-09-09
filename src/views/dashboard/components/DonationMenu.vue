@@ -35,8 +35,8 @@
           
           <div class="flex justify-between items-center mb-lg">
             <div class="flex flex-col">
-                <span class="text-overline font-bold text-amber-500 tracking-[0.14em] uppercase">Apoyo</span>
-                <span class="text-body font-bold uppercase">Invítame un café</span>
+                <span class="text-body font-bold">Invítame un café</span>
+                <span class="text-caption text-amber-500">Apoyo al proyecto</span>
             </div>
             <button @click="close" class="p-sm rounded-base hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="3"></path></svg>

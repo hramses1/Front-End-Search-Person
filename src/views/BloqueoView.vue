@@ -33,7 +33,6 @@
 
       <main id="contenido">
         <section class="py-xl sm:py-2xl">
-          <p class="text-overline font-bold tracking-[0.14em] uppercase text-[var(--accent-color)] mb-sm">Tus datos</p>
           <h1 class="text-h2 font-light tracking-tight text-balance mb-md">Bloquear mi información</h1>
           <p class="text-lead leading-relaxed text-[var(--text-secondary)] prose-limit">
             Si tu cédula, tu placa o tu RUC aparecen en nuestras consultas y quieres que dejen de

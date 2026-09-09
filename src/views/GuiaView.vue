@@ -40,7 +40,6 @@
         <!-- Índice de guías -->
         <template v-if="!guia">
           <section class="py-xl sm:py-2xl">
-            <p class="text-overline font-bold tracking-[0.14em] uppercase text-[var(--accent-color)] mb-sm">Guías</p>
             <h1 class="text-h2 font-light tracking-tight text-balance mb-md">
               Entender los datos públicos del Ecuador
             </h1>
@@ -51,7 +50,8 @@
           </section>
 
           <section v-for="cat in categorias" :key="cat" class="pb-2xl">
-            <p class="text-overline font-bold tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">{{ cat }}</p>
+            <div class="inline-block px-md py-xs mb-md rounded-base text-overline font-bold uppercase tracking-[0.1em]"
+                 style="background-color: var(--kraft-color); color: var(--kraft-ink);">{{ cat }}</div>
             <div class="grid gap-sm sm:grid-cols-2">
               <RouterLink
                 v-for="g in porCategoria(cat)" :key="g.slug"
@@ -68,9 +68,6 @@
         <!-- Una guía -->
         <template v-else>
           <article class="py-xl sm:py-2xl">
-            <p class="text-overline font-bold tracking-[0.14em] uppercase text-[var(--accent-color)] mb-sm">
-              {{ guia.categoria }}
-            </p>
             <h1 class="text-h2 font-light tracking-tight text-balance mb-md">{{ guia.titulo }}</h1>
             <p class="text-lead leading-relaxed text-[var(--text-secondary)] prose-limit mb-2xl">
               {{ guia.resumen }}
@@ -95,9 +92,10 @@
                 :to="`/${c.slug}`"
                 class="hoja-card p-md block transition-all hover:border-[var(--accent-color)]"
               >
-                <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mb-xs">{{ c.grupo }}</p>
                 <p class="text-body font-medium text-[var(--text-primary)] mb-xs">{{ c.titulo }}</p>
-                <p class="text-caption leading-relaxed text-[var(--text-secondary)]">{{ c.texto }}</p>
+                <p class="text-caption leading-relaxed text-[var(--text-secondary)] mb-sm">{{ c.texto }}</p>
+                <span class="inline-block px-sm py-[2px] rounded-base text-overline font-bold uppercase tracking-[0.08em]"
+                      style="background-color: var(--kraft-color); color: var(--kraft-ink);">{{ c.grupo }}</span>
               </RouterLink>
             </div>
           </section>
@@ -110,8 +108,9 @@
                 :to="`/guias/${o.slug}`"
                 class="hoja-card p-md block transition-all hover:border-[var(--accent-color)]"
               >
-                <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mb-xs">{{ o.categoria }}</p>
-                <p class="text-body font-medium text-[var(--text-primary)]">{{ o.titulo }}</p>
+                <p class="text-body font-medium text-[var(--text-primary)] mb-sm">{{ o.titulo }}</p>
+                <span class="inline-block px-sm py-[2px] rounded-base text-overline font-bold uppercase tracking-[0.08em]"
+                      style="background-color: var(--kraft-color); color: var(--kraft-ink);">{{ o.categoria }}</span>
               </RouterLink>
             </div>
           </section>

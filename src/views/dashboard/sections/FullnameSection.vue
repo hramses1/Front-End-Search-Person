@@ -43,8 +43,7 @@
         <div v-if="rawResults && rawResults.length > 0" class="mt-2xl space-y-xl">
           <div class="flex items-end justify-between border-b border-[var(--border-color)] pb-md">
             <div>
-              <span class="text-overline font-bold tracking-[0.14em] uppercase text-[var(--accent-color)]">Filtros</span>
-              <h3 class="text-body font-medium tracking-tight mt-xs">Refinar resultados actuales</h3>
+              <h3 class="text-body font-medium tracking-tight">Refinar resultados actuales</h3>
             </div>
             <button
               v-if="hasActiveFilters"

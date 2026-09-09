@@ -7,8 +7,8 @@
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
         </div>
         <div>
-          <h3 class="text-overline font-bold uppercase tracking-[0.14em] text-[var(--text-muted)] leading-none">Mi Cuenta</h3>
-          <p class="text-body font-semibold text-[var(--accent-color)] mt-xs">Ajustes de perfil</p>
+          <h3 class="text-body font-bold text-[var(--accent-color)] leading-none">Ajustes de perfil</h3>
+          <p class="text-caption text-[var(--text-muted)] mt-xs">Mi cuenta</p>
         </div>
       </div>
       

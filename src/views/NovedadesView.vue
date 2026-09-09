@@ -33,7 +33,6 @@
 
       <main id="contenido">
         <section class="py-xl sm:py-2xl">
-          <p class="text-overline font-bold tracking-[0.14em] uppercase text-[var(--accent-color)] mb-sm">Novedades</p>
           <h1 class="text-h2 font-light tracking-tight text-balance mb-md">Qué ha cambiado</h1>
           <p class="text-lead leading-relaxed text-[var(--text-secondary)] prose-limit">
             Un registro de lo que vamos añadiendo y corrigiendo, en el mismo lenguaje con el que

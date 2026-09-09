@@ -36,9 +36,6 @@
 
       <main id="contenido">
         <section class="py-xl sm:py-2xl">
-          <p class="text-overline font-bold tracking-[0.14em] uppercase text-[var(--accent-color)] mb-sm">
-            {{ consulta.grupo }}
-          </p>
           <h1 class="text-h2 font-light tracking-tight text-balance mb-md">{{ consulta.encabezado }}</h1>
           <p class="text-lead leading-relaxed text-[var(--text-secondary)] prose-limit">
             {{ consulta.entradilla }}
