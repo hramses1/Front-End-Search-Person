@@ -148,6 +148,7 @@
           <DonationMenu />
           <div class="h-6 w-px bg-[var(--border-color)] mx-sm hidden lg:block" aria-hidden="true"></div>
           <div class="flex items-center gap-md">
+            <NotificacionNovedades variante="panel" />
             <button @click="toggleTheme" aria-label="Cambiar tema" class="control-encabezado-icono hoja-panel hover:bg-white/5 transition-all text-[var(--accent-color)] active:scale-90">
                 <svg v-if="isDark" class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
                 <svg v-else class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
@@ -187,6 +188,7 @@ import { ref, computed, markRaw, onMounted, onUnmounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import BrandMark from '../ui/components/BrandMark.vue';
 import SecuritySeals from '../ui/components/SecuritySeals.vue';
+import NotificacionNovedades from '../ui/components/NotificacionNovedades.vue';
 import { useAuth } from '../composables/useAuth';
 import { plural } from '../utils/plural';
 import { authService } from '../api/authService';

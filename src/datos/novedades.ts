@@ -5,6 +5,10 @@
  * habla en términos de código («fix(admin): anclar los modales a la
  * ventana»), y quien lee esta página no necesita saber qué es un modal
  * anclado, sino que «los formularios ya no se abren fuera de la pantalla».
+ *
+ * Solo para el usuario final: nada del panel de administración (listados
+ * de usuarios, gestión de planes, etc.). Si un cambio real solo afecta a
+ * esa parte, no entra aquí, aunque haya sido un cambio grande.
  */
 
 export interface Novedad {
@@ -45,22 +49,10 @@ export const NOVEDADES: Novedad[] = [
       'Antes había que entrar a la cuenta para ver de qué trataba cada consulta. Ahora cada una tiene su propia página pública, con un ejemplo del resultado y respuestas a las dudas más comunes. Lo mismo con las guías, que pasan de tres a once.'
   },
   {
-    fecha: '2026-09-03',
-    titulo: 'Filtros de administración más rápidos de usar',
-    descripcion:
-      'El listado de usuarios ordena ahora por los más recientes de forma predeterminada, y los controles de la barra ganaron el tamaño mínimo recomendado para tocar con el dedo.'
-  },
-  {
     fecha: '2026-09-02',
     titulo: 'Navegación por teclado en todo el sitio',
     descripcion:
       'Los menús de perfil y donación, y todos los cuadros de diálogo, ya se manejan enteros con teclado: se abren, se cierran con Escape y anuncian su función a un lector de pantalla.'
-  },
-  {
-    fecha: '2026-09-02',
-    titulo: 'Corregido: los cuadros de edición se abrían fuera de la pantalla',
-    descripcion:
-      'En algunos casos, al editar un plan desde el final de una lista larga, el formulario aparecía desplazado y había que subir para verlo. Ya se ancla siempre al centro de la ventana.'
   },
   {
     fecha: '2026-08-30',
