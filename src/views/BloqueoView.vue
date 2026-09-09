@@ -18,7 +18,7 @@
         <button
           @click="toggleTheme"
           aria-label="Cambiar tema"
-          class="inline-flex items-center justify-center min-h-[2.75rem] min-w-[2.75rem] glass-panel rounded-base text-[var(--accent-color)] transition-transform"
+          class="inline-flex items-center justify-center min-h-[2.75rem] min-w-[2.75rem] hoja-panel rounded-base text-[var(--accent-color)] transition-transform"
         >
           <svg v-if="isDark" class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/>
@@ -42,21 +42,21 @@
         </section>
 
         <section class="pb-2xl grid gap-md sm:grid-cols-3">
-          <div class="glass-card p-lg">
+          <div class="hoja-card p-lg">
             <p class="text-overline font-bold text-[var(--accent-color)] mb-xs">1</p>
             <p class="text-body font-medium mb-xs">Envías tu solicitud</p>
             <p class="text-caption leading-relaxed text-[var(--text-muted)]">
               Con el dato a bloquear y tu correo de contacto.
             </p>
           </div>
-          <div class="glass-card p-lg">
+          <div class="hoja-card p-lg">
             <p class="text-overline font-bold text-[var(--accent-color)] mb-xs">2</p>
             <p class="text-body font-medium mb-xs">Verificamos la titularidad</p>
             <p class="text-caption leading-relaxed text-[var(--text-muted)]">
               Podemos pedirte una prueba, para evitar bloqueos pedidos por terceros.
             </p>
           </div>
-          <div class="glass-card p-lg">
+          <div class="hoja-card p-lg">
             <p class="text-overline font-bold text-[var(--accent-color)] mb-xs">3</p>
             <p class="text-body font-medium mb-xs">Bloqueo permanente</p>
             <p class="text-caption leading-relaxed text-[var(--text-muted)]">
@@ -66,7 +66,7 @@
         </section>
 
         <section class="pb-2xl">
-          <div class="glass-card p-lg sm:p-xl">
+          <div class="hoja-card p-lg sm:p-xl">
             <form v-if="!enviado" @submit.prevent="enviar" class="space-y-lg" novalidate>
               <div>
                 <label class="block text-caption font-medium mb-sm" style="color: var(--text-muted);">Qué dato quieres bloquear</label>

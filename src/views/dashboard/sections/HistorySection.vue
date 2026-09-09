@@ -28,12 +28,12 @@
     </div>
 
     <!-- Consumo diario -->
-    <div v-if="porDia.length" class="glass-card p-lg">
+    <div v-if="porDia.length" class="hoja-card p-lg">
       <GraficaBarras :datos="porDia" etiqueta="Consultas por día" />
     </div>
 
     <!-- Listado -->
-    <div class="glass-card overflow-hidden">
+    <div class="hoja-card overflow-hidden">
       <div class="px-lg py-md border-b border-[var(--border-color)] flex flex-wrap items-center justify-between gap-sm">
         <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)]">Consultas recientes</p>
         <button

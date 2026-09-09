@@ -21,14 +21,18 @@ export default {
     },
     extend: {
       /**
-       * Una sola familia. La jerarquia la marcan tamano y peso, no un cambio
-       * de tipografia. Los tres alias existen por compatibilidad con las
-       * clases que ya estaban repartidas por las vistas.
+       * Tres voces, cada una con un trabajo distinto (mundo "Expediente
+       * Sellado"): Special Elite es la maquina de escribir del sello y el
+       * titular de portada, se usa con moderacion; Archivo es el cuerpo y
+       * la mayoria de titulos, calida y legible; Courier Prime es el dato
+       * (cedula, RUC, placa), tabular, como si saliera de un formulario
+       * oficial. "primary" queda como alias de body por compatibilidad.
        */
       fontFamily: {
-        display: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
-        body: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
-        primary: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        display: ['"Special Elite"', 'Courier, monospace'],
+        body: ['Archivo', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        primary: ['Archivo', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        dato: ['"Courier Prime"', 'ui-monospace', 'monospace'],
       },
 
       /**
@@ -73,9 +77,13 @@ export default {
         '3xl': '64px',
       },
 
-      /** Un único radio base para botones, tarjetas, entradas y paneles. */
+      /**
+       * Radio bajo: el mundo "Expediente Sellado" es papel cortado, no
+       * plástico con esquinas de burbuja. 6px alcanza para suavizar el
+       * borde sin perder el aire de hoja/carpeta.
+       */
       borderRadius: {
-        base: '16px',
+        base: '6px',
       },
 
       /** Transiciones entre 150 y 200 ms. Nada instantaneo, nada por encima. */
@@ -96,6 +104,16 @@ export default {
           azul: '#0033A0',
           rojo: '#ED1C24',
         },
+      },
+
+      /**
+       * Sombra de hoja apilada: dos capas de papel debajo de la superior,
+       * en vez del glow difuso de vidrio que llevaba antes. Sustituye a
+       * shadow-sm/shadow-md en las clases .hoja-*.
+       */
+      boxShadow: {
+        hoja: '0 1px 0 var(--border-color), 0 8px 0 -6px var(--border-color), 0 14px 20px -12px rgba(36, 25, 15, 0.28)',
+        sello: '0 10px 24px -8px rgba(164, 36, 28, 0.45)',
       },
     },
   },

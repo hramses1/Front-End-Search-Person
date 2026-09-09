@@ -49,3 +49,12 @@ skills-lock.json
 git_log.txt
 .claude
 CLAUDE.md
+.codex
+
+# Impeccable: material de trabajo efimero (capturas de revision, payloads
+# de la ronda de decision, config local de la maquina). El contrato de
+# direccion (surfaces/) y design.json si se quedan, son memoria util.
+.impeccable/review
+.impeccable/payloads
+.impeccable/questions
+.impeccable/config.local.json

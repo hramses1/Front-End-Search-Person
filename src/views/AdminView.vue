@@ -13,7 +13,7 @@
     <!-- Botón Hamburguesa Móvil -->
     <button 
       @click="isSidebarOpen = !isSidebarOpen"
-      class="lg:hidden fixed top-4 right-4 z-50 control-encabezado-icono glass-panel text-[var(--accent-color)] shadow-xl active:scale-90 transition-transform"
+      class="lg:hidden fixed top-4 right-4 z-50 control-encabezado-icono hoja-panel text-[var(--accent-color)] shadow-xl active:scale-90 transition-transform"
     >
       <svg v-if="!isSidebarOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
       <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -26,7 +26,7 @@
     
     <!-- Sidebar -->
     <aside 
-      :class="['fixed inset-y-0 left-0 z-40 w-72 transition-all duration-base lg:relative lg:translate-x-0 flex flex-col h-screen glass-panel', isSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0']"
+      :class="['fixed inset-y-0 left-0 z-40 w-72 transition-all duration-base lg:relative lg:translate-x-0 flex flex-col h-screen hoja-panel', isSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0']"
     >
       <div class="p-lg border-b border-[var(--border-color)]">
         <BrandMark prefijo="Portal " titulo="Administración" apilado />
@@ -72,7 +72,7 @@
 
       <!-- Users Table -->
       <div class="flex-1">
-          <div class="glass-card overflow-hidden">
+          <div class="hoja-card overflow-hidden">
             <div class="px-lg py-md border-b border-[var(--border-color)] flex flex-wrap justify-between items-center gap-md bg-[var(--surface-color)]/50">
               <div class="flex items-center gap-sm">
                 <button
@@ -344,7 +344,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
-                  <div v-for="pl in planes" :key="pl.id" class="glass-card p-lg space-y-md">
+                  <div v-for="pl in planes" :key="pl.id" class="hoja-card p-lg space-y-md">
                     <div>
                       <p class="text-body font-semibold">{{ pl.description }}</p>
                       <p class="text-caption text-[var(--text-muted)] mt-xs">
@@ -388,7 +388,7 @@
         leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
       >
         <div v-if="planEditando !== null" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md" @click.self="cerrarPlan">
-          <div role="dialog" aria-modal="true" :aria-label="planEditando?.id ? 'Editar plan' : 'Nuevo plan'" class="w-full max-w-md glass-card p-lg sm:p-xl animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
+          <div role="dialog" aria-modal="true" :aria-label="planEditando?.id ? 'Editar plan' : 'Nuevo plan'" class="w-full max-w-md hoja-card p-lg sm:p-xl animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
             <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-xs">
               {{ planEditando?.id ? 'Editar plan' : 'Nuevo plan' }}
             </p>
@@ -501,7 +501,7 @@
         leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
       >
         <div v-if="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md">
-          <div role="dialog" aria-modal="true" aria-label="Editar usuario" class="w-full max-w-md glass-card p-lg sm:p-xl relative animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
+          <div role="dialog" aria-modal="true" aria-label="Editar usuario" class="w-full max-w-md hoja-card p-lg sm:p-xl relative animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
             <h3 class="text-lead font-bold tracking-tight mb-xl flex items-center gap-md">
                 <span class="w-2 h-8 bg-[var(--accent-color)] rounded-full"></span>
                 EDITAR USUARIO
@@ -525,7 +525,7 @@
                   <button
                     type="button"
                     @click="planAbierto = !planAbierto"
-                    class="w-full flex items-center justify-between gap-md glass-panel py-md px-md rounded-base hover:bg-white/5 transition-all active:scale-[0.99] text-left"
+                    class="w-full flex items-center justify-between gap-md hoja-panel py-md px-md rounded-base hover:bg-white/5 transition-all active:scale-[0.99] text-left"
                   >
                     <span class="flex flex-col min-w-0">
                       <span

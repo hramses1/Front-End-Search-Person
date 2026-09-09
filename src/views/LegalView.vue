@@ -11,7 +11,7 @@
           </svg>
           {{ etiquetaVolver }}
         </button>
-        <button @click="toggleTheme" class="inline-flex items-center justify-center min-h-[2.75rem] min-w-[2.75rem] glass-panel rounded-base text-[var(--accent-color)] active:scale-90 transition-transform">
+        <button @click="toggleTheme" class="inline-flex items-center justify-center min-h-[2.75rem] min-w-[2.75rem] hoja-panel rounded-base text-[var(--accent-color)] active:scale-90 transition-transform">
           <svg v-if="isDark" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.8" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
           <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.8" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         </button>
@@ -47,7 +47,7 @@
           WhatsApp y correo, y quien no queria dar su numero no tenia
           alternativa comoda.
         -->
-        <div v-if="route.name === 'contacto'" class="glass-card p-lg mt-2xl">
+        <div v-if="route.name === 'contacto'" class="hoja-card p-lg mt-2xl">
           <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">
             Enviar un mensaje
           </p>
@@ -119,7 +119,7 @@
           </div>
         </div>
 
-        <div class="glass-card p-lg mt-2xl">
+        <div class="hoja-card p-lg mt-2xl">
           <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">
             {{ route.name === 'contacto' ? 'O escríbenos directo' : 'Contacto' }}
           </p>

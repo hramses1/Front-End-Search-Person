@@ -18,7 +18,7 @@
         <button
           @click="toggleTheme"
           aria-label="Cambiar tema"
-          class="inline-flex items-center justify-center min-h-[2.75rem] min-w-[2.75rem] glass-panel rounded-base text-[var(--accent-color)] transition-transform"
+          class="inline-flex items-center justify-center min-h-[2.75rem] min-w-[2.75rem] hoja-panel rounded-base text-[var(--accent-color)] transition-transform"
         >
           <svg v-if="isDark" class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/>
@@ -63,7 +63,7 @@
 
         <!-- Qué necesitas y qué recibes -->
         <section class="grid gap-lg md:grid-cols-2 pb-2xl">
-          <div class="glass-card p-lg">
+          <div class="hoja-card p-lg">
             <h2 class="text-overline font-bold tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">
               Qué necesitas
             </h2>
@@ -73,7 +73,7 @@
             </p>
           </div>
 
-          <div class="glass-card p-lg">
+          <div class="hoja-card p-lg">
             <h2 class="text-overline font-bold tracking-[0.14em] uppercase text-[var(--text-muted)] mb-md">
               Qué recibes
             </h2>
@@ -103,7 +103,7 @@
           <div class="space-y-sm">
             <div
               v-for="(f, i) in consulta.faq" :key="f.p"
-              class="glass-card overflow-hidden"
+              class="hoja-card overflow-hidden"
             >
               <h3>
                 <button
@@ -131,7 +131,7 @@
             <RouterLink
               v-for="otra in otras" :key="otra.slug"
               :to="`/${otra.slug}`"
-              class="glass-card p-md block transition-all hover:border-[var(--accent-color)]"
+              class="hoja-card p-md block transition-all hover:border-[var(--accent-color)]"
             >
               <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mb-xs">{{ otra.grupo }}</p>
               <p class="text-body font-medium text-[var(--text-primary)] mb-xs">{{ otra.titulo }}</p>
@@ -141,7 +141,7 @@
         </section>
 
         <section class="pb-2xl">
-          <div class="glass-card p-lg sm:p-xl text-center">
+          <div class="hoja-card p-lg sm:p-xl text-center">
             <h2 class="text-h4 font-light tracking-tight mb-sm">{{ consulta.encabezado }}</h2>
             <p class="text-body leading-relaxed text-[var(--text-secondary)] mb-lg mx-auto prose-limit">
               El registro es gratuito y no pide tarjeta. Cada cuenta trae su cuota diaria de consultas,

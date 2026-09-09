@@ -8,7 +8,7 @@
     </div>
 
     <!-- Portabilidad -->
-    <section class="glass-card p-lg">
+    <section class="hoja-card p-lg">
       <h3 class="text-body font-medium mb-xs">Descargar mis datos</h3>
       <p class="text-body leading-relaxed text-[var(--text-secondary)] mb-lg prose-limit">
         Un archivo JSON con tu cuenta, tu plan y tu historial de consultas. Es tu derecho de
@@ -31,7 +31,7 @@
       irreversible, y un solo clic de confirmacion es demasiado poco para algo
       que no se puede deshacer.
     -->
-    <section class="glass-card p-lg border-[var(--estado-error)]/30">
+    <section class="hoja-card p-lg border-[var(--estado-error)]/30">
       <h3 class="text-body font-medium mb-xs" style="color: var(--estado-error);">Eliminar mi cuenta</h3>
       <p class="text-body leading-relaxed text-[var(--text-secondary)] mb-lg prose-limit">
         Se borran tu cuenta, tu plan y tu historial de consultas. La acción es permanente y no se

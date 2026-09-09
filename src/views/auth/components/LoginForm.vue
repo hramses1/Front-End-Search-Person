@@ -44,7 +44,7 @@
       <button 
         type="submit" 
         class="w-full py-md border rounded-base text-body tracking-[0.14em] uppercase transition-all duration-base overflow-hidden relative group hover-smoke-glass"
-        style="background-color: var(--glass-bg); border-color: var(--border-color); color: var(--text-primary);"
+        style="background-color: var(--hoja-bg); border-color: var(--border-color); color: var(--text-primary);"
         :disabled="isLoading"
       >
         <div class="absolute inset-0 -translate-x-full group-hover:animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>

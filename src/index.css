@@ -1,63 +1,74 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Archivo:wght@400;500;600;700;800&family=Courier+Prime:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ─────────────────────────────────────────────────────────────
-   Paleta 60-30-10, verificada contra WCAG AA en ambos temas.
+   Mundo "Expediente Sellado": carpeta de manila, hoja de papel y
+   un sello de tinta que cae al verificar un dato. Paleta
+   verificada contra WCAG AA en ambos temas.
 
-   60%  base neutra cálida (fondo y superficies)
-   30%  secundario (texto y bordes)
-   10%  acento, reservado a la acción principal
+   El kraft es el color comprometido (30-60% de la superficie:
+   cabecera, pestañas, pie): no es un acento suelto, es la carpeta
+   misma. El acento rojo queda reservado al sello — acción
+   principal y "verificado" — para que siga leyéndose como un
+   solo gesto, no como decoración repartida.
 
    Los colores de la bandera pertenecen solo al logotipo y viven
    en BrandMark.vue, fuera de estos tokens.
    ───────────────────────────────────────────────────────────── */
 :root {
-  --bg-color:        #FAF7F3;
-  --surface-color:   #FFFFFF;
-  --border-color:    #E4DACE;
-  --accent-color:    #9A3F1F;  /* 6.33:1 sobre el fondo */
-  --accent-inverse:  #FFFFFF;  /* 6.76:1 sobre el acento */
-  --text-primary:    #241F1B;  /* 15.28:1 */
-  --text-secondary:  #5A524A;  /*  7.18:1 */
-  --text-muted:      #6E655C;  /*  5.42:1 — sigue pasando AA */
-  --input-bg:        #FFFFFF;
-  --glass-bg:        rgba(250, 247, 243, 0.85);
+  --bg-color:        #F6F0E1;  /* papel envejecido */
+  --surface-color:   #FFFDF8;  /* hoja, sobre el papel de fondo */
+  --kraft-color:     #C6A06A;  /* carpeta de manila: cabecera, pestañas, pie */
+  --kraft-ink:       #4A3A22;  /* texto sobre kraft */
+  --border-color:    #DDCBA5;
+  --accent-color:    #A4241C;  /* rojo sello — 6.49:1 sobre el fondo */
+  --accent-inverse:  #FBF6EC;  /*  6.84:1 sobre el acento */
+  --text-primary:    #241F1B;
+  --text-secondary:  #5A4C3B;
+  --text-muted:      #6E6151;
+  --input-bg:        #FFFDF8;
+  --hoja-bg:         rgba(255, 253, 248, 0.92);
 
-  --estado-exito:    #1F6B3F;
-  --estado-error:    #A4241C;
+  --estado-exito:    #2F6B3A;
+  --estado-error:    #8A2E12;
   --estado-aviso:    #8A5A08;
 }
 
 .dark {
-  --bg-color:        #1A1613;
-  --surface-color:   #241F1B;
-  --border-color:    #3A332C;
-  --accent-color:    #F0A27E;  /* 8.71:1 sobre el fondo */
-  --accent-inverse:  #241F1B;  /* 7.91:1 sobre el acento */
-  --text-primary:    #F7F2EC;  /* 16.15:1 */
-  --text-secondary:  #BDB0A3;  /*  8.48:1 */
-  --text-muted:      #9C9086;  /*  5.72:1 */
-  --input-bg:        #241F1B;
-  --glass-bg:        rgba(26, 22, 19, 0.85);
+  --bg-color:        #1C1712;
+  --surface-color:   #241D16;
+  --kraft-color:     #4A3A22;
+  --kraft-ink:       #EDE0C8;
+  --border-color:    #40342A;
+  --accent-color:    #E2735F;  /* rojo sello, aclarado para fondo oscuro */
+  --accent-inverse:  #1C1712;
+  --text-primary:    #F5EDE0;
+  --text-secondary:  #C7B79E;
+  --text-muted:      #A9987D;
+  --input-bg:        #241D16;
+  --hoja-bg:         rgba(28, 23, 18, 0.92);
 
-  --estado-exito:    #7BD69F;
-  --estado-error:    #FF9B92;
-  --estado-aviso:    #F0C26B;
+  --estado-exito:    #7FC98C;
+  --estado-error:    #E08B6A;
+  --estado-aviso:    #E8C27A;
 }
 
 /* ─── Tipografía base ─────────────────────────────────────────
-   Una sola familia, Inter, para títulos y cuerpo. Es la opción
-   neutra de interfaz: la jerarquía la marcan el tamaño y el peso,
-   no un cambio de tipografía. Cuerpo a 16px, nunca menos.
-   Interlineado 1.6 en cuerpo, 1.15 en títulos.
+   Archivo lleva el cuerpo y casi todos los títulos: cálida, legible,
+   sin gradientes en el texto para marcar énfasis. Special Elite
+   (máquina de escribir) se reserva para el titular de portada y las
+   marcas de "sellado" — se usa poco a propósito, es una voz de
+   carácter, no la tipografía de trabajo. Courier Prime es el dato:
+   cédula, RUC, placa, siempre tabular, como si saliera de un
+   formulario oficial.
    ───────────────────────────────────────────────────────────── */
 body {
   @apply bg-[var(--bg-color)] text-[var(--text-primary)] transition-colors;
   transition-duration: 200ms;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -74,10 +85,26 @@ body {
 
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 600;
+  font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
   line-height: 1.15;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+}
+
+/* El dato oficial: cédula, RUC, placa. Nunca decorativo, siempre una
+   cifra o código real que el visitante puede verificar carácter a
+   carácter. */
+.dato {
+  font-family: 'Courier Prime', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* El sello: solo para el titular de portada y las marcas "verificado".
+   Se aplica al elemento puntual, nunca a un bloque de lectura. */
+.voz-sello {
+  font-family: '"Special Elite"', Courier, monospace;
+  letter-spacing: 0.01em;
 }
 
 /* ─── Foco visible ───────────────────────────────────────────
@@ -154,12 +181,14 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ─────────────────────────────────────────────────────────────
    Botones. Tres niveles y una sola definición de cada uno.
-   Altura mínima 48px para cumplir el área táctil.
+   Altura mínima 48px para cumplir el área táctil. El primario
+   lleva la sombra del sello (shadow-sello): al pasar el cursor
+   pesa más, como si fuera a caer sobre el papel.
    ───────────────────────────────────────────────────────────── */
 .btn-base {
   @apply inline-flex items-center justify-center gap-sm
          min-h-[3rem] px-lg rounded-base
-         font-body text-caption font-medium
+         font-body text-caption font-semibold
          transition-all ease-out
          disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none;
   transition-duration: 200ms;
@@ -167,11 +196,11 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Primario: relleno sólido. Como máximo uno visible por vista. */
 .btn-primary {
-  @apply btn-base bg-[var(--accent-color)] text-[var(--accent-inverse)] shadow-sm;
+  @apply btn-base bg-[var(--accent-color)] text-[var(--accent-inverse)] shadow-sello;
 }
 .btn-primary:hover:not(:disabled) {
-  @apply shadow-md;
   transform: translateY(-1px);
+  filter: brightness(1.06);
 }
 /*
    Al pulsar, el boton se hunde un pixel en vez de encogerse. scale(.98)
@@ -255,13 +284,36 @@ label {
   -webkit-overflow-scrolling: touch;
 }
 
-/* ─── Superficies ────────────────────────────────────────── */
-.glass-card {
-  @apply rounded-base border border-[var(--border-color)] bg-[var(--surface-color)] shadow-sm;
+/* ─── Superficies: la hoja ────────────────────────────────
+   Sustituye al vidrio esmerilado de antes. Una hoja de papel sobre
+   el fondo, con el borde superior derecho dblado (dog-ear) y una
+   sombra de pila de hojas en vez de un halo difuso. hoja-panel es
+   la variante que deja ver algo de la carpeta detrás (para paneles
+   flotantes sobre contenido), sin blur: solo opacidad.
+   ───────────────────────────────────────────────────────── */
+.hoja-card {
+  @apply relative rounded-base border border-[var(--border-color)]
+         bg-[var(--surface-color)] shadow-hoja;
+}
+/* La esquina doblada: dos triángulos, uno del tono del fondo (el
+   "reverso" de la hoja) y uno más oscuro simulando el pliegue. */
+.hoja-card::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 16px; height: 16px;
+  background:
+    linear-gradient(135deg, transparent 50%, var(--bg-color) 50%),
+    linear-gradient(135deg, transparent 50%, rgba(36, 25, 15, 0.18) 50%);
+  background-size: 100% 100%, 60% 60%;
+  background-position: top right, top right;
+  background-repeat: no-repeat;
+  border-top-right-radius: inherit;
+  pointer-events: none;
 }
 
-.glass-panel {
-  @apply bg-[var(--glass-bg)] border border-[var(--border-color)] backdrop-blur-xl rounded-base;
+.hoja-panel {
+  @apply bg-[var(--hoja-bg)] border border-[var(--border-color)] rounded-base;
 }
 
 /* ─── Chip de filtro ─────────────────────────────────────
@@ -338,6 +390,21 @@ label {
   to { opacity: 1; }
 }
 
+/* ─── El sello ────────────────────────────────────────────
+   Cae en seco sobre la hoja cuando un dato queda verificado: parte
+   grande y girada, golpea y se asienta un poco más pequeña y recta.
+   Un solo uso por resultado, nunca repetido en cascada.
+   ───────────────────────────────────────────────────────── */
+@keyframes sello-cae {
+  0%   { opacity: 0; transform: scale(2.4) rotate(-14deg); }
+  55%  { opacity: 1; transform: scale(0.94) rotate(-7deg); }
+  75%  { transform: scale(1.05) rotate(-9deg); }
+  100% { opacity: 1; transform: scale(1) rotate(-8deg); }
+}
+.animate-sello {
+  animation: sello-cae 420ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -364,4 +431,3 @@ label {
   .space-y-2xl > * + * { margin-top: 28px; }
   .space-y-3xl > * + * { margin-top: 40px; }
 }
-

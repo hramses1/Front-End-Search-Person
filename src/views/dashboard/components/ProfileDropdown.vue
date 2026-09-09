@@ -15,7 +15,7 @@
         @click="toggle" 
         @keydown.enter.prevent="toggle"
         @keydown.space.prevent="toggle"
-        class="control-encabezado cursor-pointer glass-panel hover:bg-white/5 transition-all group active:scale-95"
+        class="control-encabezado cursor-pointer hoja-panel hover:bg-white/5 transition-all group active:scale-95"
     >
         <!--
           Dos lineas dentro de una fila de 44px: sm:text-body trae interlineado

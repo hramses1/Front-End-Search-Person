@@ -9,7 +9,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-lg items-start">
       
       <!-- FORMULARIO DE CONSULTA (Sidebar) -->
-      <div class="lg:col-span-5 xl:col-span-4 glass-panel p-lg sm:p-xl flex flex-col overflow-hidden lg:sticky lg:top-0 lg:max-h-[85vh]">
+      <div class="lg:col-span-5 xl:col-span-4 hoja-panel p-lg sm:p-xl flex flex-col overflow-hidden lg:sticky lg:top-0 lg:max-h-[85vh]">
         <div class="flex items-center gap-md mb-2xl pb-md border-b border-[var(--border-color)] flex-shrink-0">
           <div class="w-10 h-10 rounded-base bg-[var(--accent-color)] text-[var(--accent-inverse)] flex items-center justify-center shadow-lg shadow-[var(--accent-color)]/10">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -53,7 +53,7 @@
           <SkeletonResult v-if="isLoading" class="h-full" />
 
           <!-- RESULTS STATE -->
-          <div v-else-if="results" class="glass-card overflow-hidden flex flex-col">
+          <div v-else-if="results" class="hoja-card overflow-hidden flex flex-col">
             <div class="px-lg sm:px-2xl py-md sm:py-lg border-b border-[var(--border-color)] flex flex-wrap gap-sm justify-between items-center bg-[var(--surface-color)]/80 backdrop-blur-sm flex-shrink-0 sticky top-0 z-10">
               <div class="flex items-center gap-md">
                 <span class="flex h-2 w-2 relative">
@@ -91,7 +91,7 @@
           <!-- EMPTY STATE -->
           <EstadoVacio
             v-else
-            class="glass-card border-dashed"
+            class="hoja-card border-dashed"
             titulo="Sistema listo para recibir consultas"
             detalle="Escribe el dato que quieres consultar y pulsa Ejecutar consulta."
           />

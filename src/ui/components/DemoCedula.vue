@@ -7,11 +7,8 @@
     pagina en un escaparate en vez de en una promesa: el visitante ve que
     funciona antes de registrarse.
   -->
-  <div class="glass-card p-lg sm:p-xl">
-    <p class="text-overline font-bold tracking-[0.14em] uppercase text-[var(--accent-color)] mb-xs">
-      Pruébalo ahora
-    </p>
-    <h2 class="text-lead font-light tracking-tight mb-md">Consulta una cédula sin registrarte</h2>
+  <div class="hoja-card p-lg sm:p-xl">
+    <h2 class="text-lead font-bold tracking-tight mb-md">Consulta una cédula sin registrarte</h2>
 
     <form @submit.prevent="consultar" class="flex flex-col sm:flex-row gap-sm mb-lg" novalidate>
       <div class="flex-1">
@@ -19,7 +16,7 @@
         <input
           id="demo_ci" v-model="ci" type="text" inputmode="numeric" maxlength="10"
           placeholder="Diez dígitos, ej. 0912345678"
-          class="w-full min-h-[2.75rem] px-md bg-transparent border-b border-[var(--border-color)] outline-none font-body text-body text-[var(--text-primary)] transition-colors focus:border-[var(--accent-color)]"
+          class="dato w-full min-h-[2.75rem] px-md bg-transparent border-b border-[var(--border-color)] outline-none text-body text-[var(--text-primary)] transition-colors focus:border-[var(--accent-color)]"
         />
       </div>
       <button type="submit" class="btn-primary shrink-0" :disabled="cargando">
@@ -33,13 +30,52 @@
     <!--
       Resultado real. Nombre, apellido y cedula en claro; el resto llega
       enmascarado desde el backend y aqui se sustituye por un aviso, en vez
-      de mostrar el texto con asteriscos, que se lee como un error.
+      de mostrar el texto con asteriscos, que se lee como un error. El sello
+      cae una sola vez, sobre la hoja del resultado: es la interaccion de
+      firma de la portada, no un adorno que se repite en cada tarjeta.
     -->
-    <div v-if="resultado" class="border-t border-[var(--border-color)] pt-lg">
-      <p class="text-lead font-medium text-[var(--text-primary)]">
+    <div v-if="resultado" class="relative border-t border-[var(--border-color)] pt-lg overflow-hidden">
+      <!--
+        El sello de tinta. Un rectangulo limpio con esquinas redondas se lee
+        como una insignia de "verificado" generica, no como algo estampado:
+        el filtro SVG (turbulencia + desplazamiento) rompe el borde y el
+        relleno de forma irregular, como tinta que se corrio un poco al
+        golpear el papel. Sin esto la THESIS de la portada ("cae un sello")
+        no se sostenia con evidencia visual.
+      -->
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <filter id="textura-sello" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="ruido" />
+          <feDisplacementMap in="SourceGraphic" in2="ruido" scale="7" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </svg>
+      <div
+        class="animate-sello absolute top-0 right-0 sm:right-lg select-none pointer-events-none"
+        style="mix-blend-mode: multiply;"
+        aria-hidden="true"
+      >
+        <!-- Halo de tinta: una copia mayor, mas transparente y desplazada,
+             simulando el doble golpe de un sello mal alineado. -->
+        <div
+          class="voz-sello absolute inset-0 inline-flex items-center gap-xs px-md py-xs border-[3px] opacity-40"
+          style="border-color: var(--accent-color); color: var(--accent-color); filter: url(#textura-sello); transform: scale(1.12) rotate(2deg);"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+          VERIFICADO
+        </div>
+        <div
+          class="voz-sello relative inline-flex items-center gap-xs px-md py-xs border-[3px]"
+          style="border-color: var(--accent-color); color: var(--accent-color); filter: url(#textura-sello);"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+          VERIFICADO
+        </div>
+      </div>
+
+      <p class="text-lead font-bold text-[var(--text-primary)]">
         {{ resultado.Nombre }} {{ resultado.Apellido }}
       </p>
-      <p class="text-caption text-[var(--text-muted)] mb-lg">Cédula {{ resultado.Ci }}</p>
+      <p class="dato text-caption text-[var(--text-muted)] mb-lg">Cédula {{ resultado.Ci }}</p>
 
       <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-lg gap-y-sm">
         <div v-for="campo in camposOcultos" :key="campo.clave" class="flex items-center justify-between gap-md py-xs border-b border-[var(--border-color)]">
@@ -53,7 +89,7 @@
         </div>
       </dl>
 
-      <div class="glass-panel p-lg mt-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-md">
+      <div class="hoja-panel p-lg mt-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-md">
         <p class="text-body text-[var(--text-secondary)]">
           Regístrate gratis para ver {{ camposOcultos.length === 1 ? 'este dato' : 'estos datos' }}, sin tarjeta.
         </p>

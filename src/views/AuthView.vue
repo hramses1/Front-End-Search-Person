@@ -9,7 +9,7 @@
       type="button"
       @click="router.push('/')"
       class="absolute top-6 left-6 z-50 p-md backdrop-blur-md border rounded-base shadow-lg transition-all duration-base hover:scale-105"
-      style="background-color: var(--glass-bg); border-color: var(--border-color); color: var(--accent-color);"
+      style="background-color: var(--hoja-bg); border-color: var(--border-color); color: var(--accent-color);"
       aria-label="Volver a la portada"
       title="Volver a la portada"
     >
@@ -23,7 +23,7 @@
       type="button"
       @click="toggleTheme" 
       class="absolute top-6 right-6 z-50 p-md backdrop-blur-md border rounded-base shadow-lg transition-all duration-base group hover:scale-105"
-      style="background-color: var(--glass-bg); border-color: var(--border-color); color: var(--accent-color);"
+      style="background-color: var(--hoja-bg); border-color: var(--border-color); color: var(--accent-color);"
       title="Cambiar Tema"
     >
       <transition name="fade-slide" mode="out-in">
@@ -277,7 +277,7 @@
           <button 
             type="submit" 
             class="w-full min-h-[3rem] border rounded-base text-body font-medium transition-all duration-base overflow-hidden relative group hover-smoke-glass"
-            style="background-color: var(--glass-bg); border-color: var(--border-color); color: var(--text-primary);"
+            style="background-color: var(--hoja-bg); border-color: var(--border-color); color: var(--text-primary);"
             :disabled="isLoading"
           >
             <!-- Efecto de Barrido Lumínico -->

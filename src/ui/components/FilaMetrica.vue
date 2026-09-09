@@ -7,7 +7,7 @@
     heredaba su tamaño y un "96,37 %" quedaba con el símbolo tan grande como
     la cifra.
   -->
-  <div class="glass-card p-lg">
+  <div class="hoja-card p-lg">
     <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mb-sm">
       {{ etiqueta }}
     </p>

@@ -18,7 +18,7 @@
         <button
           @click="toggleTheme"
           aria-label="Cambiar tema"
-          class="inline-flex items-center justify-center min-h-[2.75rem] min-w-[2.75rem] glass-panel rounded-base text-[var(--accent-color)] transition-transform"
+          class="inline-flex items-center justify-center min-h-[2.75rem] min-w-[2.75rem] hoja-panel rounded-base text-[var(--accent-color)] transition-transform"
         >
           <svg v-if="isDark" class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/>
@@ -56,7 +56,7 @@
               <RouterLink
                 v-for="g in porCategoria(cat)" :key="g.slug"
                 :to="`/guias/${g.slug}`"
-                class="glass-card p-lg block hover:border-[var(--accent-color)]/40 hover:-translate-y-0.5 transition-all duration-base"
+                class="hoja-card p-lg block hover:border-[var(--accent-color)]/40 hover:-translate-y-0.5 transition-all duration-base"
               >
                 <h2 class="text-body font-bold tracking-wide mb-xs">{{ g.titulo }}</h2>
                 <p class="text-caption leading-relaxed text-[var(--text-secondary)]">{{ g.resumen }}</p>
@@ -93,7 +93,7 @@
               <RouterLink
                 v-for="c in relacionadas" :key="c.slug"
                 :to="`/${c.slug}`"
-                class="glass-card p-md block transition-all hover:border-[var(--accent-color)]"
+                class="hoja-card p-md block transition-all hover:border-[var(--accent-color)]"
               >
                 <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mb-xs">{{ c.grupo }}</p>
                 <p class="text-body font-medium text-[var(--text-primary)] mb-xs">{{ c.titulo }}</p>
@@ -108,7 +108,7 @@
               <RouterLink
                 v-for="o in otrasGuias" :key="o.slug"
                 :to="`/guias/${o.slug}`"
-                class="glass-card p-md block transition-all hover:border-[var(--accent-color)]"
+                class="hoja-card p-md block transition-all hover:border-[var(--accent-color)]"
               >
                 <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mb-xs">{{ o.categoria }}</p>
                 <p class="text-body font-medium text-[var(--text-primary)]">{{ o.titulo }}</p>

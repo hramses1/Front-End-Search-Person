@@ -1,5 +1,5 @@
 <template>
-  <component :is="as" class="glass-card" :class="padding">
+  <component :is="as" class="hoja-card" :class="padding">
     <slot />
   </component>
 </template>
