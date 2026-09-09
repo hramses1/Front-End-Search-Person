@@ -4,6 +4,11 @@
     desde App.vue). Va directo a WhatsApp con un mensaje ya escrito: es el
     mismo numero que usa la pagina de contacto (LegalView), asi que no hay
     dos canales distintos segun por donde se entre a pedir ayuda.
+
+    El "bottom" queda mas alto que el margen habitual (6.5rem, no bottom-lg)
+    porque varios pies de pagina tienen su propia fila de iconos (LinkedIn,
+    volver arriba) pegada a esa misma esquina; con el margen normal, en
+    paginas cortas el boton quedaba encima de esos iconos.
   -->
   <a
     href="https://wa.me/593958652702?text=Hola%2C%20necesito%20ayuda%20con%20el%20Portal%20de%20Consulta%20Ciudadana"
@@ -11,7 +16,7 @@
     rel="noopener"
     aria-label="Soporte por WhatsApp"
     title="Soporte por WhatsApp"
-    class="fixed bottom-lg right-lg z-[999] w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95"
+    class="fixed bottom-[6.5rem] right-lg z-[999] w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95"
     style="background-color: #25D366;"
   >
     <svg class="w-7 h-7" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true">
