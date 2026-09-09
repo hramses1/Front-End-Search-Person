@@ -29,6 +29,19 @@ export const mapKey = (key: string): string => {
     bloque: 'Bloqueado', posicion: 'Posición', puntos: 'Puntos',
     sancion: 'Sanción', multa: 'Multa', remision: 'Remisión',
     total_a_pagar: 'Total a Pagar', fecha_emision: 'Fecha de Emisión',
+    // Vehiculo por placa (ANT). anioModelo y anioMatricula son dos datos
+    // distintos (el modelo del vehiculo, el año en que se matriculo): con
+    // el rotulo generico ("anio Modelo" / "anio Matricula", sin mayuscula
+    // ni tilde) quedaban casi iguales a simple vista.
+    placa: 'Placa', marca: 'Marca', modelo: 'Modelo', clase: 'Clase',
+    color: 'Color', servicio: 'Servicio', dueno: 'Dueño',
+    aniomodelo: 'Año Modelo', aniomatricula: 'Año de Matrícula',
+    fechamatricula: 'Fecha de Matrícula', fechacaducidad: 'Fecha de Caducidad',
+    polarizado: 'Polarizado', fechacaducidadpolarizado: 'Caducidad del Polarizado',
+    // Los aporta el proxy de terceros; vuelven cuando este disponible.
+    paisfabricacion: 'País de Fabricación', anioultimopago: 'Año del Último Pago',
+    camvcpn: 'CAMV/CPN', codigovehiculo: 'Código del Vehículo',
+    estadoexoneracion: 'Estado de Exoneración',
   };
   const k = key.toLowerCase();
   if (KEY_MAP[k]) return KEY_MAP[k];
