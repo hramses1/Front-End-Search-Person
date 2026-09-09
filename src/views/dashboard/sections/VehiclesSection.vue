@@ -12,9 +12,11 @@
       </div>
 
       <!--
-        Multas por placa: a peticion aparte, no automatica. Cada consulta
-        adicional cuenta contra la cuota, asi que se pide solo si se quiere
-        ver, en vez de gastarla siempre que se busca un vehiculo.
+        La ficha del vehiculo (arriba) ya trae el resumen de multas por
+        estado (campo 'citaciones': pendientes/pagadas/etc. con su conteo),
+        sin costar una consulta aparte. Este boton es solo para el desglose,
+        multa por multa: una consulta adicional, asi que se pide nada mas
+        si de verdad se quiere ver, no siempre que se busca un vehiculo.
       -->
       <div class="mt-xl pt-xl border-t border-[var(--border-color)]">
         <button
@@ -22,16 +24,19 @@
           type="button" class="btn-secondary"
           @click="buscarCitaciones"
         >
-          Ver multas de esta placa
+          Ver el detalle de cada multa
         </button>
+        <p v-if="!citaciones && !cargandoCitaciones" class="text-caption text-[var(--text-muted)] mt-sm">
+          Cuenta como otra consulta. El resumen de arriba ya está incluido en esta.
+        </p>
 
         <div v-else-if="cargandoCitaciones" class="flex items-center gap-sm text-caption text-[var(--text-muted)]">
           <span class="w-3 h-3 border-2 border-t-transparent rounded-full animate-spin border-[var(--accent-color)]"></span>
-          Buscando multas…
+          Buscando el detalle…
         </div>
 
         <template v-else>
-          <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mb-md">Multas de la placa</p>
+          <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mb-md">Detalle de las multas</p>
           <p v-if="errorCitaciones" class="text-caption text-[var(--estado-error)]">{{ errorCitaciones }}</p>
           <div v-else-if="Array.isArray(citaciones) && citaciones.length" class="space-y-md">
             <div v-for="(item, idx) in citaciones" :key="idx" class="p-md rounded-base border border-[var(--border-color)] bg-[var(--input-bg)]/30">
