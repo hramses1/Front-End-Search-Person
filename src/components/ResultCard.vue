@@ -12,8 +12,27 @@
 
     <!-- Slot para contenido personalizado -->
     <slot>
+      <!--
+        Resumen por estado (pendientes/pagadas/etc. con su conteo): en vez
+        de una sub-tarjeta apilada por cada uno de los cinco estados (dos
+        filas cada una, "Estado" y "count" repetidos diez veces en total),
+        una sola fila de chips. Se reconoce por la forma del dato, no por
+        el nombre de la clave que lo contiene, asi que sirve venga donde
+        venga en la respuesta.
+      -->
+      <div v-if="resumenDeEstados" class="flex flex-wrap gap-sm mt-xs">
+        <span
+          v-for="r in resumenDeEstados" :key="r.estado"
+          class="inline-flex items-center gap-xs text-caption font-medium px-sm py-xs rounded-full border"
+          :class="esEstadoAbierto(r.estado) ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-green-500/10 text-green-400 border-green-500/20'"
+        >
+          {{ etiquetaEstado(r.estado) }}
+          <span class="font-mono tabular-nums">{{ r.cantidad }}</span>
+        </span>
+      </div>
+
       <!-- Array de objetos – muestra sub-tarjetas compactas -->
-      <div v-if="isArrayOfObjects" class="mt-sm space-y-sm">
+      <div v-else-if="isArrayOfObjects" class="mt-sm space-y-sm">
         <div
           v-for="(item, i) in (value as any[])"
           :key="i"
@@ -184,6 +203,24 @@ const isArrayOfObjects = computed(() =>
   typeof props.value[0] === 'object' &&
   props.value[0] !== null
 );
+
+/*
+ * Reconoce el resumen por estado (un objeto por cada uno de los cinco
+ * estados, con su conteo) por la forma del dato: en cada item, un campo
+ * cuyo valor es un estado conocido y otro que es un numero. No depende
+ * de que las claves se llamen 'Estado'/'count': si el back las renombra,
+ * sigue reconociendolo igual.
+ */
+const resumenDeEstados = computed(() => {
+  if (!isArrayOfObjects.value) return null;
+  const items = props.value as Record<string, unknown>[];
+  const filas = items.map((item) => {
+    const estado = Object.values(item).find(esEstadoConocido) as string | undefined;
+    const cantidad = Object.values(item).find((v) => typeof v === 'number') as number | undefined;
+    return estado !== undefined && cantidad !== undefined ? { estado, cantidad } : null;
+  });
+  return filas.every((f) => f !== null) ? (filas as { estado: string; cantidad: number }[]) : null;
+});
 
 const displayValue = computed(() => {
   if (isEmpty.value) return 'NO REGISTRA';
