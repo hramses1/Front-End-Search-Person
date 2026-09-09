@@ -104,6 +104,16 @@
         {{ displayValue }}
       </span>
 
+      <!-- Alerta booleana: al reves de un badge comun, aqui "true" es lo
+           que hay que notar (bloqueado), no un estado bueno. -->
+      <span v-else-if="type === 'alerta'"
+        class="inline-flex items-center gap-sm text-caption font-medium px-sm py-xs rounded-full w-fit tracking-wider mt-xs"
+        :class="value ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-green-500/10 text-green-400 border border-green-500/20'"
+      >
+        <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+        {{ value ? 'Sí' : 'No' }}
+      </span>
+
       <!-- Fecha -->
       <span v-else-if="type === 'date'" class="text-body font-medium mt-xs" style="color: var(--text-primary);">
         📅 {{ displayValue }}
@@ -141,19 +151,24 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import DOMPurify from 'dompurify';
-import { mapKey } from '../utils/formatters';
+import { mapKey, esEstadoConocido, etiquetaEstado, esEstadoAbierto } from '../utils/formatters';
 
 const props = defineProps<{
   label: string;
   value?: any;
-  type?: 'text' | 'badge' | 'date' | 'currency' | 'codigo';
+  type?: 'text' | 'badge' | 'alerta' | 'date' | 'currency' | 'codigo';
 }>();
 
+/*
+ * false ya no es "sin dato": Bloque y vigente llegan como booleano real
+ * desde el back, y false es tan valido como true (no bloqueado, vencida).
+ * Antes se trataba como vacio, asi que un campo booleano en false
+ * desaparecia de la ficha en vez de mostrarse.
+ */
 const isEmpty = computed(() =>
   props.value === null ||
   props.value === undefined ||
   props.value === '' ||
-  props.value === false ||
   (Array.isArray(props.value) && props.value.length === 0)
 );
 
@@ -172,12 +187,28 @@ const isArrayOfObjects = computed(() =>
 
 const displayValue = computed(() => {
   if (isEmpty.value) return 'NO REGISTRA';
-  if (props.type === 'badge') return String(props.value).toUpperCase();
+  /*
+   * El vocabulario unico de estados vale sin importar el tipo detectado: en
+   * licencia llega en 'status' (ya tipado 'badge'), en citacion llega en
+   * 'tipo', que no siempre es un estado (a veces es "VEH"), asi que no se
+   * fuerza a badge por clave — se reconoce por el valor.
+   */
+  if (esEstadoConocido(props.value)) return etiquetaEstado(props.value);
+  if (props.type === 'badge') {
+    // Un booleano (vigente) se lee "Sí"/"No", no "TRUE".
+    if (typeof props.value === 'boolean') return props.value ? 'Sí' : 'No';
+    return String(props.value).toUpperCase();
+  }
   if (props.type === 'currency') return Number(props.value).toLocaleString('es-EC', { minimumFractionDigits: 2 });
   return String(props.value);
 });
 
 const badgeClass = computed(() => {
+  if (esEstadoConocido(props.value)) {
+    return esEstadoAbierto(props.value)
+      ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+      : 'bg-green-500/10 text-green-400 border border-green-500/20';
+  }
   const v = String(props.value).toLowerCase();
   if (['activo', 'vigente', 'true', 'si', 'sí', 'aprobado'].includes(v))
     return 'bg-green-500/10 text-green-400 border border-green-500/20';
