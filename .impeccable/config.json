@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-radius",
+        "value": "4px",
+        "files": [
+          "src/index.css"
+        ],
+        "createdAt": "2026-09-09T02:53:04.392Z",
+        "reason": "radio del anillo de foco (:focus-visible), preexistente a este rediseno, deliberadamente distinto del radio de 6px de tarjetas/botones"
+      }
+    ]
+  }
+}
