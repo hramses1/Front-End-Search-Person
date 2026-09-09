@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-08T00:00:00Z",
+  "title": "Design System: Portal de Consulta Ciudadana",
+  "extensions": {
+    "colorMeta": {
+      "rojo-sello": {
+        "role": "primary",
+        "displayName": "Rojo Sello",
+        "canonical": "#A4241C",
+        "tonalRamp": ["#3A0D08", "#5C140F", "#7E1B14", "#A4241C", "#C2493C", "#DA7466", "#EBA79C", "#F8DCD6"],
+        "note": "Dark-mode equivalent is #E2735F (lightened for contrast on near-black background), same role."
+      },
+      "bg-envejecido": {
+        "role": "neutral",
+        "displayName": "Papel Envejecido",
+        "canonical": "#F6F0E1",
+        "tonalRamp": ["#2A2216", "#453824", "#665336", "#8C744F", "#B6A176", "#D8CCA9", "#EDE4CE", "#F6F0E1"],
+        "note": "Dark-mode equivalent is #1C1712."
+      },
+      "hoja-superficie": {
+        "role": "neutral",
+        "displayName": "Hoja",
+        "canonical": "#FFFDF8",
+        "tonalRamp": ["#241D16", "#3A2F22", "#584938", "#7C6A54", "#A6957A", "#D0C4AC", "#EAE2D2", "#FFFDF8"],
+        "note": "Dark-mode equivalent is #241D16."
+      },
+      "kraft-carpeta": {
+        "role": "neutral",
+        "displayName": "Kraft Carpeta",
+        "canonical": "#C6A06A",
+        "tonalRamp": ["#2E2110", "#4A3A22", "#6C531F", "#8E7038", "#AE8B52", "#C6A06A", "#DDC192", "#EFDFC1"],
+        "note": "Dark-mode equivalent is #4A3A22 (the light mode's own text-on-kraft ink becomes the dark mode surface)."
+      },
+      "kraft-tinta": {
+        "role": "neutral",
+        "displayName": "Kraft Tinta",
+        "canonical": "#4A3A22",
+        "tonalRamp": ["#1E1710", "#4A3A22", "#6E5735", "#93764E", "#B99A6E", "#D8C097", "#EDE0C8", "#F7F0E2"],
+        "note": "Dark-mode equivalent is #EDE0C8 (text-on-kraft flips to light in dark mode)."
+      },
+      "borde-papel": {
+        "role": "neutral",
+        "displayName": "Borde Papel",
+        "canonical": "#DDCBA5",
+        "tonalRamp": ["#2E2617", "#453923", "#665336", "#8C744F", "#B6A176", "#DDCBA5", "#EBDFC6", "#F5EEDF"],
+        "note": "Dark-mode equivalent is #40342A."
+      },
+      "sello-inverso": {
+        "role": "neutral",
+        "displayName": "Sello Inverso",
+        "canonical": "#FBF6EC",
+        "tonalRamp": ["#1C1712", "#332A20", "#544636", "#7C6A54", "#A99C86", "#D3CBBC", "#ECE6DA", "#FBF6EC"],
+        "note": "Dark-mode equivalent is #1C1712 (inverted, since the accent itself lightens in dark mode)."
+      },
+      "tinta-primaria": {
+        "role": "neutral",
+        "displayName": "Tinta Primaria",
+        "canonical": "#241F1B",
+        "tonalRamp": ["#0F0D0B", "#241F1B", "#3E362E", "#5D5148", "#7E7165", "#A69A8C", "#CFC5B9", "#F0EBE3"],
+        "note": "Dark-mode equivalent is #F5EDE0."
+      },
+      "tinta-secundaria": {
+        "role": "neutral",
+        "displayName": "Tinta Secundaria",
+        "canonical": "#5A4C3B",
+        "tonalRamp": ["#241E17", "#3D3327", "#5A4C3B", "#7A6B56", "#9C8C74", "#BFAF95", "#DDD2BF", "#F0EAE0"],
+        "note": "Dark-mode equivalent is #C7B79E."
+      },
+      "tinta-atenuada": {
+        "role": "neutral",
+        "displayName": "Tinta Atenuada",
+        "canonical": "#6E6151",
+        "tonalRamp": ["#2A241C", "#453B2E", "#665738", "#8A785D", "#6E6151", "#B6A88E", "#DACEB9", "#EEE7D9"],
+        "note": "Dark-mode equivalent is #A9987D."
+      },
+      "estado-exito": {
+        "role": "status-success",
+        "displayName": "Estado Éxito",
+        "canonical": "#2F6B3A",
+        "tonalRamp": ["#0E1F11", "#173B1E", "#22572B", "#2F6B3A", "#4E8D59", "#7CB284", "#B2D4B7", "#DEEFE0"],
+        "note": "Dark-mode equivalent is #7FC98C."
+      },
+      "estado-error": {
+        "role": "status-error",
+        "displayName": "Estado Error",
+        "canonical": "#8A2E12",
+        "tonalRamp": ["#2B0E05", "#48170A", "#682110", "#8A2E12", "#AC4E2E", "#C97A58", "#E1AC90", "#F3DBCC"],
+        "note": "Dark-mode equivalent is #E08B6A."
+      },
+      "estado-aviso": {
+        "role": "status-warning",
+        "displayName": "Estado Aviso",
+        "canonical": "#8A5A08",
+        "tonalRamp": ["#2B1C03", "#483006", "#68450A", "#8A5A08", "#AC7C2C", "#C9A056", "#E1C58D", "#F3E5C8"],
+        "note": "Dark-mode equivalent is #E8C27A."
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Sello (Display)", "purpose": "Ceremonial typewriter voice: the stamp mark and one emphasized hero-headline clause only. Never a running headline." },
+      "headline": { "displayName": "Headline", "purpose": "h1-level page headings." },
+      "title": { "displayName": "Title", "purpose": "Section and card headings (h2/h3)." },
+      "body": { "displayName": "Body", "purpose": "Paragraphs and list text; never below 1rem." },
+      "label": { "displayName": "Label", "purpose": "Uppercase folder-tab/chip/category labels." },
+      "dato": { "displayName": "Dato (Data Mono)", "purpose": "Cédula, RUC, plate — anything the visitor can verify digit by digit." }
+    },
+    "shadows": [
+      { "name": "hoja", "value": "0 1px 0 var(--border-color), 0 8px 0 -6px var(--border-color), 0 14px 20px -12px rgba(36, 25, 15, 0.28)", "purpose": "Default card/panel elevation: stacked-paper effect, replaces the prior glassmorphism glow." },
+      { "name": "sello", "value": "0 10px 24px -8px rgba(164, 36, 28, 0.45)", "purpose": "Primary button only: ink-tinted shadow so the CTA carries the same weight as the stamp." }
+    ],
+    "motion": [
+      { "name": "duration-fast", "value": "150ms", "purpose": "Icon buttons, small hover shifts." },
+      { "name": "duration-base", "value": "200ms", "purpose": "Default transition for buttons, inputs, theme switch, page fade-in." },
+      { "name": "sello-cae", "value": "420ms cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "The ink-stamp drop animation: scale 2.4/rotate -14deg to settle at scale 1/-8deg. Fires once per verified result; respects prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "xs", "value": "480px" },
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" },
+      { "name": "2xl", "value": "1536px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Single accent action per view; carries the ink-tinted stamp shadow.",
+      "html": "<button class=\"ds-btn-primary\">Crear cuenta gratis</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 3rem; padding: 0 24px; border-radius: 6px; background: #A4241C; color: #FBF6EC; font-family: Archivo, 'Helvetica Neue', Arial, sans-serif; font-size: 0.8125rem; font-weight: 600; border: none; box-shadow: 0 10px 24px -8px rgba(164, 36, 28, 0.45); transition: transform 200ms, filter 200ms; } .ds-btn-primary:hover { transform: translateY(-1px); filter: brightness(1.06); } .ds-btn-primary:focus-visible { outline: 2px solid #A4241C; outline-offset: 2px; } .ds-btn-primary:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined action; accent-colored border/text on hover.",
+      "html": "<button class=\"ds-btn-secondary\">Ver consultas</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 3rem; padding: 0 24px; border-radius: 6px; background: transparent; color: #241F1B; border: 1px solid #DDCBA5; font-family: Archivo, 'Helvetica Neue', Arial, sans-serif; font-size: 0.8125rem; font-weight: 600; transition: all 200ms; } .ds-btn-secondary:hover { border-color: #A4241C; color: #A4241C; } .ds-btn-secondary:focus-visible { outline: 2px solid #A4241C; outline-offset: 2px; } .ds-btn-secondary:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Folder Tab (Chip)",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Pill filter toggle; the system's one pill-radius exception to the 6px card radius.",
+      "html": "<button class=\"ds-chip\" aria-pressed=\"false\">Vehículos</button>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; justify-content: center; min-height: 3rem; padding: 0 16px; border-radius: 9999px; border: 1px solid #DDCBA5; background: transparent; color: #5A4C3B; font-family: Archivo, sans-serif; font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; transition: all 150ms; } .ds-chip:hover { border-color: #A4241C; color: #A4241C; } .ds-chip[aria-pressed='true'] { background: #A4241C; border-color: #A4241C; color: #FBF6EC; } .ds-chip:focus-visible { outline: 2px solid #A4241C; outline-offset: 2px; }"
+    },
+    {
+      "name": "Hoja Card",
+      "kind": "card",
+      "refersTo": "hoja-card",
+      "description": "Signature paper-sheet surface with a folded top-right dog-ear and stacked-paper shadow. The default container for every content block on the landing page.",
+      "html": "<div class=\"ds-hoja-card\"><h3 class=\"ds-hoja-card__title\">Resultado inmediato</h3><p class=\"ds-hoja-card__body\">La consulta se resuelve contra la fuente en el momento.</p></div>",
+      "css": ".ds-hoja-card { position: relative; border-radius: 6px; border: 1px solid #DDCBA5; background: #FFFDF8; padding: 24px; box-shadow: 0 1px 0 #DDCBA5, 0 8px 0 -6px #DDCBA5, 0 14px 20px -12px rgba(36,25,15,0.28); } .ds-hoja-card::after { content: ''; position: absolute; top: 0; right: 0; width: 16px; height: 16px; background: linear-gradient(135deg, transparent 50%, #F6F0E1 50%), linear-gradient(135deg, transparent 50%, rgba(36,25,15,0.18) 50%); background-size: 100% 100%, 60% 60%; background-position: top right, top right; background-repeat: no-repeat; border-top-right-radius: inherit; pointer-events: none; } .ds-hoja-card__title { font-family: Archivo, sans-serif; font-weight: 700; font-size: 0.9375rem; letter-spacing: 0.02em; color: #241F1B; margin-bottom: 4px; } .ds-hoja-card__body { font-family: Archivo, sans-serif; font-size: 0.9375rem; line-height: 1.6; color: #5A4C3B; }"
+    },
+    {
+      "name": "Data Field (Dato)",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Underline-only input for entering official identifiers, set in tabular Courier Prime once filled.",
+      "html": "<div class=\"ds-field\"><label for=\"ds-ci\">Número de cédula</label><input id=\"ds-ci\" class=\"ds-field__input\" type=\"text\" inputmode=\"numeric\" maxlength=\"10\" placeholder=\"Diez dígitos, ej. 0912345678\" /></div>",
+      "css": ".ds-field label { display: block; font-family: Archivo, sans-serif; font-size: 0.8125rem; font-weight: 500; color: #6E6151; margin-bottom: 4px; transition: color 200ms; } .ds-field__input { width: 100%; min-height: 2.75rem; padding: 8px 0; background: transparent; border: none; border-bottom: 1px solid #DDCBA5; outline: none; font-family: 'Courier Prime', ui-monospace, monospace; font-variant-numeric: tabular-nums; letter-spacing: 0.02em; font-size: 0.9375rem; color: #241F1B; transition: border-color 200ms; } .ds-field__input:focus { border-bottom-color: #A4241C; border-bottom-width: 2px; } .ds-field:focus-within label { color: #A4241C; }"
+    },
+    {
+      "name": "Ink Stamp",
+      "kind": "custom",
+      "refersTo": "ink-stamp",
+      "description": "Signature verification mark: SVG turbulence/displacement filter breaks the border and fill so it reads as struck ink rather than a clean badge, with a lighter double-struck echo beneath. Animates in once per verified result (sello-cae, 420ms) and respects prefers-reduced-motion.",
+      "html": "<svg width=\"0\" height=\"0\" style=\"position:absolute\" aria-hidden=\"true\"><filter id=\"ds-textura-sello\" x=\"-20%\" y=\"-20%\" width=\"140%\" height=\"140%\"><feTurbulence type=\"fractalNoise\" baseFrequency=\"0.9\" numOctaves=\"2\" seed=\"7\" result=\"ruido\" /><feDisplacementMap in=\"SourceGraphic\" in2=\"ruido\" scale=\"7\" xChannelSelector=\"R\" yChannelSelector=\"G\" /></filter></svg><div class=\"ds-sello\" style=\"mix-blend-mode: multiply;\"><div class=\"ds-sello__halo\">VERIFICADO</div><div class=\"ds-sello__mark\">VERIFICADO</div></div>",
+      "css": ".ds-sello { position: relative; } .ds-sello__halo, .ds-sello__mark { font-family: 'Special Elite', Courier, monospace; letter-spacing: 0.01em; display: inline-flex; align-items: center; gap: 4px; padding: 4px 16px; border: 3px solid #A4241C; color: #A4241C; filter: url(#ds-textura-sello); } .ds-sello__halo { position: absolute; inset: 0; opacity: 0.4; transform: scale(1.12) rotate(2deg); } .ds-sello__mark { animation: ds-sello-cae 420ms cubic-bezier(0.16, 1, 0.3, 1) forwards; } @keyframes ds-sello-cae { 0% { opacity: 0; transform: scale(2.4) rotate(-14deg); } 55% { opacity: 1; transform: scale(0.94) rotate(-7deg); } 75% { transform: scale(1.05) rotate(-9deg); } 100% { opacity: 1; transform: scale(1) rotate(-8deg); } } @media (prefers-reduced-motion: reduce) { .ds-sello__mark { animation-duration: 0.01ms; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Expediente Sellado",
+    "overview": "This is a citizen-records lookup portal built as a physical case file: a manila folder holding paper sheets, with an ink stamp that falls the instant a record is verified. It replaced a prior single-font, glassmorphism system that read as generic SaaS. The kraft/manila tone is the committed surface color — carpeted headers, tabs, and footer — not a stray accent; the single saturated red is reserved exclusively for the ink stamp, \"verified\" state, and the one primary action per view. This was built and shipped as Phase 1: global tokens, the public landing page, and the live cédula demo. The rest of the site still carries the prior visual system and is not covered by this document until it migrates in a later phase.",
+    "keyCharacteristics": [
+      "Paper and kraft surfaces, never glass or blur — depth comes from stacked-paper shadows, not diffuse glows.",
+      "One accent color, one job: the ink-stamp red means \"verified\" or \"primary action,\" nothing else.",
+      "Three typefaces with strict, narrow jobs: a typewriter face for rare ceremonial moments, a warm grotesque for everything else, a tabular mono for official data.",
+      "The BrandMark logotype is explicitly outside this system."
+    ],
+    "rules": [
+      { "name": "The One Gesture Rule", "body": "The accent red appears only where something is verified or actionable (primary button, stamp mark, active chip, focus ring). It never decorates a heading, a background block, or a status that isn't success/error/warning.", "section": "colors" },
+      { "name": "The Folder, Not the Letterhead Rule", "body": "Kraft is the committed surface for folder-like chrome (footer, tabs, pills) but is deliberately withheld from the page header. The BrandMark logotype's flag-gradient text loses contrast against mid-tone kraft, so the header stays on the plain page background instead — an intentional adaptation to protect the untouchable logotype, not a drift from the palette.", "section": "colors" },
+      { "name": "The Rare Voice Rule", "body": "Special Elite is a ceremonial mark, not a headline typeface: it is earned by verification moments and appears at most once or twice per screen. If a heading needs weight, that's Archivo's job.", "section": "typography" },
+      { "name": "The Stacked-Paper Rule", "body": "Elevation is expressed as paper sitting on paper (multiple hard-edged offset layers + one soft ambient layer), never as a single diffuse glow. If a shadow looks like a glass panel floating, it's not this system.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do reserve the accent red (#A4241C / dark-mode #E2735F) for verification and primary action only — button fill, stamp mark, active chip, focus ring.",
+      "Do use the Hoja stacked-paper shadow (shadow-hoja) for any new card/panel; do not invent a new elevation vocabulary for a single surface.",
+      "Do set official/verifiable data (cédula, RUC, plate) in Courier Prime with tabular-nums via .dato — never in the body font.",
+      "Do keep Special Elite scoped to the stamp mark and at most one emphasized phrase per hero-level headline."
+    ],
+    "donts": [
+      "Don't apply kraft to the page header — the BrandMark's flag-gradient text loses contrast against mid-tone kraft; keep the header on the plain page background (see the Folder, Not the Letterhead Rule).",
+      "Don't touch BrandMark.vue. Its flag-gradient text and three color bars (#FFDD00/#0033A0/#ED1C24) are intentionally outside every token in this document — confirmed as an untouchable brand asset, not an oversight to reconcile.",
+      "Don't add a decorative eyebrow/kicker line above arbitrary headings. The system's only small-caps uppercase label is the folder-tab/chip/category-tag component, scoped to catalog and filter labeling — it is not a general-purpose heading ornament.",
+      "Don't reintroduce blur/backdrop-filter glass panels. This system replaced that look; depth is paper-stacking or nothing."
+    ]
+  }
+}
