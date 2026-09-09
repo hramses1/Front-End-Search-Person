@@ -11,6 +11,15 @@
         ],
         "createdAt": "2026-09-09T02:53:04.392Z",
         "reason": "radio del anillo de foco (:focus-visible), preexistente a este rediseno, deliberadamente distinto del radio de 6px de tarjetas/botones"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#25d366",
+        "files": [
+          "src/ui/components/BotonSoporte.vue"
+        ],
+        "createdAt": "2026-09-09T04:06:30.470Z",
+        "reason": "verde oficial de marca de WhatsApp, mismo color ya usado en LegalView.vue para el mismo canal de contacto"
       }
     ]
   }
