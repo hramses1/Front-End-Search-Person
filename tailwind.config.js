@@ -112,8 +112,8 @@ export default {
        * shadow-sm/shadow-md en las clases .hoja-*.
        */
       boxShadow: {
-        hoja: '0 1px 0 var(--border-color), 0 8px 0 -6px var(--border-color), 0 14px 20px -12px rgba(36, 25, 15, 0.28)',
-        sello: '0 10px 24px -8px rgba(164, 36, 28, 0.45)',
+        hoja: '0 1px 0 var(--border-color), 0 8px 0 -6px var(--border-color), 0 14px 20px -12px rgba(15, 20, 23, 0.24)',
+        sello: '0 10px 24px -8px rgba(29, 78, 110, 0.45)',
       },
     },
   },

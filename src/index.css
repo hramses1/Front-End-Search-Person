@@ -5,53 +5,60 @@
 @tailwind utilities;
 
 /* ─────────────────────────────────────────────────────────────
-   Mundo "Expediente Sellado": carpeta de manila, hoja de papel y
-   un sello de tinta que cae al verificar un dato. Paleta
-   verificada contra WCAG AA en ambos temas.
+   Mundo "Expediente Sellado": carpeta de archivo, hoja de papel y
+   un sello de tinta que cae al verificar un dato. Segunda pasada
+   de paleta: la primera se sentía "muy café" en conjunto (carpeta
+   de manila + sello rojo sobre papel envejecido); esta enfría el
+   papel a un blanco de oficina y cambia la carpeta y el acento a
+   un azul institucional serio — el mecanismo (hoja, dog-ear,
+   sello, pestaña) no cambia, solo el color. Paleta verificada
+   contra WCAG AA en ambos temas.
 
-   El kraft es el color comprometido (30-60% de la superficie:
-   cabecera, pestañas, pie): no es un acento suelto, es la carpeta
-   misma. El acento rojo queda reservado al sello — acción
-   principal y "verificado" — para que siga leyéndose como un
-   solo gesto, no como decoración repartida.
+   El azul de la carpeta es el color comprometido (30-60% de la
+   superficie: cabecera, pestañas, pie): no es un acento suelto, es
+   la carpeta misma. El acento (mismo azul, más saturado) queda
+   reservado a la acción principal y al sello de "verificado", para
+   que siga leyéndose como un solo gesto, no como decoración
+   repartida. Los estados (éxito/error/aviso) se mantienen en su
+   propia familia de color para no confundirse con el acento.
 
    Los colores de la bandera pertenecen solo al logotipo y viven
    en BrandMark.vue, fuera de estos tokens.
    ───────────────────────────────────────────────────────────── */
 :root {
-  --bg-color:        #F6F0E1;  /* papel envejecido */
-  --surface-color:   #FFFDF8;  /* hoja, sobre el papel de fondo */
-  --kraft-color:     #C6A06A;  /* carpeta de manila: cabecera, pestañas, pie */
-  --kraft-ink:       #4A3A22;  /* texto sobre kraft */
-  --border-color:    #DDCBA5;
-  --accent-color:    #A4241C;  /* rojo sello — 6.49:1 sobre el fondo */
-  --accent-inverse:  #FBF6EC;  /*  6.84:1 sobre el acento */
-  --text-primary:    #241F1B;
-  --text-secondary:  #5A4C3B;
-  --text-muted:      #6E6151;
-  --input-bg:        #FFFDF8;
-  --hoja-bg:         rgba(255, 253, 248, 0.92);
+  --bg-color:        #F2F3F1;  /* papel de oficina, frío */
+  --surface-color:   #FFFFFF;  /* hoja, sobre el papel de fondo */
+  --folder-color:    #33475A;  /* carpeta: cabecera, pestañas, pie */
+  --folder-ink:      #EDF1F3;  /* texto sobre la carpeta */
+  --border-color:    #D7DAD6;
+  --accent-color:    #1D4E6E;  /* azul institucional — 7.95:1 sobre el fondo */
+  --accent-inverse:  #FFFFFF;  /*  8.87:1 sobre el acento */
+  --text-primary:    #1E2422;
+  --text-secondary:  #4B534F;
+  --text-muted:      #626964;
+  --input-bg:        #FFFFFF;
+  --hoja-bg:         rgba(255, 255, 255, 0.92);
 
-  --estado-exito:    #2F6B3A;
-  --estado-error:    #8A2E12;
+  --estado-exito:    #1F6B3F;
+  --estado-error:    #A4241C;
   --estado-aviso:    #8A5A08;
 }
 
 .dark {
-  --bg-color:        #1C1712;
-  --surface-color:   #241D16;
-  --kraft-color:     #4A3A22;
-  --kraft-ink:       #EDE0C8;
-  --border-color:    #40342A;
-  --accent-color:    #E2735F;  /* rojo sello, aclarado para fondo oscuro */
-  --accent-inverse:  #1C1712;
-  --text-primary:    #F5EDE0;
-  --text-secondary:  #C7B79E;
-  --text-muted:      #A9987D;
-  --input-bg:        #241D16;
-  --hoja-bg:         rgba(28, 23, 18, 0.92);
+  --bg-color:        #14181A;
+  --surface-color:   #1B2023;
+  --folder-color:    #1E2A33;
+  --folder-ink:      #C9D4D8;
+  --border-color:    #2B3338;
+  --accent-color:    #7EB6D9;  /* azul institucional, aclarado para fondo oscuro */
+  --accent-inverse:  #10171B;
+  --text-primary:    #EDF1F0;
+  --text-secondary:  #B7C0BD;
+  --text-muted:      #90978F;
+  --input-bg:        #1B2023;
+  --hoja-bg:         rgba(27, 32, 35, 0.92);
 
-  --estado-exito:    #7FC98C;
+  --estado-exito:    #7BD69F;
   --estado-error:    #E08B6A;
   --estado-aviso:    #E8C27A;
 }

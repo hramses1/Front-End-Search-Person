@@ -51,7 +51,7 @@
 
           <section v-for="cat in categorias" :key="cat" class="pb-2xl">
             <div class="inline-block px-md py-xs mb-md rounded-base text-overline font-bold uppercase tracking-[0.1em]"
-                 style="background-color: var(--kraft-color); color: var(--kraft-ink);">{{ cat }}</div>
+                 style="background-color: var(--folder-color); color: var(--folder-ink);">{{ cat }}</div>
             <div class="grid gap-sm sm:grid-cols-2">
               <RouterLink
                 v-for="g in porCategoria(cat)" :key="g.slug"
@@ -95,7 +95,7 @@
                 <p class="text-body font-medium text-[var(--text-primary)] mb-xs">{{ c.titulo }}</p>
                 <p class="text-caption leading-relaxed text-[var(--text-secondary)] mb-sm">{{ c.texto }}</p>
                 <span class="inline-block px-sm py-[2px] rounded-base text-overline font-bold uppercase tracking-[0.08em]"
-                      style="background-color: var(--kraft-color); color: var(--kraft-ink);">{{ c.grupo }}</span>
+                      style="background-color: var(--folder-color); color: var(--folder-ink);">{{ c.grupo }}</span>
               </RouterLink>
             </div>
           </section>
@@ -110,7 +110,7 @@
               >
                 <p class="text-body font-medium text-[var(--text-primary)] mb-sm">{{ o.titulo }}</p>
                 <span class="inline-block px-sm py-[2px] rounded-base text-overline font-bold uppercase tracking-[0.08em]"
-                      style="background-color: var(--kraft-color); color: var(--kraft-ink);">{{ o.categoria }}</span>
+                      style="background-color: var(--folder-color); color: var(--folder-ink);">{{ o.categoria }}</span>
               </RouterLink>
             </div>
           </section>

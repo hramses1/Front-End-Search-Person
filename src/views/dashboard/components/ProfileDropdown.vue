@@ -26,7 +26,7 @@
             <span class="text-caption font-bold tracking-[0.14em] leading-none text-[var(--text-primary)] group-hover:text-[var(--accent-color)] transition-colors uppercase truncate max-w-[100px]">{{ userName }}</span>
             <span class="text-overline font-medium leading-none text-[var(--text-muted)] mt-xs">Mi cuenta</span>
         </div>
-        <div class="w-8 h-8 shrink-0 rounded-base bg-gradient-to-br from-[var(--accent-color)] to-violet-400 flex items-center justify-center text-caption font-black text-white shadow-lg shadow-[var(--accent-color)]/20 rotate-3 group-hover:rotate-0 transition-transform">
+        <div class="w-8 h-8 shrink-0 rounded-base bg-[var(--accent-color)] flex items-center justify-center text-caption font-black text-[var(--accent-inverse)] shadow-sello rotate-3 group-hover:rotate-0 transition-transform">
             {{ userName.substring(0, 2).toUpperCase() }}
         </div>
     </div>

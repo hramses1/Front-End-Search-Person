@@ -3,11 +3,13 @@
     <a href="#contenido" class="salto-contenido">Saltar al contenido</a>
 
     <!--
-      Cabecera: fondo de página, no kraft. El degradado bandera del
-      logotipo (BrandMark, intocable) se afinó contra el papel y el
-      carbón del tema oscuro; sobre un kraft intermedio el tramo azul
-      pierde contraste y se vuelve ilegible. El kraft se reserva a
-      superficies que no llevan el logotipo (pie, pestañas, etiquetas).
+      Cabecera: fondo de página, no el color de carpeta. El degradado
+      bandera del logotipo (BrandMark, intocable) se afinó contra el
+      papel y el carbón del tema oscuro; el tramo azul del degradado
+      pierde contraste sobre el azul de la carpeta (más aún ahora que
+      el acento del sitio también es azul). El color de carpeta se
+      reserva a superficies que no llevan el logotipo (pie, pestañas,
+      etiquetas).
     -->
     <header class="border-b" style="border-color: var(--border-color);">
       <div class="max-w-5xl mx-auto px-lg sm:px-xl flex items-center justify-between py-lg">
@@ -49,7 +51,7 @@
                la esquina de la hoja, no un texto flotando encima. -->
           <div
             class="absolute -top-3 left-lg z-10 inline-flex items-center gap-xs px-md py-xs rounded-base text-overline font-bold uppercase tracking-[0.1em]"
-            style="background-color: var(--kraft-color); color: var(--kraft-ink); transform: rotate(-2deg);"
+            style="background-color: var(--folder-color); color: var(--folder-ink); transform: rotate(-2deg);"
           >
             <span class="relative flex h-1.5 w-1.5" aria-hidden="true">
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color: var(--estado-exito);"></span>
@@ -88,7 +90,7 @@
 
         <div v-for="grupo in GRUPOS" :key="grupo" class="mb-lg">
           <div class="inline-block px-md py-xs rounded-t-base text-overline font-bold uppercase tracking-[0.1em]"
-               style="background-color: var(--kraft-color); color: var(--kraft-ink);">
+               style="background-color: var(--folder-color); color: var(--folder-ink);">
             {{ grupo }}
           </div>
           <div class="hoja-card divide-y" style="border-top-left-radius: 0; border-color: var(--border-color);">
@@ -122,7 +124,7 @@
             <h3 class="text-body font-bold tracking-wide mb-xs">{{ g.titulo }}</h3>
             <p class="text-caption leading-relaxed text-[var(--text-secondary)] mb-sm">{{ g.resumen }}</p>
             <span class="inline-block px-sm py-[2px] rounded-base text-overline font-bold uppercase tracking-[0.08em]"
-                  style="background-color: var(--kraft-color); color: var(--kraft-ink);">{{ g.categoria }}</span>
+                  style="background-color: var(--folder-color); color: var(--folder-ink);">{{ g.categoria }}</span>
           </RouterLink>
         </div>
 
@@ -185,7 +187,7 @@
     </div>
 
     <!-- Pie: banda de carpeta, cierra la misma franja que abre la cabecera. -->
-    <footer style="background-color: var(--kraft-color); color: var(--kraft-ink);">
+    <footer style="background-color: var(--folder-color); color: var(--folder-ink);">
       <div class="max-w-5xl mx-auto px-lg sm:px-xl py-2xl flex flex-col sm:flex-row items-center justify-between gap-lg">
         <div class="flex flex-wrap gap-x-lg gap-y-0 justify-center">
           <component
@@ -194,7 +196,7 @@
             :href="l.ruta ? undefined : l.href"
             @click="l.ruta && router.push(l.ruta)"
             class="enlace-menor"
-            style="color: var(--kraft-ink);"
+            style="color: var(--folder-ink);"
           >
             {{ l.texto }}
           </component>
