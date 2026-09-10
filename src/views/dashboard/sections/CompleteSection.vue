@@ -81,14 +81,39 @@
               v-if="esResumenConteo(datosDe(data, f.key))"
               :label="f.label" :value="datosDe(data, f.key)"
             />
-            <p
-              v-else-if="Array.isArray(datosDe(data, f.key))"
-              class="text-caption text-[var(--text-secondary)]"
-            >
-              {{ (datosDe(data, f.key) as any[]).length }}
-              {{ (datosDe(data, f.key) as any[]).length === 1 ? 'registro' : 'registros' }}.
-              Ábrelos en la consulta de {{ f.label.toLowerCase() }}.
-            </p>
+            <div v-else-if="Array.isArray(datosDe(data, f.key))">
+              <!--
+                La lista no se despliega sola: hace demasiado ruido cuando
+                hay varios registros. Se muestra el conteo y un boton para
+                abrirla aqui mismo (los datos ya vienen en la respuesta, no
+                cuesta otra consulta).
+              -->
+              <button
+                type="button"
+                class="inline-flex items-center gap-xs text-caption font-medium text-[var(--accent-color)] hover:underline"
+                :aria-expanded="abierto(f.key)"
+                @click="alternar(f.key)"
+              >
+                <svg
+                  class="w-3 h-3 transition-transform" :class="{ 'rotate-90': abierto(f.key) }"
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+                {{ abierto(f.key) ? 'Ocultar' : 'Ver detalle' }}
+                ({{ (datosDe(data, f.key) as any[]).length }}
+                {{ (datosDe(data, f.key) as any[]).length === 1 ? 'registro' : 'registros' }})
+              </button>
+
+              <div v-if="abierto(f.key)" class="mt-md space-y-sm">
+                <div
+                  v-for="(item, i) in (datosDe(data, f.key) as any[])" :key="i"
+                  class="p-md rounded-base border border-[var(--border-color)] bg-[var(--input-bg)]/30"
+                >
+                  <ResultCard v-for="(v, k) in item" :key="k" :label="mapKey(String(k))" :value="v" :type="detectType(String(k), v)" />
+                </div>
+              </div>
+            </div>
             <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-x-10">
               <ResultCard
                 v-for="(v, k) in (datosDe(data, f.key) || {})" :key="k"
@@ -118,6 +143,13 @@ const ci = ref('');
 const isLoading = ref(false);
 const errorMsg = ref('');
 const resultsData = ref<any>(null);
+
+/** Fuentes cuya lista de detalle esta desplegada. */
+const abiertos = ref<string[]>([]);
+const abierto = (key: string) => abiertos.value.includes(key);
+const alternar = (key: string) => {
+  abiertos.value = abierto(key) ? abiertos.value.filter((k) => k !== key) : [...abiertos.value, key];
+};
 
 const emit = defineEmits(['refresh-stats']);
 
@@ -203,6 +235,7 @@ const executeSearch = async () => {
   isLoading.value = true;
   errorMsg.value = '';
   resultsData.value = null;
+  abiertos.value = [];
 
   try {
     const data = await apiService.getComplete(cleanCi);
