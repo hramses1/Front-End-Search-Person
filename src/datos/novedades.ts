@@ -25,6 +25,12 @@ export interface Novedad {
  */
 const NOVEDADES_SIN_ORDENAR: Novedad[] = [
   {
+    fecha: '2026-09-10',
+    titulo: 'Nuevo método de donación: Payphone',
+    descripcion:
+      'Además de PayPal, ahora puedes apoyar el proyecto por Payphone desde el menú de donación, en la cabecera del panel.'
+  },
+  {
     fecha: '2026-09-09',
     titulo: 'Nueva imagen del portal',
     descripcion:
