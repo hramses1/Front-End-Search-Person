@@ -104,13 +104,23 @@
         <span class="flex-1 h-px bg-[var(--border-color)]"></span>
       </div>
 
+      <!--
+        Mismo tamano y peso que el boton de PayPal de arriba: dos botones con
+        el mismo trabajo ("pagar por este medio") a escalas distintas se leen
+        como un agregado a ultima hora, justo lo contrario de la confianza
+        que el icono busca dar. Color e icono son los oficiales de Payphone
+        (naranja de marca #FF4E00, tomado de su propio sitio); el texto se
+        queda solo en el nombre, como "Paypal Secure" arriba, para no
+        atiborrar un boton angosto con una frase larga en mayusculas.
+      -->
       <a
         href="https://ppls.me/wTdYLBIk8o4InVYkwu9Rsw"
         target="_blank"
         rel="noopener noreferrer"
-        class="w-full py-md bg-[var(--accent-color)] text-[var(--accent-inverse)] font-extrabold text-body tracking-[0.1em] rounded-base shadow-lg transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-sm uppercase"
+        class="w-full py-md bg-[#FF4E00] hover:bg-[#e64600] text-white font-extrabold text-body tracking-[0.1em] rounded-base shadow-lg transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-sm uppercase"
       >
-        Pagar con Payphone
+        <img src="/payphone-icon.png" alt="" width="20" height="20" loading="lazy" decoding="async" class="w-5 h-5 rounded-full" />
+        Payphone
       </a>
   </div>
 </div>
