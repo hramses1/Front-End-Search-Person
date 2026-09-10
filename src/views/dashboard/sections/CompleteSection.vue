@@ -242,6 +242,8 @@ const executeSearch = async () => {
     resultsData.value = data;
     emit('refresh-stats');
   } catch (err: any) {
+    // La cuota se reembolsa en algunos errores (400/451/500/503); hay que releerla.
+    emit('refresh-stats');
     errorMsg.value = err.message || 'Error en la consulta.';
   } finally {
     isLoading.value = false;

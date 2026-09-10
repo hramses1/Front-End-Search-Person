@@ -82,6 +82,8 @@ const executeSearch = async () => {
     resultsData.value = data;
     emit('refresh-stats');
   } catch (err: any) {
+    // La cuota se reembolsa en algunos errores (400/451/500/503); hay que releerla.
+    emit('refresh-stats');
     errorMsg.value = err.response?.data?.detail || 'Vehículo no encontrado.';
   } finally {
     isLoading.value = false;
@@ -96,6 +98,8 @@ const buscarCitaciones = async () => {
     citaciones.value = await apiService.getCitationsByPlate(cleanPlate);
     emit('refresh-stats');
   } catch (err: any) {
+    // La cuota se reembolsa en algunos errores (400/451/500/503); hay que releerla.
+    emit('refresh-stats');
     errorCitaciones.value = err.response?.data?.detail || 'No se pudieron obtener las multas.';
   } finally {
     cargandoCitaciones.value = false;

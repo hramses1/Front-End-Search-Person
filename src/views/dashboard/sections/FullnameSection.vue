@@ -444,6 +444,8 @@ const executeSearch = async () => {
     rawResults.value = Array.isArray(data) ? [...data] : data ? [{...data}] : [];
     emit('refresh-stats');
   } catch (err: any) {
+    // La cuota se reembolsa en algunos errores (400/451/500/503); hay que releerla.
+    emit('refresh-stats');
     errorMsg.value = err.response?.data?.detail || 'No se encontraron registros.';
     rawResults.value = [];
   } finally {
