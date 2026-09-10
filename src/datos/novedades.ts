@@ -25,6 +25,30 @@ export interface Novedad {
  */
 const NOVEDADES_SIN_ORDENAR: Novedad[] = [
   {
+    fecha: '2026-09-09',
+    titulo: 'Nueva imagen del portal',
+    descripcion:
+      'Rediseño completo de la portada y del panel: nueva paleta, tipografía y disposición, con menos ruido visual y más coherencia. Cada consulta y cada resultado se leen igual en todo el sitio.'
+  },
+  {
+    fecha: '2026-09-09',
+    titulo: 'Consulta completa por cédula',
+    descripcion:
+      'Una sola consulta revisa siete fuentes a la vez (identidad, licencia, multas, denuncias, causas judiciales, citas médicas y RUC) y las resume en una vista. Descuenta siete consultas del cupo, así que se avisa antes de ejecutarla, y las listas largas quedan plegadas para poder ojearlas sin saturar la pantalla.'
+  },
+  {
+    fecha: '2026-09-09',
+    titulo: 'Botón de ayuda y campana de novedades',
+    descripcion:
+      'Un botón flotante de WhatsApp para escribir a soporte desde cualquier página, y una campana en la cabecera que abre esta lista de novedades sin salir de donde estás.'
+  },
+  {
+    fecha: '2026-09-09',
+    titulo: 'El contador de consultas ya no se descuadra',
+    descripcion:
+      'Cuando una consulta falla por causas ajenas a ti (una fuente oficial caída, un error nuestro), la consulta se devuelve al cupo y el contador se actualiza al instante, sin tener que recargar.'
+  },
+  {
     fecha: '2026-09-07',
     titulo: 'Multas por placa y consulta de citas médicas',
     descripcion:
