@@ -201,6 +201,7 @@ import MainFooter from '../ui/components/MainFooter.vue';
 
 // Secciones
 import IdentitySection from './dashboard/sections/IdentitySection.vue';
+import CompleteSection from './dashboard/sections/CompleteSection.vue';
 import RucSection from './dashboard/sections/RucSection.vue';
 import FullnameSection from './dashboard/sections/FullnameSection.vue';
 import LicenseSection from './dashboard/sections/LicenseSection.vue';
@@ -244,6 +245,8 @@ const sectionGroups = [
     items: [
       { key: 'identity', label: 'Buscar por cédula', titulo: 'Verificación de identidad',
         icon: ['M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'] },
+      { key: 'complete', label: 'Consulta completa', titulo: 'Consulta completa',
+        icon: ['M13 10V3L4 14h7v7l9-11h-7z'] },
       { key: 'fullname', label: 'Buscar por nombre', titulo: 'Búsqueda por nombre',
         icon: ['M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'] },
       { key: 'medical', label: 'Citas médicas', titulo: 'Citas médicas',
@@ -308,6 +311,7 @@ const currentSection = ref<string>(
 const activeComponent = computed(() => {
   const components: any = {
     identity: IdentitySection,
+    complete: CompleteSection,
     fullname: FullnameSection,
     ruc: RucSection,
     license: LicenseSection,

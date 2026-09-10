@@ -4,6 +4,7 @@ export const mapKey = (key: string): string => {
     primer_nombre: 'Primer Nombre', segundo_nombre: 'Segundo Nombre',
     primer_apellido: 'Primer Apellido', segundo_apellido: 'Segundo Apellido',
     nombre_completo: 'Nombre Completo', nombres: 'Nombres', apellidos: 'Apellidos',
+    nombre: 'Nombre', apellido: 'Apellido',
     fecha_nacimiento: 'Fecha de Nacimiento', lugar_nacimiento: 'Lugar de Nacimiento',
     estado_civil: 'Estado Civil', genero: 'Género', sexo: 'Sexo',
     nacionalidad: 'Nacionalidad', pais: 'País',

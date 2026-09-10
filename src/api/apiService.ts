@@ -69,6 +69,15 @@ export const apiService = {
     return fetchWithCache('/api/main/license/', { ci });
   },
 
+  /**
+   * Identidad, licencia, multas, denuncias, causas judiciales, citas médicas
+   * y RUC en una sola llamada. Cuesta 7 de cuota (una por fuente, haya datos
+   * o no): si no alcanza se rechaza con 429 sin descontar ninguna.
+   */
+  async getComplete(ci: string) {
+    return fetchWithCache('/api/main/complete/', { ci });
+  },
+
   async getCitation(ci: string) {
     return fetchWithCache('/api/main/citation/', { ci });
   },
