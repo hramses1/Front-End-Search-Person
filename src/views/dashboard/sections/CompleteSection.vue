@@ -37,30 +37,20 @@
     </template>
 
     <template #results="{ data }">
-      <div class="space-y-2xl">
-        <!-- RESUMEN: lo justo para leer de un vistazo, sin abrir cada fuente -->
-        <div>
-          <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mb-md">Resumen</p>
-
-          <p v-if="resumen(data)?.nombre || resumen(data)?.apellido" class="text-h5 font-medium text-[var(--text-primary)] mb-md">
-            {{ [resumen(data)?.nombre, resumen(data)?.apellido].filter(Boolean).join(' ') }}
+      <div class="space-y-xl">
+        <!--
+          Encabezado: el nombre y, en una sola linea, los datos que NO
+          aparecen en ningun bloque de abajo (vigencia y puntos de la
+          licencia, multas pendientes). Todo lo demas del resumen —
+          "tiene licencia", "tiene RUC"— ya lo dice el estado de cada
+          fuente, asi que no se repite aqui.
+        -->
+        <div v-if="nombreCompleto(data) || resumenFacts(data).length">
+          <p v-if="nombreCompleto(data)" class="text-h5 font-medium text-[var(--text-primary)]">
+            {{ nombreCompleto(data) }}
           </p>
-
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-sm">
-            <div v-for="fila in indicadoresResumen(data)" :key="fila.etiqueta" class="flex flex-col gap-xs">
-              <span class="text-overline uppercase tracking-[0.1em] text-[var(--text-muted)]">{{ fila.etiqueta }}</span>
-              <span
-                class="inline-flex items-center gap-xs text-caption font-medium px-sm py-xs rounded-full border w-fit"
-                :class="fila.clase"
-              >
-                {{ fila.texto }}
-              </span>
-            </div>
-          </div>
-
-          <p v-if="fuentesSinRespuesta(data) > 0" class="text-caption text-[var(--text-muted)] mt-md">
-            {{ fuentesSinRespuesta(data) }} {{ fuentesSinRespuesta(data) === 1 ? 'fuente no respondió' : 'fuentes no respondieron' }}.
-            Se marcan abajo con "No se pudo consultar".
+          <p v-if="resumenFacts(data).length" class="text-caption text-[var(--text-secondary)] mt-xs">
+            {{ resumenFacts(data).join(' · ') }}
           </p>
         </div>
 
@@ -81,14 +71,24 @@
 
           <!-- ok: la fuente respondio y hay datos -->
           <template v-if="estadoDe(data, f.key) === 'ok'">
-            <div v-if="Array.isArray(datosDe(data, f.key))" class="space-y-sm">
-              <div
-                v-for="(item, i) in (datosDe(data, f.key) as any[])" :key="i"
-                class="p-md rounded-base border border-[var(--border-color)] bg-[var(--input-bg)]/30"
-              >
-                <ResultCard v-for="(v, k) in item" :key="k" :label="mapKey(String(k))" :value="v" :type="detectType(String(k), v)" />
-              </div>
-            </div>
+            <!--
+              Resumen por estado (pendientes/pagadas… con su conteo):
+              ResultCard lo reconoce por la forma y lo pinta en chips,
+              compacto. Una lista larga de registros no se vuelca aqui:
+              solo el conteo, y el detalle se ve en su propia consulta.
+            -->
+            <ResultCard
+              v-if="esResumenConteo(datosDe(data, f.key))"
+              :label="f.label" :value="datosDe(data, f.key)"
+            />
+            <p
+              v-else-if="Array.isArray(datosDe(data, f.key))"
+              class="text-caption text-[var(--text-secondary)]"
+            >
+              {{ (datosDe(data, f.key) as any[]).length }}
+              {{ (datosDe(data, f.key) as any[]).length === 1 ? 'registro' : 'registros' }}.
+              Ábrelos en la consulta de {{ f.label.toLowerCase() }}.
+            </p>
             <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-x-10">
               <ResultCard
                 v-for="(v, k) in (datosDe(data, f.key) || {})" :key="k"
@@ -97,12 +97,7 @@
             </div>
           </template>
 
-          <!-- sin_datos: la fuente respondio y no hay nada. Aqui si se afirma. -->
-          <p v-else-if="estadoDe(data, f.key) === 'sin_datos'" class="text-caption text-[var(--text-secondary)]">
-            La fuente respondió: no hay {{ f.label.toLowerCase() }} registrada{{ f.plural ? 's' : '' }}.
-          </p>
-
-          <!-- no_disponible: la fuente no respondio. -->
+          <!-- La fuente no entrego datos: da igual el motivo. -->
           <p v-else class="text-caption text-[var(--text-secondary)]">
             No se encontraron datos.
           </p>
@@ -151,51 +146,47 @@ const datosDe = (data: any, key: string): any => data?.[key]?.datos;
 
 const resumen = (data: any) => data?.resumen;
 
-const fuentesSinRespuesta = (data: any): number => resumen(data)?.fuentes_sin_respuesta ?? 0;
-
 const badgeEstado = (estado: string | undefined) => {
   if (estado === 'ok') return { texto: 'Con datos', clase: 'bg-green-500/10 text-green-400 border-green-500/20' };
-  if (estado === 'sin_datos') return { texto: 'Sin datos', clase: 'border-[var(--border-color)] text-[var(--text-secondary)] opacity-80' };
-  // no_disponible, o cualquier valor que no reconozcamos: nunca "no tiene".
-  return { texto: 'No se pudo consultar', clase: 'bg-amber-500/10 text-amber-400 border-amber-500/20' };
+  // sin_datos y no_disponible se ven igual: si la fuente no entregó nada,
+  // al usuario le da lo mismo el motivo tecnico.
+  return { texto: 'Sin datos', clase: 'border-[var(--border-color)] text-[var(--text-secondary)] opacity-80' };
+};
+
+const nombreCompleto = (data: any): string => {
+  const r = resumen(data);
+  return r ? [r.nombre, r.apellido].filter(Boolean).join(' ') : '';
 };
 
 /*
- * Regla de pintado del backend: false es "no tiene", null es "no se pudo
- * consultar, reintenta". Mezclarlos le diria a alguien que esta limpio
- * cuando nadie lo comprobo, asi que cada uno tiene su propio color.
+ * Solo los datos del resumen que NO salen en ningun bloque: la vigencia y
+ * los puntos de la licencia, y las multas pendientes. Lo demas ("tiene
+ * licencia", "tiene RUC"…) ya lo dice el estado de cada fuente.
  */
-const indicadorBooleano = (valor: boolean | null | undefined) => {
-  if (valor === true) return { texto: 'Sí', clase: 'bg-green-500/10 text-green-400 border-green-500/20' };
-  if (valor === false) return { texto: 'No', clase: 'border-[var(--border-color)] text-[var(--text-secondary)]' };
-  return { texto: 'No se pudo verificar', clase: 'bg-amber-500/10 text-amber-400 border-amber-500/20' };
-};
-
-const indicadorNumero = (valor: number | null | undefined, singular: string, plural: string) => {
-  if (valor === null || valor === undefined) return { texto: 'No se pudo verificar', clase: 'bg-amber-500/10 text-amber-400 border-amber-500/20' };
-  return { texto: `${valor} ${valor === 1 ? singular : plural}`, clase: 'border-[var(--border-color)] text-[var(--text-primary)]' };
-};
-
-const indicadoresResumen = (data: any) => {
+const resumenFacts = (data: any): string[] => {
   const r = resumen(data);
   if (!r) return [];
-  const filas = [
-    { etiqueta: 'Licencia', ...indicadorBooleano(r.tiene_licencia) },
-    { etiqueta: 'Denuncias', ...indicadorBooleano(r.tiene_denuncias) },
-    { etiqueta: 'Causas judiciales', ...indicadorBooleano(r.tiene_causas_judiciales) },
-    { etiqueta: 'Citas médicas', ...indicadorBooleano(r.tiene_citas_medicas) },
-    { etiqueta: 'RUC', ...indicadorBooleano(r.tiene_ruc) },
-    { etiqueta: 'Multas pendientes', ...indicadorNumero(r.multas_pendientes, 'multa', 'multas') }
-  ];
-  // La vigencia de la licencia solo tiene sentido si de verdad tiene una.
+  const out: string[] = [];
   if (r.tiene_licencia) {
-    filas.splice(1, 0, { etiqueta: 'Licencia vigente', ...indicadorBooleano(r.licencia_vigente) });
-    if (typeof r.puntos === 'number') {
-      filas.splice(2, 0, { etiqueta: 'Puntos', texto: `${r.puntos} de 30`, clase: 'border-[var(--border-color)] text-[var(--text-primary)]' });
-    }
+    if (r.licencia_vigente === true) out.push('Licencia vigente');
+    else if (r.licencia_vigente === false) out.push('Licencia vencida');
+    if (typeof r.puntos === 'number') out.push(`${r.puntos}/30 puntos`);
   }
-  return filas;
+  if (typeof r.multas_pendientes === 'number') {
+    out.push(`${r.multas_pendientes} ${r.multas_pendientes === 1 ? 'multa pendiente' : 'multas pendientes'}`);
+  }
+  return out;
 };
+
+/*
+ * ¿Es el resumen por estado (array de {status/estado, count}) y no una
+ * lista de registros? Se mira la forma: cada item es un objeto con un
+ * numero dentro. ResultCard ya lo pinta en chips.
+ */
+const esResumenConteo = (valor: any): boolean =>
+  Array.isArray(valor) &&
+  valor.length > 0 &&
+  valor.every((o) => o && typeof o === 'object' && Object.values(o).some((v) => typeof v === 'number'));
 
 const executeSearch = async () => {
   const cleanCi = ci.value.trim();
