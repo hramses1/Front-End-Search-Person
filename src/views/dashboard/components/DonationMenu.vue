@@ -95,6 +95,23 @@
             100% Protegido
           </p>
       </div>
+
+      <!-- Segundo metodo: enlace de pago de Payphone, para quien prefiere
+           tarjeta local o transferencia en vez de PayPal. -->
+      <div class="flex items-center gap-sm text-[var(--text-muted)]" aria-hidden="true">
+        <span class="flex-1 h-px bg-[var(--border-color)]"></span>
+        <span class="text-caption font-bold uppercase tracking-wider">o</span>
+        <span class="flex-1 h-px bg-[var(--border-color)]"></span>
+      </div>
+
+      <a
+        href="https://ppls.me/wTdYLBIk8o4InVYkwu9Rsw"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="w-full py-md bg-[var(--accent-color)] text-[var(--accent-inverse)] font-extrabold text-body tracking-[0.1em] rounded-base shadow-lg transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-sm uppercase"
+      >
+        Pagar con Payphone
+      </a>
   </div>
 </div>
         </div>
