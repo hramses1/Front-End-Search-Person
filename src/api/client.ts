@@ -103,6 +103,8 @@ export type ApiErrorCode =
   | 'source_unavailable'
   | 'unauthorized'
   | 'forbidden'
+  | 'blocked_by_owner'
+  | 'conflict'
   | 'internal_error';
 
 export interface ApiErrorBody {
@@ -128,6 +130,9 @@ const CODE_MESSAGES: Record<string, string> = {
   source_unavailable: 'La fuente oficial no responde. No se descontó la consulta.',
   unauthorized: 'Tu sesión expiró. Vuelve a iniciar sesión.',
   forbidden: 'No tienes permiso para realizar esta operación.',
+  // 451: el titular pidió retirar este dato por la LOPDP. No es una avería.
+  blocked_by_owner: 'Este dato no se muestra: su titular solicitó retirarlo. No se descontó la consulta.',
+  conflict: 'La operación choca con el estado actual del recurso. Actualiza y vuelve a intentar.',
   internal_error: 'Ocurrió un error inesperado. Intenta de nuevo en unos minutos.'
 };
 
@@ -137,7 +142,9 @@ const STATUS_MESSAGES: Record<number, string> = {
   401: 'Tu sesión expiró. Vuelve a iniciar sesión.',
   403: 'No tienes permiso para realizar esta operación.',
   404: 'Sin resultados para esta búsqueda.',
+  409: 'La operación choca con el estado actual del recurso. Actualiza y vuelve a intentar.',
   422: 'Los datos enviados no tienen el formato esperado.',
+  451: 'Este dato no se muestra: su titular solicitó retirarlo. No se descontó la consulta.',
   429: 'Demasiadas peticiones. Espera un momento e intenta de nuevo.',
   500: 'Ocurrió un error inesperado. Intenta de nuevo en unos minutos.',
   502: 'La fuente oficial no responde. No se descontó la consulta.',
