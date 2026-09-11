@@ -213,6 +213,9 @@ import ProfileSection from './dashboard/sections/ProfileSection.vue';
 import HistorySection from './dashboard/sections/HistorySection.vue';
 import AccountSection from './dashboard/sections/AccountSection.vue';
 import MedicalSection from './dashboard/sections/MedicalSection.vue';
+import FatherNameSection from './dashboard/sections/FatherNameSection.vue';
+import MotherNameSection from './dashboard/sections/MotherNameSection.vue';
+import AlimonySection from './dashboard/sections/AlimonySection.vue';
 
 const router = useRouter();
 const { logout, isDark, toggleTheme, userPlan, userRole, userRequests, tokenLimit, isAdmin, userId, setPlanData, setQuota } = useAuth();
@@ -250,7 +253,11 @@ const sectionGroups = [
       { key: 'fullname', label: 'Buscar por nombre', titulo: 'Búsqueda por nombre',
         icon: ['M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'] },
       { key: 'medical', label: 'Citas médicas', titulo: 'Citas médicas',
-        icon: ['M4.5 12.75l6 6 9-13.5', 'M9 11l3 3L22 4'] }
+        icon: ['M4.5 12.75l6 6 9-13.5', 'M9 11l3 3L22 4'] },
+      { key: 'father', label: 'Nombre del padre', titulo: 'Nombre del padre',
+        icon: ['M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'] },
+      { key: 'mother', label: 'Nombre de la madre', titulo: 'Nombre de la madre',
+        icon: ['M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'] }
     ]
   },
   {
@@ -259,7 +266,9 @@ const sectionGroups = [
       { key: 'complaint', label: 'Denuncias', titulo: 'Registro de denuncias',
         icon: ['M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'] },
       { key: 'judgement', label: 'Juicios como demandante', titulo: 'Juicios como demandante',
-        icon: ['M12 3v18m0-18L6 6m6-3l6 3M4 9l3 8a4 4 0 01-6 0l3-8zm16 0l3 8a4 4 0 01-6 0l3-8z'] }
+        icon: ['M12 3v18m0-18L6 6m6-3l6 3M4 9l3 8a4 4 0 01-6 0l3-8zm16 0l3 8a4 4 0 01-6 0l3-8z'] },
+      { key: 'alimony', label: 'Pensión alimenticia', titulo: 'Pensión alimenticia',
+        icon: ['M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V6m0 2v8m0 0v2m0-2c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'] }
     ]
   },
   {
@@ -322,7 +331,10 @@ const activeComponent = computed(() => {
     profile: ProfileSection,
     history: HistorySection,
     account: AccountSection,
-    medical: MedicalSection
+    medical: MedicalSection,
+    father: FatherNameSection,
+    mother: MotherNameSection,
+    alimony: AlimonySection
   };
   return markRaw(components[currentSection.value] || IdentitySection);
 });

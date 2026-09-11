@@ -47,6 +47,14 @@ export const mapKey = (key: string): string => {
     paisfabricacion: 'País de Fabricación', anioultimopago: 'Año del Último Pago',
     camvcpn: 'CAMV/CPN', codigovehiculo: 'Código del Vehículo',
     estadoexoneracion: 'Estado de Exoneración',
+    // Padre, madre y pension alimenticia (Registro Civil / Funcion Judicial · SUPA).
+    nombrepadre: 'Nombre del Padre', nombremadre: 'Nombre de la Madre',
+    homonimos: 'Homónimos', nombrecompleto: 'Nombre Completo',
+    totaladeudado: 'Total Adeudado', pensiones: 'Pensiones',
+    numerocausa: 'Número de Causa', obligado: 'Obligado', beneficiario: 'Beneficiario',
+    pensionmensual: 'Pensión Mensual', mesesadeudados: 'Meses Adeudados',
+    totaldeuda: 'Total de Deuda', provincia: 'Provincia', canton: 'Cantón',
+    unidadjudicial: 'Unidad Judicial',
   };
   const k = key.toLowerCase();
   if (KEY_MAP[k]) return KEY_MAP[k];
@@ -94,6 +102,9 @@ export const detectType = (key: string, _value: any): 'badge' | 'alerta' | 'date
   // escueto que devuelven juicios y denuncias, y desde/hasta de licencia.
   if (k.includes('fecha') || k === 'desde' || k === 'hasta') return 'date';
   if (['valor', 'valor_a_pagar', 'monto', 'saldo', 'multa', 'remision', 'sancion', 'total_a_pagar'].some(c => k.includes(c))) return 'currency';
+  // Coincidencia exacta, no por subcadena: "mesesadeudados" contiene "deuda"
+  // como subcadena y no es un monto sino un conteo de meses.
+  if (['totaladeudado', 'pensionmensual', 'totaldeuda'].includes(k)) return 'currency';
   /*
    * Codigo: cedula, RUC, placa y demas identificadores que la persona
    * verifica caracter a caracter. Van en Courier Prime tabular (.dato),

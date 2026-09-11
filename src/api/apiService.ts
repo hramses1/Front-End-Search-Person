@@ -121,5 +121,23 @@ export const apiService = {
     return fetchWithCache('/api/main/medical_appointments/', { ci });
   },
 
+  /** Nombre del padre registrado en el Registro Civil. */
+  async getFatherName(ci: string) {
+    return fetchWithCache('/api/main/father-name/', { ci });
+  },
+
+  /** Nombre de la madre registrada en el Registro Civil. */
+  async getMotherName(ci: string) {
+    return fetchWithCache('/api/main/mother-name/', { ci });
+  },
+
+  /**
+   * Juicios de pensión alimenticia. TotalAdeudado es el total que publica
+   * la fuente (Función Judicial · SUPA), no una suma armada en el front.
+   */
+  async getAlimony(ci: string) {
+    return fetchWithCache('/api/main/alimony/', { ci });
+  },
+
   clearCache
 };
