@@ -145,6 +145,51 @@ export const authService = {
     return response.data;
   },
 
+  /** Listado de solicitudes de bloqueo LOPDP. Requiere token de admin. */
+  async getBloqueos(params: { estado?: string; page?: number; perPage?: number } = {}) {
+    const response = await apiClient.get('/api/lopdp/requests/', { params });
+    return response.data;
+  },
+
+  /**
+   * Resuelve una solicitud pendiente. Requiere token de admin.
+   * Con estado "activo" invalida la cache de bloqueo de inmediato.
+   */
+  async resolverBloqueo(id: string, datos: { estado: 'activo' | 'rechazado'; notas?: string }) {
+    const response = await apiClient.patch(`/api/lopdp/requests/${id}`, datos);
+    return response.data;
+  },
+
+  /**
+   * Crea un bloqueo directo, sin pasar por una solicitud pendiente.
+   * Requiere token de admin. Activo por defecto.
+   */
+  async crearBloqueo(datos: {
+    tipo: string; valor: string; estado?: 'activo' | 'rechazado' | 'pendiente';
+    solicitante_email?: string; prueba?: string; notas?: string
+  }) {
+    const response = await apiClient.post('/api/lopdp/requests/', datos);
+    return response.data;
+  },
+
+  /**
+   * Edicion parcial de un bloqueo. Requiere token de admin.
+   * Solo los campos que se manden se tocan.
+   */
+  async actualizarBloqueo(id: string, datos: {
+    tipo?: string; valor?: string; estado?: 'activo' | 'rechazado' | 'pendiente';
+    prueba?: string; notas?: string
+  }) {
+    const response = await apiClient.put(`/api/lopdp/requests/${id}`, datos);
+    return response.data;
+  },
+
+  /** Elimina un bloqueo. Requiere token de admin. */
+  async eliminarBloqueo(id: string) {
+    const response = await apiClient.delete(`/api/lopdp/requests/${id}`);
+    return response.data;
+  },
+
   /**
    * Demo publica de cedula: 5 al dia por IP, con los campos enmascarados
    * salvo nombre y cedula. No exige sesion.

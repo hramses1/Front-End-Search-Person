@@ -84,7 +84,7 @@
               </div>
 
               <button
-                @click="pestana === 'usuarios' ? fetchUsers() : fetchPlanes()"
+                @click="pestana === 'usuarios' ? fetchUsers() : (pestana === 'planes' ? fetchPlanes() : fetchBloqueos())"
                 :disabled="isLoading"
                 class="inline-flex items-center gap-sm min-h-[2.75rem] px-sm text-caption font-bold tracking-[0.14em] uppercase hover:text-[var(--accent-color)] transition-all disabled:text-[var(--text-muted)]"
               >
@@ -334,7 +334,7 @@
             </template>
 
             <!-- ══ Planes ══ -->
-            <template v-else>
+            <template v-else-if="pestana === 'planes'">
               <div class="p-lg space-y-md">
                 <div class="flex items-center justify-between gap-md">
                   <p class="text-caption text-[var(--text-muted)]">
@@ -366,6 +366,114 @@
                   <button type="button" class="btn-secondary" @click="fetchPlanes" :disabled="cargandoPlanes">
                     {{ cargandoPlanes ? 'Reintentando…' : 'Reintentar' }}
                   </button>
+                </div>
+              </div>
+            </template>
+
+            <!-- ══ Bloqueos LOPDP ══ -->
+            <template v-else>
+              <div class="p-lg space-y-lg">
+                <div class="flex flex-wrap items-center justify-between gap-md">
+                  <div class="flex items-center gap-sm">
+                    <button
+                      v-for="e in estadosBloqueo" :key="e.valor"
+                      type="button" class="chip"
+                      :aria-pressed="filtroEstadoBloqueo === e.valor"
+                      @click="filtroEstadoBloqueo = e.valor; fetchBloqueos()"
+                    >{{ e.texto }}</button>
+                  </div>
+                  <button type="button" class="btn-primary" @click="abrirBloqueo(null)">Bloquear identificador</button>
+                </div>
+
+                <p class="text-caption text-[var(--text-muted)]">
+                  {{ plural(bloqueos.length, 'solicitud') }}
+                </p>
+
+                <div v-if="errorBloqueos" class="rounded-base border border-amber-500/20 bg-amber-500/5 px-md py-md space-y-sm">
+                  <p class="text-caption leading-relaxed text-amber-500">{{ errorBloqueos }}</p>
+                  <button type="button" class="btn-secondary" @click="fetchBloqueos" :disabled="cargandoBloqueos">
+                    {{ cargandoBloqueos ? 'Reintentando…' : 'Reintentar' }}
+                  </button>
+                </div>
+
+                <EstadoVacio
+                  v-if="!cargandoBloqueos && bloqueos.length === 0 && !errorBloqueos"
+                  compacto
+                  titulo="No hay solicitudes"
+                  detalle="Cuando alguien pida bloquear un dato, o crees uno directo, aparecerá aquí."
+                />
+
+                <div v-else class="hidden md:block overflow-x-auto custom-scrollbar">
+                  <table class="w-full text-left border-collapse border-b border-[var(--border-color)]">
+                    <thead>
+                      <tr class="border-b border-[var(--border-color)] bg-black/5">
+                        <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Tipo</th>
+                        <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Valor</th>
+                        <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Estado</th>
+                        <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Solicitante</th>
+                        <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)] text-right">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[var(--border-color)]">
+                      <tr v-for="b in bloqueos" :key="b.id" class="hover:bg-white/[0.02] transition-colors">
+                        <td class="px-lg py-md text-body">{{ b.tipo }}</td>
+                        <td class="px-lg py-md text-body font-mono">{{ b.valor }}</td>
+                        <td class="px-lg py-md">
+                          <span
+                            class="text-caption font-medium px-md py-xs rounded-base border"
+                            :style="estiloEstadoBloqueo(b.estado)"
+                          >{{ b.estado }}</span>
+                        </td>
+                        <td class="px-lg py-md text-caption text-[var(--text-secondary)]">{{ b.solicitante_email || '—' }}</td>
+                        <td class="px-lg py-md text-right">
+                          <div class="flex justify-end gap-sm">
+                            <template v-if="b.estado === 'pendiente'">
+                              <button
+                                type="button" :disabled="resolviendoBloqueo === b.id"
+                                class="inline-flex items-center justify-center px-md min-h-[2.75rem] rounded-base text-caption font-medium border border-[var(--border-color)] hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-all"
+                                @click="resolverBloqueoRapido(b, 'activo')"
+                              >Aprobar</button>
+                              <button
+                                type="button" :disabled="resolviendoBloqueo === b.id"
+                                class="inline-flex items-center justify-center px-md min-h-[2.75rem] rounded-base text-caption font-medium border border-red-500/20 text-red-500/60 hover:text-red-500 hover:border-red-500/50 transition-all"
+                                @click="resolverBloqueoRapido(b, 'rechazado')"
+                              >Rechazar</button>
+                            </template>
+                            <button
+                              type="button"
+                              class="inline-flex items-center justify-center px-md min-h-[2.75rem] rounded-base text-caption font-medium border border-[var(--border-color)] hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-all"
+                              @click="abrirBloqueo(b)"
+                            >Editar</button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div v-if="bloqueos.length > 0" class="md:hidden divide-y divide-[var(--border-color)]">
+                  <article v-for="b in bloqueos" :key="b.id" class="p-lg space-y-md">
+                    <div class="flex items-center justify-between gap-md">
+                      <div>
+                        <p class="text-body font-bold">{{ b.tipo }} · {{ b.valor }}</p>
+                        <p class="text-caption text-[var(--text-secondary)]">{{ b.solicitante_email || '—' }}</p>
+                      </div>
+                      <span class="text-caption font-medium px-md py-xs rounded-base border" :style="estiloEstadoBloqueo(b.estado)">{{ b.estado }}</span>
+                    </div>
+                    <div class="flex flex-wrap gap-sm">
+                      <template v-if="b.estado === 'pendiente'">
+                        <button type="button" class="btn-secondary flex-1" :disabled="resolviendoBloqueo === b.id" @click="resolverBloqueoRapido(b, 'activo')">Aprobar</button>
+                        <button type="button" class="btn-base border flex-1" style="color: var(--estado-error); border-color: color-mix(in srgb, var(--estado-error) 30%, transparent);" :disabled="resolviendoBloqueo === b.id" @click="resolverBloqueoRapido(b, 'rechazado')">Rechazar</button>
+                      </template>
+                      <button type="button" class="btn-secondary flex-1" @click="abrirBloqueo(b)">Editar</button>
+                    </div>
+                  </article>
+                </div>
+
+                <div v-if="paginaBloqueos.totalPages > 1" class="flex items-center justify-center gap-md py-lg">
+                  <button type="button" class="btn-secondary" :disabled="paginaBloqueos.page <= 1 || cargandoBloqueos" @click="paginaBloqueos.page--; fetchBloqueos()">Anterior</button>
+                  <p class="text-caption text-[var(--text-muted)]">Página {{ paginaBloqueos.page }} de {{ paginaBloqueos.totalPages }}</p>
+                  <button type="button" class="btn-secondary" :disabled="paginaBloqueos.page >= paginaBloqueos.totalPages || cargandoBloqueos" @click="paginaBloqueos.page++; fetchBloqueos()">Siguiente</button>
                 </div>
               </div>
             </template>
@@ -485,6 +593,128 @@
                     @click="borrarPlan"
                   >
                     {{ borrandoPlan ? 'Eliminando…' : 'Sí, eliminar' }}
+                  </button>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </transition>
+      </Teleport>
+
+      <Teleport to="body">
+      <!-- Alta y edicion de bloqueos LOPDP -->
+      <transition
+        enter-active-class="duration-base ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100"
+        leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
+      >
+        <div v-if="bloqueoEditando !== null" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md" @click.self="cerrarBloqueo">
+          <div role="dialog" aria-modal="true" :aria-label="bloqueoEditando?.id ? 'Editar bloqueo' : 'Nuevo bloqueo'" class="w-full max-w-md hoja-card p-lg sm:p-xl animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
+            <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-xs">
+              {{ bloqueoEditando?.id ? 'Editar bloqueo' : 'Bloquear identificador' }}
+            </p>
+            <h3 class="text-h4 font-light tracking-tight mb-lg">
+              {{ bloqueoEditando?.id ? bloqueoEditando.valor : 'Crear un bloqueo directo' }}
+            </h3>
+
+            <form @submit.prevent="guardarBloqueo" class="space-y-lg">
+              <div class="space-y-sm">
+                <p class="text-overline font-bold uppercase tracking-[0.14em] text-[var(--text-muted)]">Tipo</p>
+                <div class="flex flex-wrap gap-sm">
+                  <button
+                    v-for="t in tiposBloqueo" :key="t.valor" type="button"
+                    class="chip" :aria-pressed="bloqueoForm.tipo === t.valor"
+                    @click="bloqueoForm.tipo = t.valor"
+                  >{{ t.texto }}</button>
+                </div>
+              </div>
+
+              <div class="space-y-sm">
+                <label for="bloqueo_valor" class="!static !translate-y-0 !scale-100 block text-overline font-bold uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                  Valor
+                </label>
+                <input
+                  id="bloqueo_valor" v-model.trim="bloqueoForm.valor" type="text" maxlength="20" required
+                  class="w-full min-h-[48px] bg-transparent border-b border-[var(--border-color)] py-sm outline-none font-body text-body text-[var(--text-primary)] transition-colors focus:border-[var(--accent-color)]"
+                />
+              </div>
+
+              <div class="space-y-sm">
+                <p class="text-overline font-bold uppercase tracking-[0.14em] text-[var(--text-muted)]">Estado</p>
+                <div class="flex flex-wrap gap-sm">
+                  <button
+                    v-for="e in estadosBloqueoForm" :key="e.valor" type="button"
+                    class="chip" :aria-pressed="bloqueoForm.estado === e.valor"
+                    @click="bloqueoForm.estado = e.valor"
+                  >{{ e.texto }}</button>
+                </div>
+                <p v-if="bloqueoForm.estado === 'activo'" class="text-overline text-[var(--text-muted)]">Surte efecto de inmediato, sin esperar el TTL de la caché.</p>
+              </div>
+
+              <div v-if="!bloqueoEditando?.id" class="space-y-sm">
+                <label for="bloqueo_email" class="!static !translate-y-0 !scale-100 block text-overline font-bold uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                  Correo del solicitante (opcional)
+                </label>
+                <input
+                  id="bloqueo_email" v-model.trim="bloqueoForm.solicitante_email" type="email" maxlength="120"
+                  class="w-full min-h-[48px] bg-transparent border-b border-[var(--border-color)] py-sm outline-none font-body text-body text-[var(--text-primary)] transition-colors focus:border-[var(--accent-color)]"
+                />
+              </div>
+
+              <div class="space-y-sm">
+                <label for="bloqueo_notas" class="!static !translate-y-0 !scale-100 block text-overline font-bold uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                  Notas (opcional)
+                </label>
+                <textarea
+                  id="bloqueo_notas" v-model.trim="bloqueoForm.notas" maxlength="500" rows="3"
+                  class="w-full px-md py-sm bg-transparent border border-[var(--border-color)] rounded-base outline-none font-body text-body text-[var(--text-primary)] transition-colors focus:border-[var(--accent-color)] resize-y"
+                ></textarea>
+              </div>
+
+              <p v-if="errorBloqueo" class="rounded-base border border-red-500/20 bg-red-500/5 px-md py-md text-caption leading-relaxed text-red-400">
+                {{ errorBloqueo }}
+              </p>
+
+              <div class="flex gap-md pt-sm">
+                <button type="button" class="flex-1 btn-secondary" @click="cerrarBloqueo">Cancelar</button>
+                <button type="submit" class="flex-1 btn-primary" :disabled="guardandoBloqueo">
+                  {{ guardandoBloqueo ? 'Guardando…' : (bloqueoEditando?.id ? 'Guardar cambios' : 'Crear bloqueo') }}
+                </button>
+              </div>
+            </form>
+
+            <!--
+              Eliminar en dos pasos, sin confirm() del navegador: mismo patron
+              que el borrado de planes.
+            -->
+            <div v-if="bloqueoEditando?.id" class="mt-lg pt-lg border-t border-[var(--border-color)]">
+              <template v-if="!confirmandoBorradoBloqueo">
+                <button
+                  type="button"
+                  class="text-caption font-bold tracking-[0.14em] uppercase transition-colors"
+                  style="color: var(--estado-error);"
+                  @click="confirmandoBorradoBloqueo = true"
+                >
+                  Eliminar bloqueo
+                </button>
+              </template>
+
+              <template v-else>
+                <p class="text-caption leading-relaxed mb-md" style="color: var(--estado-error);">
+                  Se eliminará el bloqueo de «{{ bloqueoEditando.valor }}» de forma permanente.
+                </p>
+                <div class="flex gap-md">
+                  <button type="button" class="flex-1 btn-secondary" @click="confirmandoBorradoBloqueo = false">
+                    Conservar
+                  </button>
+                  <button
+                    type="button"
+                    class="flex-1 btn-base border"
+                    style="color: var(--estado-error); border-color: var(--estado-error);"
+                    :disabled="borrandoBloqueo"
+                    @click="borrarBloqueo"
+                  >
+                    {{ borrandoBloqueo ? 'Eliminando…' : 'Sí, eliminar' }}
                   </button>
                 </div>
               </template>
@@ -650,10 +880,11 @@ const planes = ref<any[]>([]);
    de usuario. Con el CRUD publicado se puede administrar desde aqui
    en vez de entrar a PocketBase.
    ───────────────────────────────────────────────────────────── */
-const pestana = ref<'usuarios' | 'planes'>('usuarios');
+const pestana = ref<'usuarios' | 'planes' | 'bloqueos'>('usuarios');
 const pestanas = [
   { valor: 'usuarios' as const, texto: 'Usuarios' },
-  { valor: 'planes' as const, texto: 'Planes' }
+  { valor: 'planes' as const, texto: 'Planes' },
+  { valor: 'bloqueos' as const, texto: 'Bloqueos' }
 ];
 const planEditando = ref<any | null>(null);
 const planForm = reactive({ description: '', daily_limit: 0 });
@@ -685,13 +916,174 @@ const cerrarPlan = () => {
  * mientras dura: el modal vive en body, asi que sin esto la rueda seguia
  * moviendo la lista de fondo.
  */
-const hayModal = computed(() => planEditando.value !== null || showModal.value);
+const hayModal = computed(() => planEditando.value !== null || showModal.value || bloqueoEditando.value !== null);
 
 /** Escape cierra el modal que este abierto. */
 const alPulsarTecla = (e: KeyboardEvent) => {
   if (e.key !== 'Escape') return;
   if (planEditando.value !== null) cerrarPlan();
   else if (showModal.value) showModal.value = false;
+  else if (bloqueoEditando.value !== null) cerrarBloqueo();
+};
+
+/* ─── Gestion de bloqueos LOPDP ───────────────────────────────
+   Antes el panel no tenia nada de esto: solo existia el formulario
+   publico de solicitud. Mismo patron que el CRUD de planes.
+   ───────────────────────────────────────────────────────────── */
+const bloqueos = ref<any[]>([]);
+const cargandoBloqueos = ref(false);
+const errorBloqueos = ref('');
+const paginaBloqueos = reactive({ page: 1, perPage: 30, totalPages: 1 });
+
+const estadosBloqueo = [
+  { valor: '' as const, texto: 'Todos' },
+  { valor: 'pendiente' as const, texto: 'Pendientes' },
+  { valor: 'activo' as const, texto: 'Activos' },
+  { valor: 'rechazado' as const, texto: 'Rechazados' }
+];
+const filtroEstadoBloqueo = ref<'' | 'pendiente' | 'activo' | 'rechazado'>('pendiente');
+
+const tiposBloqueo: { valor: 'cedula' | 'placa' | 'ruc'; texto: string }[] = [
+  { valor: 'cedula', texto: 'Cédula' },
+  { valor: 'placa', texto: 'Placa' },
+  { valor: 'ruc', texto: 'RUC' }
+];
+const estadosBloqueoForm = [
+  { valor: 'activo' as const, texto: 'Activo' },
+  { valor: 'pendiente' as const, texto: 'Pendiente' },
+  { valor: 'rechazado' as const, texto: 'Rechazado' }
+];
+
+const estiloEstadoBloqueo = (estado: string) => {
+  const color = estado === 'activo' ? 'var(--estado-exito)'
+    : estado === 'rechazado' ? 'var(--estado-error)'
+    : 'var(--estado-aviso)';
+  return { color, borderColor: `color-mix(in srgb, ${color} 30%, transparent)` };
+};
+
+const fetchBloqueos = async () => {
+  cargandoBloqueos.value = true;
+  errorBloqueos.value = '';
+  try {
+    const data = await authService.getBloqueos({
+      ...(filtroEstadoBloqueo.value ? { estado: filtroEstadoBloqueo.value } : {}),
+      page: paginaBloqueos.page,
+      perPage: paginaBloqueos.perPage
+    });
+    const items = Array.isArray(data) ? data : (data?.items ?? []);
+    bloqueos.value = items;
+    paginaBloqueos.totalPages = data?.totalPages ?? 1;
+  } catch (error: any) {
+    bloqueos.value = [];
+    errorBloqueos.value = error?.message || 'No se pudo cargar el listado de bloqueos.';
+    console.error('[admin] fallo al cargar bloqueos:', {
+      status: error?.response?.status, body: error?.response?.data
+    });
+  } finally {
+    cargandoBloqueos.value = false;
+  }
+};
+
+const resolviendoBloqueo = ref<string | null>(null);
+
+const resolverBloqueoRapido = async (b: any, estado: 'activo' | 'rechazado') => {
+  resolviendoBloqueo.value = b.id;
+  try {
+    await authService.resolverBloqueo(b.id, { estado });
+    await fetchBloqueos();
+  } catch (error: any) {
+    errorBloqueos.value = error?.message || 'No se pudo resolver la solicitud.';
+    console.error('[admin] fallo al resolver bloqueo:', {
+      status: error?.response?.status, body: error?.response?.data
+    });
+  } finally {
+    resolviendoBloqueo.value = null;
+  }
+};
+
+const bloqueoEditando = ref<any | null>(null);
+const bloqueoForm = reactive({
+  tipo: 'cedula' as 'cedula' | 'placa' | 'ruc',
+  valor: '',
+  estado: 'activo' as 'activo' | 'pendiente' | 'rechazado',
+  solicitante_email: '',
+  notas: ''
+});
+const guardandoBloqueo = ref(false);
+const errorBloqueo = ref('');
+const confirmandoBorradoBloqueo = ref(false);
+const borrandoBloqueo = ref(false);
+
+const abrirBloqueo = (b: any | null) => {
+  bloqueoEditando.value = b ?? {};
+  bloqueoForm.tipo = b?.tipo ?? 'cedula';
+  bloqueoForm.valor = b?.valor ?? '';
+  bloqueoForm.estado = b?.estado ?? 'activo';
+  bloqueoForm.solicitante_email = b?.solicitante_email ?? '';
+  bloqueoForm.notas = b?.notas ?? '';
+  errorBloqueo.value = '';
+  confirmandoBorradoBloqueo.value = false;
+};
+
+const cerrarBloqueo = () => {
+  bloqueoEditando.value = null;
+  errorBloqueo.value = '';
+  confirmandoBorradoBloqueo.value = false;
+};
+
+const guardarBloqueo = async () => {
+  const valor = bloqueoForm.valor.trim();
+  if (valor.length < 3) { errorBloqueo.value = 'El valor debe tener al menos 3 caracteres.'; return; }
+
+  guardandoBloqueo.value = true;
+  errorBloqueo.value = '';
+  try {
+    if (bloqueoEditando.value?.id) {
+      await authService.actualizarBloqueo(bloqueoEditando.value.id, {
+        tipo: bloqueoForm.tipo,
+        valor,
+        estado: bloqueoForm.estado,
+        notas: bloqueoForm.notas || undefined
+      });
+    } else {
+      await authService.crearBloqueo({
+        tipo: bloqueoForm.tipo,
+        valor,
+        estado: bloqueoForm.estado,
+        solicitante_email: bloqueoForm.solicitante_email || undefined,
+        notas: bloqueoForm.notas || undefined
+      });
+    }
+    await fetchBloqueos();
+    cerrarBloqueo();
+  } catch (error: any) {
+    errorBloqueo.value = error?.message || 'No se pudo guardar el bloqueo.';
+    console.error('[admin] fallo al guardar bloqueo:', {
+      status: error?.response?.status, body: error?.response?.data
+    });
+  } finally {
+    guardandoBloqueo.value = false;
+  }
+};
+
+const borrarBloqueo = async () => {
+  if (!bloqueoEditando.value?.id) return;
+
+  borrandoBloqueo.value = true;
+  errorBloqueo.value = '';
+  try {
+    await authService.eliminarBloqueo(bloqueoEditando.value.id);
+    await fetchBloqueos();
+    cerrarBloqueo();
+  } catch (error: any) {
+    errorBloqueo.value = error?.message || 'No se pudo eliminar el bloqueo.';
+    confirmandoBorradoBloqueo.value = false;
+    console.error('[admin] fallo al eliminar bloqueo:', {
+      status: error?.response?.status, body: error?.response?.data
+    });
+  } finally {
+    borrandoBloqueo.value = false;
+  }
 };
 
 /**
@@ -977,6 +1369,13 @@ onMounted(async () => {
   // si se piden a la vez, la resta se haria contra 0 usuarios todavia.
   await fetchUsers();
   cargarResumenUsuarios();
+});
+
+// Carga perezosa: la pestaña de bloqueos no se pide hasta que se abre.
+watch(pestana, (v) => {
+  if (v === 'bloqueos' && bloqueos.value.length === 0 && !cargandoBloqueos.value) {
+    fetchBloqueos();
+  }
 });
 
 /**
