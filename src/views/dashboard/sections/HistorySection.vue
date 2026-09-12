@@ -103,7 +103,7 @@ import GraficaBarras from '../../../ui/components/GraficaBarras.vue';
 import type { PuntoDia } from '../../../types/graficas';
 import EstadoVacio from '../../../ui/components/EstadoVacio.vue';
 
-const { tokenLimit } = useAuth();
+const { tokenLimit, userRequests } = useAuth();
 
 const crudo = ref<any[]>([]);
 const pagina = ref(1);
@@ -181,10 +181,14 @@ const porDia = computed<PuntoDia[]>(() => {
     .map(([fecha, valor]) => ({ fecha, valor }));
 });
 
-const deHoy = computed(() => {
-  const hoy = new Date().toISOString().slice(0, 10);
-  return porDia.value.find(d => d.fecha === hoy)?.valor ?? 0;
-});
+/*
+ * NO se deriva de `porDia`: esa agrupacion solo ve la pagina de historial
+ * cargada (30 filas), asi que con mas de 30 consultas acumuladas la de hoy
+ * podia quedar fuera de esa pagina y mostrar 0 aun con consultas hechas.
+ * userRequests es la cuota real del dia, la misma que ya usa el encabezado
+ * del panel (userRequests / tokenLimit) y que el backend resetea a medianoche.
+ */
+const deHoy = computed(() => userRequests.value);
 
 const estadoCuota = computed<'neutro' | 'aviso' | 'malo'>(() => {
   if (cuotaSinTope.value) return 'neutro';
