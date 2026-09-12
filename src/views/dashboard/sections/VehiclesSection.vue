@@ -38,11 +38,13 @@
         <template v-else>
           <p class="text-overline uppercase tracking-[0.14em] text-[var(--text-muted)] mb-md">Detalle de las multas</p>
           <p v-if="errorCitaciones" class="text-caption text-[var(--estado-error)]">{{ errorCitaciones }}</p>
-          <div v-else-if="Array.isArray(citaciones) && citaciones.length" class="space-y-md">
-            <div v-for="(item, idx) in citaciones" :key="idx" class="p-md rounded-base border border-[var(--border-color)] bg-[var(--input-bg)]/30">
-              <ResultCard v-for="(v, k) in item" :key="k" :label="mapKey(String(k))" :value="v" :type="detectType(String(k), v)" />
-            </div>
-          </div>
+          <ListaConLimite v-else-if="Array.isArray(citaciones) && citaciones.length" :items="citaciones">
+            <template #default="{ item }">
+              <div class="p-md rounded-base border border-[var(--border-color)] bg-[var(--input-bg)]/30">
+                <ResultCard v-for="(v, k) in item" :key="k" :label="mapKey(String(k))" :value="v" :type="detectType(String(k), v)" />
+              </div>
+            </template>
+          </ListaConLimite>
           <p v-else class="text-caption text-[var(--text-muted)]">Sin multas registradas para esta placa.</p>
         </template>
       </div>
@@ -54,6 +56,7 @@
 import { ref, watch } from 'vue';
 import ServiceSection from '../components/ServiceSection.vue';
 import ResultCard from '../../../components/ResultCard.vue';
+import ListaConLimite from '../../../components/ListaConLimite.vue';
 import { apiService } from '../../../api/apiService';
 import { mapKey, detectType } from '../../../utils/formatters';
 

@@ -7,11 +7,13 @@
       </div>
     </template>
     <template #results="{ data }">
-      <div v-if="Array.isArray(data)" class="space-y-md">
-        <div v-for="(item, idx) in data" :key="idx" class="p-md rounded-base border border-[var(--border-color)] bg-[var(--input-bg)]/30">
-          <ResultCard v-for="(v, k) in item" :key="k" :label="mapKey(String(k))" :value="v" :type="detectType(String(k), v)" />
-        </div>
-      </div>
+      <ListaConLimite v-if="Array.isArray(data)" :items="data">
+        <template #default="{ item }">
+          <div class="p-md rounded-base border border-[var(--border-color)] bg-[var(--input-bg)]/30">
+            <ResultCard v-for="(v, k) in item" :key="k" :label="mapKey(String(k))" :value="v" :type="detectType(String(k), v)" />
+          </div>
+        </template>
+      </ListaConLimite>
       <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-x-10">
         <ResultCard v-for="(v, k) in data" :key="k" :label="mapKey(String(k))" :value="v" :type="detectType(String(k), v)" />
       </div>
@@ -23,6 +25,7 @@
 import { ref } from 'vue';
 import ServiceSection from '../components/ServiceSection.vue';
 import ResultCard from '../../../components/ResultCard.vue';
+import ListaConLimite from '../../../components/ListaConLimite.vue';
 import { apiService } from '../../../api/apiService';
 import { mapKey, detectType } from '../../../utils/formatters';
 

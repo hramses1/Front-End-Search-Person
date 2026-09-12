@@ -106,14 +106,13 @@
                 {{ (datosDe(data, f.key) as any[]).length === 1 ? 'registro' : 'registros' }})
               </button>
 
-              <div v-if="abierto(f.key)" class="mt-md space-y-sm">
-                <div
-                  v-for="(item, i) in (datosDe(data, f.key) as any[])" :key="i"
-                  class="p-md rounded-base border border-[var(--border-color)] bg-[var(--input-bg)]/30"
-                >
-                  <ResultCard v-for="(v, k) in item" :key="k" :label="mapKey(String(k))" :value="v" :type="detectType(String(k), v)" />
-                </div>
-              </div>
+              <ListaConLimite v-if="abierto(f.key)" class="mt-md" :items="(datosDe(data, f.key) as any[])">
+                <template #default="{ item }">
+                  <div class="p-md rounded-base border border-[var(--border-color)] bg-[var(--input-bg)]/30">
+                    <ResultCard v-for="(v, k) in item" :key="k" :label="mapKey(String(k))" :value="v" :type="detectType(String(k), v)" />
+                  </div>
+                </template>
+              </ListaConLimite>
             </div>
             <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-x-10">
               <ResultCard
@@ -137,6 +136,7 @@
 import { ref } from 'vue';
 import ServiceSection from '../components/ServiceSection.vue';
 import ResultCard from '../../../components/ResultCard.vue';
+import ListaConLimite from '../../../components/ListaConLimite.vue';
 import { apiService } from '../../../api/apiService';
 import { mapKey, detectType } from '../../../utils/formatters';
 

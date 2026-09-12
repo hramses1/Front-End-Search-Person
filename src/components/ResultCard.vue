@@ -32,49 +32,51 @@
       </div>
 
       <!-- Array de objetos – muestra sub-tarjetas compactas -->
-      <div v-else-if="isArrayOfObjects" class="mt-sm space-y-sm">
-        <div
-          v-for="(item, i) in (value as any[])"
-          :key="i"
-          class="rounded-base border p-md shadow-sm"
-          style="background-color: var(--card-bg); border-color: var(--border-color);"
-        >
-          <div v-for="(v, k) in item" :key="k" class="py-sm border-b last:border-0" style="border-color: var(--border-color);">
-            
-            <!-- Contenido HTML o Textos muy largos (bloque completo) -->
-            <template v-if="isHtmlContent(v)">
-              <div class="flex flex-col gap-sm">
-                <span class="text-[var(--text-secondary)] uppercase tracking-wider text-caption" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
-                <div 
-                  class="prose prose-sm prose-invert max-w-none w-full opacity-90 p-md rounded-base bg-black/20 border border-white/10 overflow-x-auto"
-                  v-html="sanitizeHTML(String(v))"
-                ></div>
-              </div>
-            </template>
-            
-            <!-- Si el sub-valor es a su vez un objeto o array, llamamos a ResultCard recursivamente -->
-            <template v-else-if="v !== null && typeof v === 'object'">
-              <ResultCard :label="formatKey(String(k))" :value="v" />
-            </template>
+      <div v-else-if="isArrayOfObjects" class="mt-sm">
+        <ListaConLimite :items="(value as any[])">
+          <template #default="{ item }">
+            <div
+              class="rounded-base border p-md shadow-sm"
+              style="background-color: var(--card-bg); border-color: var(--border-color);"
+            >
+              <div v-for="(v, k) in item" :key="k" class="py-sm border-b last:border-0" style="border-color: var(--border-color);">
 
-            <!-- Textos puros de longitud mediana/larga (bloque completo) -->
-            <template v-else-if="typeof v === 'string' && v.length > 50">
-              <div class="flex flex-col gap-xs">
-                <span class="text-[var(--text-secondary)] uppercase tracking-wider text-caption" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
-                <span class="font-medium text-body whitespace-pre-line leading-relaxed pb-xs" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v }}</span>
-              </div>
-            </template>
+                <!-- Contenido HTML o Textos muy largos (bloque completo) -->
+                <template v-if="isHtmlContent(v)">
+                  <div class="flex flex-col gap-sm">
+                    <span class="text-[var(--text-secondary)] uppercase tracking-wider text-caption" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
+                    <div
+                      class="prose prose-sm prose-invert max-w-none w-full opacity-90 p-md rounded-base bg-black/20 border border-white/10 overflow-x-auto"
+                      v-html="sanitizeHTML(String(v))"
+                    ></div>
+                  </div>
+                </template>
 
-            <!-- Datos cortos (en línea) -->
-            <template v-else>
-              <div class="flex justify-between items-start gap-md text-body">
-                <span class="text-[var(--text-secondary)] uppercase tracking-wider text-caption" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
-                <span class="font-medium text-right break-words max-w-[60%]" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v ?? '—' }}</span>
-              </div>
-            </template>
+                <!-- Si el sub-valor es a su vez un objeto o array, llamamos a ResultCard recursivamente -->
+                <template v-else-if="v !== null && typeof v === 'object'">
+                  <ResultCard :label="formatKey(String(k))" :value="v" />
+                </template>
 
-          </div>
-        </div>
+                <!-- Textos puros de longitud mediana/larga (bloque completo) -->
+                <template v-else-if="typeof v === 'string' && v.length > 50">
+                  <div class="flex flex-col gap-xs">
+                    <span class="text-[var(--text-secondary)] uppercase tracking-wider text-caption" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
+                    <span class="font-medium text-body whitespace-pre-line leading-relaxed pb-xs" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v }}</span>
+                  </div>
+                </template>
+
+                <!-- Datos cortos (en línea) -->
+                <template v-else>
+                  <div class="flex justify-between items-start gap-md text-body">
+                    <span class="text-[var(--text-secondary)] uppercase tracking-wider text-caption" style="color: var(--text-secondary);">{{ formatKey(String(k)) }}</span>
+                    <span class="font-medium text-right break-words max-w-[60%]" :style="{ color: isBadgeValue(String(v)) ? badgeColor(String(v)) : 'var(--text-primary)' }">{{ v ?? '—' }}</span>
+                  </div>
+                </template>
+
+              </div>
+            </div>
+          </template>
+        </ListaConLimite>
       </div>
 
       <!-- Array de primitivos -->
@@ -171,6 +173,7 @@
 import { computed } from 'vue';
 import DOMPurify from 'dompurify';
 import { mapKey, esEstadoConocido, etiquetaEstado, esEstadoAbierto } from '../utils/formatters';
+import ListaConLimite from './ListaConLimite.vue';
 
 const props = defineProps<{
   label: string;
