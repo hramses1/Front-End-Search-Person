@@ -233,6 +233,43 @@ export const CONSULTAS: Consulta[] = [
     ]
   },
   {
+    slug: 'consultar-titulos-universitarios',
+    seccion: 'degrees',
+    grupo: 'Identidad',
+    titulo: 'Títulos universitarios',
+    tituloSeo: 'Consultar títulos universitarios por cédula (SENESCYT)',
+    descripcion:
+      'Consulta los títulos universitarios registrados en SENESCYT a partir del número de cédula: universidad, nivel y fecha de registro.',
+    encabezado: 'Consultar títulos universitarios por cédula',
+    entradilla:
+      'Escribe la cédula del titular y obtén sus títulos registrados en SENESCYT, con universidad, nivel y fecha de registro.',
+    texto: 'Títulos universitarios registrados en SENESCYT, con universidad, nivel y fecha de registro.',
+    requisito: 'El número de cédula del titular, diez dígitos.',
+    fuente: 'SENESCYT',
+    ejemplo: [
+      ['Titular', 'LOPEZ TORRES MARIA FERNANDA'],
+      ['Universidad', 'UNIVERSIDAD DE GUAYAQUIL'],
+      ['Nombre del título', 'INGENIERA EN SISTEMAS COMPUTACIONALES'],
+      ['Nivel', 'TERCER NIVEL'],
+      ['Tipo', 'GRADO'],
+      ['Fecha de registro', '14/09/2018']
+    ],
+    faq: [
+      {
+        p: '¿Aparecen los títulos de posgrado?',
+        r: 'Sí. La consulta devuelve todos los títulos que SENESCYT tenga registrados para esa cédula, sin distinguir de antemano el nivel.'
+      },
+      {
+        p: '¿Qué pasa si la persona no tiene títulos registrados?',
+        r: 'La consulta devuelve que no hay títulos para esa cédula, sin descontar la cuota diaria.'
+      },
+      {
+        p: '¿Sirve para verificar un título ante un empleador?',
+        r: 'Sirve para consultar lo que SENESCYT tiene registrado. La verificación oficial para trámites se hace directamente en el portal de SENESCYT.'
+      }
+    ]
+  },
+  {
     slug: 'consultar-denuncias',
     seccion: 'complaint',
     grupo: 'Judicial',

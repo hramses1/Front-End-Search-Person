@@ -139,5 +139,10 @@ export const apiService = {
     return fetchWithCache('/api/main/alimony/', { ci });
   },
 
+  /** Títulos universitarios registrados en SENESCYT. */
+  async getDegrees(ci: string) {
+    return fetchWithCache('/api/main/degrees/', { ci });
+  },
+
   clearCache
 };

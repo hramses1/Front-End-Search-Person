@@ -55,6 +55,10 @@ export const mapKey = (key: string): string => {
     pensionmensual: 'Pensión Mensual', mesesadeudados: 'Meses Adeudados',
     totaldeuda: 'Total de Deuda', provincia: 'Provincia', canton: 'Cantón',
     unidadjudicial: 'Unidad Judicial',
+    // Titulos universitarios (SENESCYT).
+    titular: 'Titular', titulos: 'Títulos', universidad: 'Universidad',
+    nombretitulo: 'Nombre del Título', nivel: 'Nivel',
+    nroregistro: 'N.º de Registro', fecharegistro: 'Fecha de Registro',
   };
   const k = key.toLowerCase();
   if (KEY_MAP[k]) return KEY_MAP[k];
