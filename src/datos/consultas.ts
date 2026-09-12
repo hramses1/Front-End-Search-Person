@@ -167,6 +167,72 @@ export const CONSULTAS: Consulta[] = [
     ]
   },
   {
+    slug: 'consultar-nombre-padre',
+    seccion: 'father',
+    grupo: 'Identidad',
+    titulo: 'Nombre del padre',
+    tituloSeo: 'Consultar el nombre del padre por cédula en Ecuador',
+    descripcion:
+      'Consulta el nombre del padre registrado en el Registro Civil de Ecuador a partir del número de cédula del hijo o de la hija.',
+    encabezado: 'Consultar el nombre del padre por cédula',
+    entradilla:
+      'Escribe la cédula del hijo o de la hija y obtén el nombre del padre tal como consta en el Registro Civil.',
+    texto: 'El nombre del padre registrado en el Registro Civil, a partir de la cédula del hijo o la hija.',
+    requisito: 'El número de cédula del hijo o de la hija, diez dígitos.',
+    fuente: 'Registro Civil',
+    ejemplo: [
+      ['Nombre del padre', 'ARISMENDI NUÑEZ HECTOR JOSE'],
+      ['Homónimos', '0']
+    ],
+    faq: [
+      {
+        p: '¿Qué pasa si hay más de una persona con el mismo nombre?',
+        r: 'La respuesta trae una lista de homónimos, con su propia cédula, para distinguir de cuál se trata. Casi siempre llega vacía.'
+      },
+      {
+        p: '¿Qué pasa si el padre no está registrado?',
+        r: 'La consulta devuelve que no hay padre registrado para esa cédula, sin descontar la cuota diaria.'
+      },
+      {
+        p: '¿Sirve para cualquier cédula, no solo la propia?',
+        r: 'Sí, siempre que el titular de la cédula consultada no la haya bloqueado ejerciendo su derecho de oposición por la LOPDP.'
+      }
+    ]
+  },
+  {
+    slug: 'consultar-nombre-madre',
+    seccion: 'mother',
+    grupo: 'Identidad',
+    titulo: 'Nombre de la madre',
+    tituloSeo: 'Consultar el nombre de la madre por cédula en Ecuador',
+    descripcion:
+      'Consulta el nombre de la madre registrada en el Registro Civil de Ecuador a partir del número de cédula del hijo o de la hija.',
+    encabezado: 'Consultar el nombre de la madre por cédula',
+    entradilla:
+      'Escribe la cédula del hijo o de la hija y obtén el nombre de la madre tal como consta en el Registro Civil.',
+    texto: 'El nombre de la madre registrada en el Registro Civil, a partir de la cédula del hijo o la hija.',
+    requisito: 'El número de cédula del hijo o de la hija, diez dígitos.',
+    fuente: 'Registro Civil',
+    ejemplo: [
+      ['Nombre de la madre', 'ASQUI DE ARISMENDI TANNIA PAULETTE'],
+      ['Homónimos', '0']
+    ],
+    faq: [
+      {
+        p: '¿Qué pasa si hay más de una persona con el mismo nombre?',
+        r: 'La respuesta trae una lista de homónimos, con su propia cédula, para distinguir de cuál se trata. Casi siempre llega vacía.'
+      },
+      {
+        p: '¿Qué pasa si la madre no está registrada?',
+        r: 'La consulta devuelve que no hay madre registrada para esa cédula, sin descontar la cuota diaria.'
+      },
+      {
+        p: '¿Sirve para cualquier cédula, no solo la propia?',
+        r: 'Sí, siempre que el titular de la cédula consultada no la haya bloqueado ejerciendo su derecho de oposición por la LOPDP.'
+      }
+    ]
+  },
+  {
     slug: 'consultar-denuncias',
     seccion: 'complaint',
     grupo: 'Judicial',
@@ -235,6 +301,44 @@ export const CONSULTAS: Consulta[] = [
       {
         p: '¿Incluye el estado del proceso?',
         r: 'Incluye lo que publica la Función Judicial: número de juicio, materia, tipo de acción, fecha y judicatura. El detalle del trámite se consulta en la propia judicatura.'
+      }
+    ]
+  },
+  {
+    slug: 'consultar-pension-alimenticia',
+    seccion: 'alimony',
+    grupo: 'Judicial',
+    titulo: 'Pensión alimenticia',
+    tituloSeo: 'Consultar juicios de pensión alimenticia por cédula',
+    descripcion:
+      'Consulta juicios de pensión alimenticia en Ecuador: pensión mensual, meses adeudados y total de la deuda, según la Función Judicial.',
+    encabezado: 'Consultar juicios de pensión alimenticia',
+    entradilla:
+      'Juicios de pensión alimenticia asociados a una cédula, con el total adeudado, la pensión mensual y los meses pendientes de cada causa.',
+    texto: 'Juicios de pensión alimenticia con el total adeudado y los meses pendientes de cada causa.',
+    requisito: 'El número de cédula del obligado o del beneficiario, diez dígitos.',
+    fuente: 'Función Judicial · SUPA',
+    ejemplo: [
+      ['Total adeudado', '4.820,40'],
+      ['N.º de causa', '0101-11845'],
+      ['Pensión mensual', '73,95'],
+      ['Meses adeudados', '65'],
+      ['Provincia', 'AZUAY'],
+      ['Cantón', 'CUENCA'],
+      ['Unidad judicial', 'UNIDAD JUDICIAL DE FAMILIA, MUJER, NIÑEZ Y ADOLESCENCIA DE CUENCA']
+    ],
+    faq: [
+      {
+        p: '¿El total adeudado se calcula sumando los juicios?',
+        r: 'No. Es el total que publica la propia fuente para cada causa; cuando hay más de un juicio, ese dato manda sobre cualquier suma armada aparte.'
+      },
+      {
+        p: '¿Sirve tanto para el obligado como para el beneficiario?',
+        r: 'Sí. La cédula puede ser la de quien debe la pensión o la de quien la recibe; la consulta devuelve las causas donde aparece cualquiera de los dos.'
+      },
+      {
+        p: '¿Qué pasa si no hay juicios de pensión alimenticia?',
+        r: 'La consulta devuelve que no hay causas registradas para esa cédula, sin descontar la cuota diaria.'
       }
     ]
   },

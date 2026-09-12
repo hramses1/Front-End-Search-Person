@@ -215,7 +215,7 @@ import { RouterLink } from 'vue-router';
 import { useRouter } from 'vue-router';
 import BrandMark from '../ui/components/BrandMark.vue';
 import { useAuth } from '../composables/useAuth';
-import { GRUPOS, porGrupo } from '../datos/consultas';
+import { GRUPOS, porGrupo, CONSULTAS } from '../datos/consultas';
 import { GUIAS } from '../datos/guias';
 import DemoCedula from '../ui/components/DemoCedula.vue';
 import NotificacionNovedades from '../ui/components/NotificacionNovedades.vue';
@@ -232,7 +232,10 @@ const guiasDestacadas = GUIAS.slice(0, 4);
 
 const ventajasPrecio = [
   'Cuota diaria que se renueva cada medianoche',
-  'Acceso a las ocho consultas del catálogo',
+  // Cantidad derivada del catalogo: con el numero fijo a mano, sumar una
+  // consulta mas (como paso con padre, madre y pension alimenticia) lo
+  // dejaba desactualizado sin que nada avisara.
+  `Acceso a las ${CONSULTAS.length} consultas del catálogo`,
   'Sin tarjeta de crédito ni permanencia',
   'Sin saldo que recargar ni consultas que caduquen'
 ];
@@ -244,7 +247,7 @@ const ventajas = [
   },
   {
     titulo: 'Fuentes oficiales',
-    texto: 'Registro Civil, SRI y ANT. No se inventa ni se completa nada por nuestra cuenta.'
+    texto: 'Registro Civil, SRI, ANT y Función Judicial. No se inventa ni se completa nada por nuestra cuenta.'
   },
   {
     titulo: 'Un solo lugar',
