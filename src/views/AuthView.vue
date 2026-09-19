@@ -751,8 +751,12 @@ const handleSubmit = async () => {
       successMsg.value = 'Cuenta creada. Ya puedes entrar con tu usuario y contraseña.';
     }
   } catch (error: any) {
-    const detail = error.response?.data?.detail;
-    
+    // Solo se usa si es texto: en otros codigos (422 con detail.fields, o el
+    // {used, limit, reset_at} de quota_exceeded) es un objeto, y volcarlo tal
+    // cual en el mensaje lo mostraria como JSON crudo en pantalla.
+    const detailRaw = error.response?.data?.detail;
+    const detail = typeof detailRaw === 'string' ? detailRaw : undefined;
+
     if (detail === 'Has superado el límite de peticiones') {
       errorMsg.value = 'ACCESO DENEGADO: Has agotado tu límite de peticiones. Por favor, contacta con soporte para renovar tu plan.';
     } else if (isLogin.value && error.response?.status === 401) {

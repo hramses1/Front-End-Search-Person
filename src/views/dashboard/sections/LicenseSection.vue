@@ -41,7 +41,7 @@ const executeSearch = async () => {
   } catch (err: any) {
     // La cuota se reembolsa en algunos errores (400/451/500/503); hay que releerla.
     emit('refresh-stats');
-    errorMsg.value = err.response?.data?.detail || 'No se hallaron licencias.';
+    errorMsg.value = err.message || 'No se hallaron licencias.';
   } finally {
     isLoading.value = false;
   }

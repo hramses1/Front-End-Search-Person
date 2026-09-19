@@ -41,7 +41,7 @@ const executeSearch = async () => {
   } catch (err: any) {
     // La cuota se reembolsa en algunos errores (400/451/500/503); hay que releerla.
     emit('refresh-stats');
-    errorMsg.value = err.response?.data?.detail || 'Sin madre registrada para esta cédula.';
+    errorMsg.value = err.message || 'Sin madre registrada para esta cédula.';
   } finally {
     isLoading.value = false;
   }

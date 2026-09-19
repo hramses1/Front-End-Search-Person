@@ -446,7 +446,7 @@ const executeSearch = async () => {
   } catch (err: any) {
     // La cuota se reembolsa en algunos errores (400/451/500/503); hay que releerla.
     emit('refresh-stats');
-    errorMsg.value = err.response?.data?.detail || 'No se encontraron registros.';
+    errorMsg.value = err.message || 'No se encontraron registros.';
     rawResults.value = [];
   } finally {
     isLoading.value = false;
