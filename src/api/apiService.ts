@@ -139,5 +139,10 @@ export const apiService = {
     return fetchWithCache('/api/main/alimony/', { ci });
   },
 
+  /** Estado civil y cónyuge, si aplica. Conyuge llega null cuando no corresponde. */
+  async getCivilStatus(ci: string) {
+    return fetchWithCache('/api/main/civil-status/', { ci });
+  },
+
   clearCache
 };

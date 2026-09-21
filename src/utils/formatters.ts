@@ -55,6 +55,7 @@ export const mapKey = (key: string): string => {
     pensionmensual: 'Pensión Mensual', mesesadeudados: 'Meses Adeudados',
     totaldeuda: 'Total de Deuda', provincia: 'Provincia', canton: 'Cantón',
     unidadjudicial: 'Unidad Judicial',
+    conyuge: 'Cónyuge',
   };
   const k = key.toLowerCase();
   if (KEY_MAP[k]) return KEY_MAP[k];

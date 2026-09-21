@@ -216,6 +216,7 @@ import MedicalSection from './dashboard/sections/MedicalSection.vue';
 import FatherNameSection from './dashboard/sections/FatherNameSection.vue';
 import MotherNameSection from './dashboard/sections/MotherNameSection.vue';
 import AlimonySection from './dashboard/sections/AlimonySection.vue';
+import CivilStatusSection from './dashboard/sections/CivilStatusSection.vue';
 
 const router = useRouter();
 const { logout, isDark, toggleTheme, userPlan, userRole, userRequests, tokenLimit, isAdmin, userId, setPlanData, setQuota } = useAuth();
@@ -257,7 +258,9 @@ const sectionGroups = [
       { key: 'father', label: 'Nombre del padre', titulo: 'Nombre del padre',
         icon: ['M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'] },
       { key: 'mother', label: 'Nombre de la madre', titulo: 'Nombre de la madre',
-        icon: ['M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'] }
+        icon: ['M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'] },
+      { key: 'civilstatus', label: 'Estado civil', titulo: 'Estado civil',
+        icon: ['M16.5 3.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5zM7.5 15.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5zM14.834 8.628L9.166 15.372'] }
     ]
   },
   {
@@ -334,7 +337,8 @@ const activeComponent = computed(() => {
     medical: MedicalSection,
     father: FatherNameSection,
     mother: MotherNameSection,
-    alimony: AlimonySection
+    alimony: AlimonySection,
+    civilstatus: CivilStatusSection
   };
   return markRaw(components[currentSection.value] || IdentitySection);
 });

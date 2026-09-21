@@ -9,17 +9,18 @@
   >
     <template #fields>
       <!--
-        Alerta fija, no solo en el error: esta consulta cuesta 9 (una por
+        Alerta fija, no solo en el error: esta consulta cuesta 10 (una por
         fuente, haya datos o no) y se descuentan de una vez antes de saber
-        si el usuario de verdad quería las nueve. Tiene que verse ANTES de
+        si el usuario de verdad quería las diez. Tiene que verse ANTES de
         pulsar el botón, no despues de gastarlas.
       -->
       <div class="rounded-base border border-amber-500/20 bg-amber-500/5 p-md flex items-start gap-sm" role="note">
         <span class="text-body leading-none mt-xs" aria-hidden="true">⚠️</span>
         <p class="text-caption leading-relaxed" style="color: var(--estado-aviso);">
-          Esta consulta revisa <strong>9 fuentes a la vez</strong> (identidad, padre,
-          madre, licencia, multas, denuncias, causas judiciales, citas médicas y RUC)
-          y descuenta <strong>9 consultas</strong> de tu cupo, haya datos o no en cada una.
+          Esta consulta revisa <strong>10 fuentes a la vez</strong> (identidad, padre,
+          madre, estado civil, licencia, multas, denuncias, causas judiciales,
+          citas médicas y RUC) y descuenta <strong>10 consultas</strong> de tu cupo,
+          haya datos o no en cada una.
         </p>
       </div>
 
@@ -153,11 +154,12 @@ const alternar = (key: string) => {
 
 const emit = defineEmits(['refresh-stats']);
 
-/** Las nueve fuentes que trae /api/main/complete/, en el orden en que se pintan. */
+/** Las diez fuentes que trae /api/main/complete/, en el orden en que se pintan. */
 const FUENTES = [
   { key: 'identidad', label: 'Identidad', fuente: 'Registro Civil', plural: false },
   { key: 'padre', label: 'Nombre del padre', fuente: 'Registro Civil', plural: false },
   { key: 'madre', label: 'Nombre de la madre', fuente: 'Registro Civil', plural: false },
+  { key: 'estado_civil', label: 'Estado civil', fuente: 'Registro Civil', plural: false },
   { key: 'licencia', label: 'Licencia de conducir', fuente: 'ANT', plural: false },
   { key: 'multas', label: 'Multas e infracciones', fuente: 'ANT y municipios', plural: true },
   { key: 'denuncias', label: 'Denuncias', fuente: 'Función Judicial', plural: true },

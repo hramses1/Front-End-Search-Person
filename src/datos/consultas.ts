@@ -233,6 +233,41 @@ export const CONSULTAS: Consulta[] = [
     ]
   },
   {
+    slug: 'consultar-estado-civil',
+    seccion: 'civilstatus',
+    grupo: 'Identidad',
+    titulo: 'Estado civil',
+    tituloSeo: 'Consultar estado civil por cédula en Ecuador',
+    descripcion:
+      'Consulta el estado civil y el nombre del cónyuge registrados en el Registro Civil de Ecuador a partir del número de cédula.',
+    encabezado: 'Consultar el estado civil por cédula',
+    entradilla:
+      'Escribe la cédula y obtén el estado civil registrado, con el nombre del cónyuge cuando aplica.',
+    texto: 'Estado civil registrado en el Registro Civil, con el nombre del cónyuge cuando aplica.',
+    requisito: 'El número de cédula del titular, diez dígitos.',
+    fuente: 'Registro Civil',
+    ejemplo: [
+      ['Nombre completo', 'JIMENEZ AQUIÑO SEGUNDO GONZALO'],
+      ['Cédula', '1719735092'],
+      ['Estado civil', 'CASADO'],
+      ['Cónyuge', 'GUANOTASIG GALVAN ANA MARIA']
+    ],
+    faq: [
+      {
+        p: '¿Siempre aparece el nombre del cónyuge?',
+        r: 'No. Solo cuando el estado civil registrado lo tiene: si la persona es soltera, viuda o su estado no lleva cónyuge, ese campo llega vacío.'
+      },
+      {
+        p: '¿Qué pasa si la persona no tiene estado civil registrado?',
+        r: 'La consulta devuelve que no hay registro para esa cédula, sin descontar la cuota diaria.'
+      },
+      {
+        p: '¿Sirve para cualquier cédula, no solo la propia?',
+        r: 'Sí, siempre que el titular de la cédula consultada no la haya bloqueado ejerciendo su derecho de oposición por la LOPDP.'
+      }
+    ]
+  },
+  {
     slug: 'consultar-denuncias',
     seccion: 'complaint',
     grupo: 'Judicial',
