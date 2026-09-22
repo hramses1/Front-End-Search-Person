@@ -4,23 +4,22 @@
     :isLoading="isLoading"
     :errorMsg="errorMsg"
     :results="resultsData"
-    @search="executeSearch"
+    @search="abrirConfirmacion"
     @copy="copyResults"
   >
     <template #fields>
       <!--
-        Alerta fija, no solo en el error: esta consulta cuesta 10 (una por
-        fuente, haya datos o no) y se descuentan de una vez antes de saber
-        si el usuario de verdad quería las diez. Tiene que verse ANTES de
-        pulsar el botón, no despues de gastarlas.
+        Alerta fija, no solo en el error: esta consulta cuesta una por fuente
+        (haya datos o no) y se descuentan de una vez. El texto se arma desde
+        FUENTES.length para no volver a quedar desactualizado: cada vez que
+        se sumo o quito una fuente (7 -> 10 -> 9 -> 10) este numero, escrito
+        a mano, se quedaba atras en algun sitio.
       -->
       <div class="rounded-base border border-amber-500/20 bg-amber-500/5 p-md flex items-start gap-sm" role="note">
         <span class="text-body leading-none mt-xs" aria-hidden="true">⚠️</span>
         <p class="text-caption leading-relaxed" style="color: var(--estado-aviso);">
-          Esta consulta revisa <strong>10 fuentes a la vez</strong> (identidad, padre,
-          madre, estado civil, licencia, multas, denuncias, causas judiciales,
-          citas médicas y RUC) y descuenta <strong>10 consultas</strong> de tu cupo,
-          haya datos o no en cada una.
+          Esta consulta revisa <strong>{{ COSTO }} fuentes a la vez</strong> ({{ listaFuentesTexto }})
+          y descuenta <strong>{{ COSTO }} consultas</strong> de tu cupo, haya datos o no en cada una.
         </p>
       </div>
 
@@ -130,15 +129,63 @@
       </div>
     </template>
   </ServiceSection>
+
+  <Teleport to="body">
+    <transition
+      enter-active-class="duration-base ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100"
+      leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
+    >
+      <div
+        v-if="mostrarConfirmacion"
+        class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md"
+        @click.self="cancelarConsulta"
+      >
+        <div role="dialog" aria-modal="true" aria-label="Confirmar consulta completa" class="w-full max-w-md hoja-card p-lg sm:p-xl animate-fade-in shadow-2xl">
+          <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-xs">Antes de continuar</p>
+          <h3 class="text-h4 font-light tracking-tight mb-lg">
+            Esta consulta descuenta {{ COSTO }} de tu cupo
+          </h3>
+
+          <p class="text-body leading-relaxed text-[var(--text-secondary)] mb-lg">
+            Revisa {{ COSTO }} fuentes a la vez ({{ listaFuentesTexto }}), haya datos o no en
+            cada una. Si solo te interesa una, puedes consultarla por separado y gastar una sola.
+          </p>
+
+          <p
+            class="rounded-base border px-md py-md text-caption leading-relaxed mb-lg"
+            :class="alcanzaCuota ? 'border-[var(--border-color)] text-[var(--text-secondary)]' : 'border-red-500/20 bg-red-500/5 text-red-400'"
+          >
+            <template v-if="cuotaSinTope">Tu plan no tiene tope diario.</template>
+            <template v-else-if="alcanzaCuota">Te quedan {{ restantes }} de {{ tokenLimit }}.</template>
+            <template v-else>
+              Te quedan {{ restantes }} de {{ tokenLimit }}: no alcanza para las {{ COSTO }} que necesita esta consulta.
+            </template>
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-md">
+            <button type="button" class="flex-1 btn-secondary" @click="cancelarConsulta">
+              Mejor una a una
+            </button>
+            <button v-if="alcanzaCuota" type="button" class="flex-1 btn-primary" @click="confirmarConsulta">
+              Sí, consultar todo
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import ServiceSection from '../components/ServiceSection.vue';
 import ResultCard from '../../../components/ResultCard.vue';
 import ListaConLimite from '../../../components/ListaConLimite.vue';
 import { apiService } from '../../../api/apiService';
 import { mapKey, detectType } from '../../../utils/formatters';
+import { useAuth } from '../../../composables/useAuth';
+
+const { userRequests, tokenLimit } = useAuth();
 
 const ci = ref('');
 const isLoading = ref(false);
@@ -167,6 +214,29 @@ const FUENTES = [
   { key: 'citas_medicas', label: 'Citas médicas', fuente: 'Sistema Público de Salud', plural: true },
   { key: 'ruc', label: 'RUC', fuente: 'SRI', plural: false }
 ];
+
+/** Cuanto cuesta esta consulta: una por fuente. Deriva de FUENTES, no a mano. */
+const COSTO = FUENTES.length;
+
+/** "identidad, nombre del padre, ... y RUC", para el aviso y el modal. */
+const listaFuentesTexto = (() => {
+  const nombres = FUENTES.map((f) => (f.label === 'RUC' ? 'RUC' : f.label.toLowerCase()));
+  return nombres.length <= 1
+    ? nombres.join('')
+    : `${nombres.slice(0, -1).join(', ')} y ${nombres[nombres.length - 1]}`;
+})();
+
+/*
+ * Cuenta regresiva del cupo, para avisar ANTES de gastarlo en vez de solo
+ * despues de un 429. Mismo sentinela de "sin tope" que usa el resto del
+ * panel (AdminView, DashboardView).
+ */
+const LIMITE_SIN_TOPE = 1_000_000;
+const cuotaSinTope = computed(() => tokenLimit.value >= LIMITE_SIN_TOPE);
+const restantes = computed(() => Math.max(0, tokenLimit.value - userRequests.value));
+const alcanzaCuota = computed(() => cuotaSinTope.value || restantes.value >= COSTO);
+
+const mostrarConfirmacion = ref(false);
 
 /*
  * Cada una de las siete claves de la respuesta trae { estado, datos }. El
@@ -224,7 +294,12 @@ const esResumenConteo = (valor: any): boolean =>
   valor.length > 0 &&
   valor.every((o) => o && typeof o === 'object' && Object.values(o).some((v) => typeof v === 'number'));
 
-const executeSearch = async () => {
+/**
+ * Valida la cedula y abre el modal de confirmacion; no gasta cupo por si
+ * sola. La consulta de verdad corre en `ejecutar`, tras el "Si, consultar
+ * todo" del modal.
+ */
+const abrirConfirmacion = () => {
   const cleanCi = ci.value.trim();
 
   if (!cleanCi) {
@@ -235,6 +310,20 @@ const executeSearch = async () => {
     errorMsg.value = 'La cédula debe tener exactamente 10 dígitos.';
     return;
   }
+
+  errorMsg.value = '';
+  mostrarConfirmacion.value = true;
+};
+
+const cancelarConsulta = () => { mostrarConfirmacion.value = false; };
+
+const confirmarConsulta = () => {
+  mostrarConfirmacion.value = false;
+  ejecutar();
+};
+
+const ejecutar = async () => {
+  const cleanCi = ci.value.trim();
 
   isLoading.value = true;
   errorMsg.value = '';
