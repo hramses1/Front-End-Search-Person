@@ -357,6 +357,28 @@ export const authService = {
     return response.data;
   },
 
+  /**
+   * Tabla de usuarios con estadisticas agregadas (peticiones y ultima
+   * actividad). Requiere token de admin.
+   *
+   * `sample_complete: false` significa que la ventana de peticiones que
+   * agrega el backend se corto por volumen: total_requests/last_activity
+   * son parciales, no el numero real.
+   */
+  async getAdminUsers(page = 1, perPage = 50) {
+    const response = await apiClient.get('/api/admin/users/', { params: { page, perPage } });
+    return response.data;
+  },
+
+  /**
+   * Serie diaria de altas y peticiones. Requiere token de admin.
+   * `days` tope 90, igual que el backend.
+   */
+  async getAdminDaily(days = 30) {
+    const response = await apiClient.get('/api/admin/daily/', { params: { days } });
+    return response.data;
+  },
+
   /** Métodos de autenticación disponibles (ej. Google OAuth2). */
   async getAuthMethods() {
     const response = await apiClient.get('/api/main/auth-methods/');
