@@ -564,6 +564,7 @@
                           <tr class="border-b border-[var(--border-color)] bg-black/5">
                             <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Usuario</th>
                             <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Plan</th>
+                            <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Estado</th>
                             <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Peticiones</th>
                             <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Última actividad</th>
                             <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Registro</th>
@@ -581,7 +582,21 @@
                               <span class="text-caption font-medium px-md py-xs rounded-base border border-[var(--border-color)]">
                                 {{ descripcionPlan(u.plan) }}
                               </span>
-                              <span v-if="u.disable" class="ml-sm text-caption font-bold uppercase tracking-[0.1em]" style="color: var(--estado-error);">Deshabilitado</span>
+                            </td>
+                            <td class="px-lg py-md">
+                              <div class="flex items-center gap-sm">
+                                <span class="text-caption font-medium px-sm py-xs rounded-base border" :style="estiloEstadoUsuario(!!u.disable)">
+                                  {{ u.disable ? 'Deshabilitado' : 'Activo' }}
+                                </span>
+                                <button
+                                  type="button"
+                                  class="text-caption font-medium text-[var(--accent-color)] hover:underline disabled:opacity-50 disabled:no-underline"
+                                  :disabled="cambiandoEstadoId === u.id"
+                                  @click="alternarEstadoUsuario(u)"
+                                >
+                                  {{ cambiandoEstadoId === u.id ? '…' : (u.disable ? 'Activar' : 'Desactivar') }}
+                                </button>
+                              </div>
                             </td>
                             <td class="px-lg py-md text-body font-black tabular-nums">{{ u.total_requests ?? 0 }}</td>
                             <td class="px-lg py-md text-caption text-[var(--text-secondary)] tabular-nums">{{ fechaCorta(u.last_activity) }}</td>
@@ -599,10 +614,19 @@
                         </div>
                         <div class="flex flex-wrap items-center gap-sm text-caption text-[var(--text-secondary)]">
                           <span class="px-sm py-xs rounded-base border border-[var(--border-color)]">{{ descripcionPlan(u.plan) }}</span>
-                          <span v-if="u.disable" class="font-bold uppercase tracking-[0.1em]" style="color: var(--estado-error);">Deshabilitado</span>
+                          <span class="px-sm py-xs rounded-base border" :style="estiloEstadoUsuario(!!u.disable)">
+                            {{ u.disable ? 'Deshabilitado' : 'Activo' }}
+                          </span>
                           <span>{{ u.total_requests ?? 0 }} peticiones</span>
                           <span>Última: {{ fechaCorta(u.last_activity) }}</span>
                         </div>
+                        <button
+                          type="button" class="btn-secondary w-full"
+                          :disabled="cambiandoEstadoId === u.id"
+                          @click="alternarEstadoUsuario(u)"
+                        >
+                          {{ cambiandoEstadoId === u.id ? 'Cambiando…' : (u.disable ? 'Activar' : 'Desactivar') }}
+                        </button>
                       </article>
                     </div>
 
@@ -1316,6 +1340,37 @@ const fetchEstadisticasUsuarios = async (page = 1) => {
 /** El plan llega como id; se resuelve contra el catalogo ya cargado para la pestana de Usuarios. */
 const descripcionPlan = (planId: string): string =>
   planes.value.find((pl: any) => pl.id === planId)?.description || planId || 'SIN PLAN';
+
+const estiloEstadoUsuario = (deshabilitado: boolean) => {
+  const color = deshabilitado ? 'var(--estado-error)' : 'var(--estado-exito)';
+  return { color, borderColor: `color-mix(in srgb, ${color} 30%, transparent)` };
+};
+
+/** Activa o desactiva un usuario, releyendo la pagina actual para reflejar el cambio. */
+const cambiandoEstadoId = ref<string | null>(null);
+
+const alternarEstadoUsuario = async (u: any) => {
+  const nuevoDisable = !u.disable;
+  const nombre = u.username || u.name || u.id;
+  const confirmado = confirm(
+    nuevoDisable ? `¿Deshabilitar a ${nombre}? No podrá iniciar sesión.` : `¿Reactivar a ${nombre}?`
+  );
+  if (!confirmado) return;
+
+  cambiandoEstadoId.value = u.id;
+  errorEstadisticasUsuarios.value = '';
+  try {
+    await authService.patchUser(u.id, { disable: nuevoDisable });
+    await fetchEstadisticasUsuarios(estadisticasUsuarios.page);
+  } catch (error: any) {
+    errorEstadisticasUsuarios.value = error?.message || 'No se pudo cambiar el estado del usuario.';
+    console.error('[admin] fallo al cambiar estado de usuario:', {
+      status: error?.response?.status, body: error?.response?.data
+    });
+  } finally {
+    cambiandoEstadoId.value = null;
+  }
+};
 
 const refrescarEstadisticas = () => {
   fetchDiario();
