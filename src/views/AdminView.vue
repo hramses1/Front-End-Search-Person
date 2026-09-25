@@ -84,7 +84,7 @@
               </div>
 
               <button
-                @click="pestana === 'usuarios' ? fetchUsers() : (pestana === 'planes' ? fetchPlanes() : (pestana === 'bloqueos' ? fetchBloqueos() : refrescarEstadisticas()))"
+                @click="pestana === 'usuarios' ? (fetchUsers(), cargarEstadoDisponibilidad()) : (pestana === 'planes' ? fetchPlanes() : (pestana === 'bloqueos' ? fetchBloqueos() : refrescarEstadisticas()))"
                 :disabled="isLoading"
                 class="inline-flex items-center gap-sm min-h-[2.75rem] px-sm text-caption font-bold tracking-[0.14em] uppercase hover:text-[var(--accent-color)] transition-all disabled:text-[var(--text-muted)]"
               >
@@ -208,6 +208,14 @@
                     {{ userItem.planDescription || 'SIN PLAN' }}
                   </span>
 
+                  <span
+                    v-if="disablePorId[userItem.userId] !== undefined"
+                    class="text-caption font-medium px-sm py-xs rounded-base border"
+                    :style="estiloEstadoUsuario(!!disablePorId[userItem.userId])"
+                  >
+                    {{ disablePorId[userItem.userId] ? 'Deshabilitado' : 'Activo' }}
+                  </span>
+
                   <span class="text-caption text-[var(--text-muted)]">
                     {{ userItem.consumoDesconocido ? 'Sin dato' : (sinTope(userItem.limite) ? `${userItem.number_requests ?? 0} · sin límite` : `${userItem.number_requests ?? 0} / ${userItem.limite}`) }}
                   </span>
@@ -219,6 +227,14 @@
 
                 <div class="flex flex-wrap gap-sm">
                   <button type="button" class="btn-secondary flex-1" @click="openEditModal(userItem)">Editar</button>
+                  <button
+                    v-if="disablePorId[userItem.userId] !== undefined"
+                    type="button" class="btn-secondary flex-1"
+                    :disabled="cambiandoEstadoId === userItem.userId"
+                    @click="alternarEstadoUsuarioLista(userItem)"
+                  >
+                    {{ cambiandoEstadoId === userItem.userId ? 'Cambiando…' : (disablePorId[userItem.userId] ? 'Activar' : 'Desactivar') }}
+                  </button>
                   <button
                     type="button"
                     class="btn-base border flex-1"
@@ -238,6 +254,7 @@
                   <tr class="border-b border-[var(--border-color)] bg-black/5">
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Usuario</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Plan</th>
+                    <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Estado</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Peticiones</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Registro</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)] text-right">Acciones</th>
@@ -245,7 +262,7 @@
                 </thead>
                 <tbody class="divide-y divide-[var(--border-color)]">
                   <tr v-if="!isLoading && usuariosFiltrados.length === 0">
-                    <td colspan="5">
+                    <td colspan="6">
                       <EstadoVacio
                         compacto
                         :titulo="vacioTitulo"
@@ -278,6 +295,16 @@
                       </span>
                     </td>
                     <td class="px-lg py-md">
+                      <span
+                        v-if="disablePorId[userItem.userId] !== undefined"
+                        class="text-caption font-medium px-sm py-xs rounded-base border"
+                        :style="estiloEstadoUsuario(!!disablePorId[userItem.userId])"
+                      >
+                        {{ disablePorId[userItem.userId] ? 'Deshabilitado' : 'Activo' }}
+                      </span>
+                      <span v-else class="text-caption text-[var(--text-muted)]">—</span>
+                    </td>
+                    <td class="px-lg py-md">
                       <div class="flex items-center gap-md">
                         <div class="flex flex-col min-w-[60px]">
                             <span
@@ -308,7 +335,15 @@
                         >
                           Editar
                         </button>
-                        <button 
+                        <button
+                          v-if="disablePorId[userItem.userId] !== undefined"
+                          @click="alternarEstadoUsuarioLista(userItem)"
+                          :disabled="cambiandoEstadoId === userItem.userId"
+                          class="inline-flex items-center justify-center px-md min-h-[2.75rem] rounded-base text-caption font-medium border border-[var(--border-color)] hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-all"
+                        >
+                          {{ cambiandoEstadoId === userItem.userId ? '…' : (disablePorId[userItem.userId] ? 'Activar' : 'Desactivar') }}
+                        </button>
+                        <button
                           @click="resetRequests(userItem)"
                           :disabled="userItem.number_requests === 0 || isResetting === userItem.userId"
                           class="inline-flex items-center justify-center px-md min-h-[2.75rem] rounded-base text-caption font-medium border border-red-500/20 text-red-500/60 hover:text-red-500 hover:border-red-500/50 transition-all disabled:text-[var(--text-muted)]"
@@ -1035,6 +1070,8 @@ const { logout, userName, isAdmin } = useAuth();
 const isSidebarOpen = ref(false);
 const users = ref<any[]>([]);
 const isLoading = ref(false);
+/** Estado activo/deshabilitado por userId, cruzado desde /api/admin/users/. */
+const disablePorId = ref<Record<string, boolean>>({});
 const showModal = ref(false);
 const modalError = ref('');
 const planes = ref<any[]>([]);
@@ -1660,6 +1697,7 @@ onMounted(async () => {
   // si se piden a la vez, la resta se haria contra 0 usuarios todavia.
   await fetchUsers();
   cargarResumenUsuarios();
+  cargarEstadoDisponibilidad();
 });
 
 // Carga perezosa: bloqueos y estadisticas no se piden hasta que se abren.
@@ -1795,6 +1833,25 @@ const fetchUsers = async () => {
   }
 };
 
+/**
+ * Estado activo/deshabilitado de cada usuario, cruzado por id contra
+ * /api/admin/users/: get_all_users_plans no lo trae. Es un dato adicional
+ * (aparece el boton solo si se pudo leer); si falla, la tabla sigue
+ * funcionando igual sin la columna de estado.
+ */
+const cargarEstadoDisponibilidad = async () => {
+  try {
+    const data = await authService.getAllAdminUsers();
+    disablePorId.value = Object.fromEntries(
+      (data?.items ?? []).map((u: any) => [u.id, !!u.disable])
+    );
+  } catch (error: any) {
+    console.error('[admin] no se pudo leer el estado activo/deshabilitado:', {
+      status: error?.response?.status, body: error?.response?.data
+    });
+  }
+};
+
 const handleLogout = () => {
   logout();
   router.push('/auth');
@@ -1830,6 +1887,33 @@ const resetRequests = async (userItem: any) => {
     console.error('Error al resetear peticiones:', error);
   } finally {
     isResetting.value = null;
+  }
+};
+
+/**
+ * Activa o desactiva un usuario desde la pestaña de Usuarios. Actualiza
+ * disablePorId de forma optimista en vez de releer todo el listado.
+ */
+const alternarEstadoUsuarioLista = async (userItem: any) => {
+  const id = userItem.userId;
+  const nuevoDisable = !disablePorId.value[id];
+  const confirmado = confirm(
+    nuevoDisable ? `¿Deshabilitar a ${userItem.userName}? No podrá iniciar sesión.` : `¿Reactivar a ${userItem.userName}?`
+  );
+  if (!confirmado) return;
+
+  cambiandoEstadoId.value = id;
+  loadError.value = '';
+  try {
+    await authService.patchUser(id, { disable: nuevoDisable });
+    disablePorId.value = { ...disablePorId.value, [id]: nuevoDisable };
+  } catch (error: any) {
+    loadError.value = error?.message || 'No se pudo cambiar el estado del usuario.';
+    console.error('[admin] fallo al cambiar estado de usuario:', {
+      status: error?.response?.status, body: error?.response?.data
+    });
+  } finally {
+    cambiandoEstadoId.value = null;
   }
 };
 

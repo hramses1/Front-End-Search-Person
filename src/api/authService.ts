@@ -371,6 +371,33 @@ export const authService = {
   },
 
   /**
+   * Todos los usuarios de /api/admin/users/, sin paginar del lado del
+   * llamador. Mismo patron que getAllUsersPlans: la primera pagina dice
+   * cuantas hay y el resto se pide en paralelo. Se usa solo para cruzar el
+   * estado activo/deshabilitado contra la pestaña de Usuarios, que lista a
+   * todos de una vez.
+   */
+  async getAllAdminUsers(perPage = 200, maxPaginas = 25) {
+    const pedir = async (page: number) => {
+      const r = await apiClient.get('/api/admin/users/', { params: { page, perPage } });
+      return r.data;
+    };
+
+    const primera = await pedir(1);
+    const totalPaginas = Math.min(primera?.totalPages ?? 1, maxPaginas);
+    if (totalPaginas <= 1) return primera;
+
+    const resto = await Promise.all(
+      Array.from({ length: totalPaginas - 1 }, (_, i) => pedir(i + 2))
+    );
+
+    return {
+      ...primera,
+      items: [primera?.items ?? [], ...resto.map((r) => r?.items ?? [])].flat()
+    };
+  },
+
+  /**
    * Serie diaria de altas y peticiones. Requiere token de admin.
    * `days` tope 90, igual que el backend.
    */
