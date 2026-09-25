@@ -103,19 +103,9 @@
                   </span>
                 </td>
                 <td class="px-lg py-md">
-                  <div class="flex items-center gap-sm">
-                    <span class="text-caption font-medium px-sm py-xs rounded-base border" :style="estiloEstadoUsuario(!!u.disable)">
-                      {{ u.disable ? 'Deshabilitado' : 'Activo' }}
-                    </span>
-                    <button
-                      type="button"
-                      class="inline-flex items-center justify-center min-h-[2.75rem] px-sm text-caption font-medium text-[var(--accent-color)] hover:underline disabled:opacity-50 disabled:no-underline"
-                      :disabled="cambiandoEstadoId === u.id"
-                      @click="alternarEstadoUsuario(u)"
-                    >
-                      {{ cambiandoEstadoId === u.id ? '…' : (u.disable ? 'Activar' : 'Desactivar') }}
-                    </button>
-                  </div>
+                  <span class="text-caption font-medium px-sm py-xs rounded-base border" :style="estiloEstadoUsuario(!!u.disable)">
+                    {{ u.disable ? 'Deshabilitado' : 'Activo' }}
+                  </span>
                 </td>
                 <td class="px-lg py-md text-body font-black tabular-nums">{{ u.total_requests ?? 0 }}</td>
                 <td class="px-lg py-md text-caption text-[var(--text-secondary)] tabular-nums">{{ fechaCorta(u.last_activity) }}</td>
@@ -139,13 +129,6 @@
               <span>{{ u.total_requests ?? 0 }} peticiones</span>
               <span>Última: {{ fechaCorta(u.last_activity) }}</span>
             </div>
-            <button
-              type="button" class="btn-secondary w-full"
-              :disabled="cambiandoEstadoId === u.id"
-              @click="alternarEstadoUsuario(u)"
-            >
-              {{ cambiandoEstadoId === u.id ? 'Cambiando…' : (u.disable ? 'Activar' : 'Desactivar') }}
-            </button>
           </article>
         </div>
 
@@ -274,32 +257,6 @@ const descripcionPlan = (planId: string): string =>
 const estiloEstadoUsuario = (deshabilitado: boolean) => {
   const color = deshabilitado ? 'var(--estado-error)' : 'var(--estado-exito)';
   return { color, borderColor: `color-mix(in srgb, ${color} 30%, transparent)` };
-};
-
-/** Activa o desactiva un usuario, releyendo la pagina actual para reflejar el cambio. */
-const cambiandoEstadoId = ref<string | null>(null);
-
-const alternarEstadoUsuario = async (u: any) => {
-  const nuevoDisable = !u.disable;
-  const nombre = u.username || u.name || u.id;
-  const confirmado = confirm(
-    nuevoDisable ? `¿Deshabilitar a ${nombre}? No podrá iniciar sesión.` : `¿Reactivar a ${nombre}?`
-  );
-  if (!confirmado) return;
-
-  cambiandoEstadoId.value = u.id;
-  errorEstadisticasUsuarios.value = '';
-  try {
-    await authService.patchUser(u.id, { disable: nuevoDisable });
-    await fetchEstadisticasUsuarios(estadisticasUsuarios.page);
-  } catch (error: any) {
-    errorEstadisticasUsuarios.value = error?.message || 'No se pudo cambiar el estado del usuario.';
-    console.error('[admin] fallo al cambiar estado de usuario:', {
-      status: error?.response?.status, body: error?.response?.data
-    });
-  } finally {
-    cambiandoEstadoId.value = null;
-  }
 };
 
 /** Fecha legible; PocketBase entrega ISO o "YYYY-MM-DD HH:mm:ss.SSSZ". */
