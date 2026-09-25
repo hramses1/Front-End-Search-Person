@@ -177,7 +177,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import ServiceSection from '../components/ServiceSection.vue';
 import ResultCard from '../../../components/ResultCard.vue';
 import ListaConLimite from '../../../components/ListaConLimite.vue';
@@ -321,6 +321,13 @@ const confirmarConsulta = () => {
   mostrarConfirmacion.value = false;
   ejecutar();
 };
+
+/** Escape cierra el modal de confirmacion, como cualquier dialogo del panel. */
+const alPulsarTecla = (e: KeyboardEvent) => {
+  if (e.key === 'Escape' && mostrarConfirmacion.value) cancelarConsulta();
+};
+onMounted(() => window.addEventListener('keydown', alPulsarTecla));
+onUnmounted(() => window.removeEventListener('keydown', alPulsarTecla));
 
 const ejecutar = async () => {
   const cleanCi = ci.value.trim();
