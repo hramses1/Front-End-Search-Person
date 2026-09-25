@@ -64,6 +64,19 @@ export const mapKey = (key: string): string => {
   return key.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/_/g, ' ').trim();
 };
 
+/**
+ * Limpia texto de una linea que viene tal cual de PocketBase (nombre de
+ * usuario, descripcion de plan...): sin formulario de por medio no hay forma
+ * de evitar que un dato sembrado a mano traiga un salto de linea real o
+ * escapado ("\n" literal). Colapsa cualquier espacio en blanco a uno solo y
+ * recorta los extremos, asi ese texto nunca se ve partido ni con un "\n" a
+ * la vista en una ficha, una tabla o un badge que espera una sola linea.
+ */
+export const limpiarTexto = (valor: unknown): string => {
+  if (valor == null) return '';
+  return String(valor).replace(/\\n|\\r/g, ' ').replace(/\s+/g, ' ').trim();
+};
+
 /*
  * Vocabulario unico de estados. El mismo concepto se llamaba distinto segun
  * el endpoint: "Pendiente" en citaciones, "pendientes" en licencias, y

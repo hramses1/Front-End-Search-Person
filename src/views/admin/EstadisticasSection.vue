@@ -170,6 +170,7 @@
 import { ref, computed, reactive } from 'vue';
 import { authService } from '../../api/authService';
 import { plural } from '../../utils/plural';
+import { limpiarTexto } from '../../utils/formatters';
 import GraficaBarras from '../../ui/components/GraficaBarras.vue';
 import EstadoVacio from '../../ui/components/EstadoVacio.vue';
 import type { PuntoDia } from '../../types/graficas';
@@ -243,7 +244,14 @@ const fetchEstadisticasUsuarios = async (page = 1) => {
   errorEstadisticasUsuarios.value = '';
   try {
     const data = await authService.getAdminUsers(page, estadisticasUsuarios.perPage);
-    estadisticasUsuarios.items = data?.items ?? [];
+    // username/name/email pueden traer un salto de linea sembrado en el
+    // dato, igual que planDescription en la pestaña de Usuarios.
+    estadisticasUsuarios.items = (data?.items ?? []).map((u: any) => ({
+      ...u,
+      username: limpiarTexto(u.username),
+      name: limpiarTexto(u.name),
+      email: limpiarTexto(u.email)
+    }));
     estadisticasUsuarios.page = data?.page ?? page;
     estadisticasUsuarios.totalItems = data?.totalItems ?? estadisticasUsuarios.items.length;
     estadisticasUsuarios.totalPages = data?.totalPages ?? 1;

@@ -915,6 +915,7 @@ import SecuritySeals from '../ui/components/SecuritySeals.vue';
 import { useAuth } from '../composables/useAuth';
 import { authService } from '../api/authService';
 import { plural } from '../utils/plural';
+import { limpiarTexto } from '../utils/formatters';
 import MainFooter from '../ui/components/MainFooter.vue';
 import EstadoVacio from '../ui/components/EstadoVacio.vue';
 import EstadisticasSection from './admin/EstadisticasSection.vue';
@@ -1031,7 +1032,14 @@ const fetchBloqueos = async () => {
       perPage: paginaBloqueos.perPage
     });
     const items = Array.isArray(data) ? data : (data?.items ?? []);
-    bloqueos.value = items;
+    // valor/solicitante_email son identificadores de una sola linea; notas y
+    // prueba se dejan intactos, son texto libre donde un salto de linea es
+    // legitimo.
+    bloqueos.value = items.map((b: any) => ({
+      ...b,
+      valor: limpiarTexto(b.valor),
+      solicitante_email: limpiarTexto(b.solicitante_email)
+    }));
     paginaBloqueos.totalPages = data?.totalPages ?? 1;
   } catch (error: any) {
     bloqueos.value = [];
@@ -1504,7 +1512,10 @@ const fetchPlanes = async () => {
     // La respuesta puede venir paginada o como lista suelta: se aceptan ambas
     // en vez de dar por hecho una forma que no esta garantizada.
     const items = Array.isArray(data) ? data : (data?.items ?? []);
-    planes.value = items;
+    // description puede llegar con un salto de linea sembrado en el dato:
+    // sin este limpiado se veia literal ("\n") en cada sitio que lo pinta
+    // (esta tabla, el modal, la de Usuarios y la de Estadisticas).
+    planes.value = items.map((pl: any) => ({ ...pl, description: limpiarTexto(pl.description) }));
 
     if (items.length === 0) {
       // Se describe la respuesta recibida para poder distinguir una coleccion
@@ -1546,6 +1557,10 @@ const fetchUsers = async () => {
 
     users.value = (data.items || []).map((u: any) => ({
       ...u,
+      // Mismo saneado que el catalogo de planes: userName y planDescription
+      // pueden traer un salto de linea sembrado en el dato.
+      userName: limpiarTexto(u.userName),
+      planDescription: limpiarTexto(u.planDescription),
       // El contador que manda es number_requests, que es el que el backend
       // valida y reinicia. Si el listado todavia no lo incluye se cae a
       // quota.used para no dejar la columna vacia.
