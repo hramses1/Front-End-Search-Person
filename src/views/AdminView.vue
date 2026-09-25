@@ -254,7 +254,6 @@
                   <tr class="border-b border-[var(--border-color)] bg-black/5">
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Usuario</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Plan</th>
-                    <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Estado</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Peticiones</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Registro</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)] text-right">Acciones</th>
@@ -262,7 +261,7 @@
                 </thead>
                 <tbody class="divide-y divide-[var(--border-color)]">
                   <tr v-if="!isLoading && usuariosFiltrados.length === 0">
-                    <td colspan="6">
+                    <td colspan="5">
                       <EstadoVacio
                         compacto
                         :titulo="vacioTitulo"
@@ -290,19 +289,18 @@
                       </div>
                     </td>
                     <td class="px-lg py-md">
-                      <span class="inline-block text-caption font-medium px-md py-xs rounded-base border border-[var(--border-color)]" :style="{ color: userItem.planDescription?.includes('ADMIN') ? 'var(--accent-color)' : 'var(--text-secondary)' }">
-                        {{ userItem.planDescription || 'SIN PLAN' }}
-                      </span>
-                    </td>
-                    <td class="px-lg py-md">
-                      <span
-                        v-if="disablePorId[userItem.userId] !== undefined"
-                        class="text-caption font-medium px-sm py-xs rounded-base border"
-                        :style="estiloEstadoUsuario(!!disablePorId[userItem.userId])"
-                      >
-                        {{ disablePorId[userItem.userId] ? 'Deshabilitado' : 'Activo' }}
-                      </span>
-                      <span v-else class="text-caption text-[var(--text-muted)]">—</span>
+                      <div class="flex flex-wrap items-center gap-sm">
+                        <span class="inline-block text-caption font-medium px-md py-xs rounded-base border border-[var(--border-color)]" :style="{ color: userItem.planDescription?.includes('ADMIN') ? 'var(--accent-color)' : 'var(--text-secondary)' }">
+                          {{ userItem.planDescription || 'SIN PLAN' }}
+                        </span>
+                        <span
+                          v-if="disablePorId[userItem.userId] !== undefined"
+                          class="text-caption font-medium px-sm py-xs rounded-base border"
+                          :style="estiloEstadoUsuario(!!disablePorId[userItem.userId])"
+                        >
+                          {{ disablePorId[userItem.userId] ? 'Deshabilitado' : 'Activo' }}
+                        </span>
+                      </div>
                     </td>
                     <td class="px-lg py-md">
                       <div class="flex items-center gap-md">
@@ -328,8 +326,8 @@
                       <span v-else class="text-caption text-[var(--text-muted)]">—</span>
                     </td>
                     <td class="px-lg py-md text-right">
-                      <div class="flex justify-end gap-sm">
-                        <button 
+                      <div class="flex flex-wrap justify-end gap-sm max-w-[220px] ml-auto">
+                        <button
                           @click="openEditModal(userItem)"
                           class="inline-flex items-center justify-center px-md min-h-[2.75rem] rounded-base text-caption font-medium border border-[var(--border-color)] hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-all"
                         >
