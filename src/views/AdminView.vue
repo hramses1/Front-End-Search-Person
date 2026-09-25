@@ -254,6 +254,7 @@
                   <tr class="border-b border-[var(--border-color)] bg-black/5">
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Usuario</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Plan</th>
+                    <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Estado</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Peticiones</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)]">Registro</th>
                     <th class="px-lg py-md text-caption font-black uppercase tracking-[0.14em] text-[var(--text-muted)] text-right">Acciones</th>
@@ -261,7 +262,7 @@
                 </thead>
                 <tbody class="divide-y divide-[var(--border-color)]">
                   <tr v-if="!isLoading && usuariosFiltrados.length === 0">
-                    <td colspan="5">
+                    <td colspan="6">
                       <EstadoVacio
                         compacto
                         :titulo="vacioTitulo"
@@ -289,18 +290,19 @@
                       </div>
                     </td>
                     <td class="px-lg py-md">
-                      <div class="flex flex-wrap items-center gap-sm">
-                        <span class="inline-block text-caption font-medium px-md py-xs rounded-base border border-[var(--border-color)]" :style="{ color: userItem.planDescription?.includes('ADMIN') ? 'var(--accent-color)' : 'var(--text-secondary)' }">
-                          {{ userItem.planDescription || 'SIN PLAN' }}
-                        </span>
-                        <span
-                          v-if="disablePorId[userItem.userId] !== undefined"
-                          class="text-caption font-medium px-sm py-xs rounded-base border"
-                          :style="estiloEstadoUsuario(!!disablePorId[userItem.userId])"
-                        >
-                          {{ disablePorId[userItem.userId] ? 'Deshabilitado' : 'Activo' }}
-                        </span>
-                      </div>
+                      <span class="inline-block text-caption font-medium px-md py-xs rounded-base border border-[var(--border-color)]" :style="{ color: userItem.planDescription?.includes('ADMIN') ? 'var(--accent-color)' : 'var(--text-secondary)' }">
+                        {{ userItem.planDescription || 'SIN PLAN' }}
+                      </span>
+                    </td>
+                    <td class="px-lg py-md">
+                      <span
+                        v-if="disablePorId[userItem.userId] !== undefined"
+                        class="text-caption font-medium px-sm py-xs rounded-base border"
+                        :style="estiloEstadoUsuario(!!disablePorId[userItem.userId])"
+                      >
+                        {{ disablePorId[userItem.userId] ? 'Deshabilitado' : 'Activo' }}
+                      </span>
+                      <span v-else class="text-caption text-[var(--text-muted)]">—</span>
                     </td>
                     <td class="px-lg py-md">
                       <div class="flex items-center gap-md">
@@ -326,29 +328,42 @@
                       <span v-else class="text-caption text-[var(--text-muted)]">—</span>
                     </td>
                     <td class="px-lg py-md text-right">
-                      <div class="flex flex-wrap justify-end gap-sm max-w-[220px] ml-auto">
-                        <button
-                          @click="openEditModal(userItem)"
-                          class="inline-flex items-center justify-center px-md min-h-[2.75rem] rounded-base text-caption font-medium border border-[var(--border-color)] hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-all"
-                        >
-                          Editar
-                        </button>
-                        <button
-                          v-if="disablePorId[userItem.userId] !== undefined"
-                          @click="alternarEstadoUsuarioLista(userItem)"
-                          :disabled="cambiandoEstadoId === userItem.userId"
-                          class="inline-flex items-center justify-center px-md min-h-[2.75rem] rounded-base text-caption font-medium border border-[var(--border-color)] hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-all"
-                        >
-                          {{ cambiandoEstadoId === userItem.userId ? '…' : (disablePorId[userItem.userId] ? 'Activar' : 'Desactivar') }}
-                        </button>
-                        <button
-                          @click="resetRequests(userItem)"
-                          :disabled="userItem.number_requests === 0 || isResetting === userItem.userId"
-                          class="inline-flex items-center justify-center px-md min-h-[2.75rem] rounded-base text-caption font-medium border border-red-500/20 text-red-500/60 hover:text-red-500 hover:border-red-500/50 transition-all disabled:text-[var(--text-muted)]"
-                        >
-                          <span v-if="isResetting === userItem.userId">...</span>
-                          <span v-else>Reset</span>
-                        </button>
+                      <div class="flex justify-end">
+                        <MenuAcciones :etiqueta="`Acciones para ${userItem.userName}`">
+                          <template #default="{ cerrar }">
+                            <button
+                              role="menuitem"
+                              class="w-full flex items-center gap-md px-md py-md rounded-base hover:bg-[var(--accent-color)]/10 hover:text-[var(--accent-color)] transition-all text-left"
+                              @click="openEditModal(userItem); cerrar()"
+                            >
+                              <svg class="w-4 h-4 shrink-0 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                              <span class="text-caption font-medium">Editar</span>
+                            </button>
+
+                            <button
+                              v-if="disablePorId[userItem.userId] !== undefined"
+                              role="menuitem"
+                              :disabled="cambiandoEstadoId === userItem.userId"
+                              class="w-full flex items-center gap-md px-md py-md rounded-base hover:bg-[var(--accent-color)]/10 hover:text-[var(--accent-color)] transition-all text-left disabled:opacity-50"
+                              @click="alternarEstadoUsuarioLista(userItem); cerrar()"
+                            >
+                              <svg class="w-4 h-4 shrink-0 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" /></svg>
+                              <span class="text-caption font-medium">
+                                {{ cambiandoEstadoId === userItem.userId ? 'Cambiando…' : (disablePorId[userItem.userId] ? 'Activar' : 'Desactivar') }}
+                              </span>
+                            </button>
+
+                            <button
+                              role="menuitem"
+                              :disabled="userItem.number_requests === 0 || isResetting === userItem.userId"
+                              class="w-full flex items-center gap-md px-md py-md rounded-base hover:bg-red-500/10 hover:text-red-500 transition-all text-left disabled:opacity-50"
+                              @click="resetRequests(userItem); cerrar()"
+                            >
+                              <svg class="w-4 h-4 shrink-0 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                              <span class="text-caption font-medium">{{ isResetting === userItem.userId ? 'Reiniciando…' : 'Reiniciar peticiones' }}</span>
+                            </button>
+                          </template>
+                        </MenuAcciones>
                       </div>
                     </td>
                   </tr>
@@ -903,6 +918,7 @@ import { plural } from '../utils/plural';
 import MainFooter from '../ui/components/MainFooter.vue';
 import EstadoVacio from '../ui/components/EstadoVacio.vue';
 import EstadisticasSection from './admin/EstadisticasSection.vue';
+import MenuAcciones from '../ui/components/MenuAcciones.vue';
 
 const router = useRouter();
 const { logout, userName, isAdmin } = useAuth();
