@@ -5,7 +5,7 @@
     <section class="space-y-lg">
       <div class="flex flex-wrap items-center justify-between gap-md">
         <h3 class="text-body font-semibold">Altas y peticiones por día</h3>
-        <div class="flex items-center gap-sm">
+        <div class="flex flex-wrap items-center gap-sm min-w-0">
           <button
             v-for="d in OPCIONES_DIAS" :key="d"
             type="button" class="chip"

@@ -74,7 +74,22 @@
       <div class="flex-1">
           <div class="hoja-card overflow-hidden">
             <div class="px-lg py-md border-b border-[var(--border-color)] flex flex-wrap justify-between items-center gap-md bg-[var(--surface-color)]/50">
-              <div class="flex items-center gap-sm">
+              <!--
+                flex-wrap, no scroll: en movil las cuatro pestañas no cabian
+                en una fila y, como el panel que las envuelve recorta el
+                desborde (overflow-hidden, por las esquinas redondeadas),
+                "Estadisticas" quedaba recortada fuera de pantalla sin forma
+                de alcanzarla. Envolver a una segunda fila las deja siempre
+                visibles, sin depender de que alguien descubra que hay que
+                deslizar.
+              -->
+              <!--
+                min-w-0: por defecto un hijo flex no encoge por debajo del
+                ancho de su contenido (min-width:auto), asi que sin esto el
+                flex-wrap de aqui adentro nunca llegaba a activarse y el
+                propio div se salia del panel igual que antes.
+              -->
+              <div class="flex flex-wrap items-center gap-sm min-w-0">
                 <button
                   v-for="t in pestanas" :key="t.valor"
                   type="button" class="chip"
@@ -422,7 +437,7 @@
             <template v-else-if="pestana === 'bloqueos'">
               <div class="p-lg space-y-lg">
                 <div class="flex flex-wrap items-center justify-between gap-md">
-                  <div class="flex items-center gap-sm">
+                  <div class="flex flex-wrap items-center gap-sm min-w-0">
                     <button
                       v-for="e in estadosBloqueo" :key="e.valor"
                       type="button" class="chip"
