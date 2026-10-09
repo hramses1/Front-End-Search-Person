@@ -17,10 +17,16 @@
       -->
       <div class="rounded-base border border-amber-500/20 bg-amber-500/5 p-md flex items-start gap-sm" role="note">
         <span class="text-body leading-none mt-xs" aria-hidden="true">⚠️</span>
-        <p class="text-caption leading-relaxed" style="color: var(--estado-aviso);">
-          Esta consulta revisa <strong>{{ COSTO }} fuentes a la vez</strong> ({{ listaFuentesTexto }})
-          y descuenta <strong>{{ COSTO }} consultas</strong> de tu cupo, haya datos o no en cada una.
-        </p>
+        <div class="text-caption leading-relaxed" style="color: var(--estado-aviso);">
+          <p>
+            Revisa <strong>{{ COSTO }} fuentes</strong> y descuenta
+            <strong>{{ COSTO }} consultas</strong> de tu cupo, haya datos o no.
+          </p>
+          <details class="mt-xs">
+            <summary class="cursor-pointer font-medium underline-offset-2 hover:underline">Ver fuentes</summary>
+            <p class="mt-xs">{{ listaFuentesTexto }}.</p>
+          </details>
+        </div>
       </div>
 
       <div class="relative group input-container">
@@ -146,10 +152,14 @@
             Esta consulta descuenta {{ COSTO }} de tu cupo
           </h3>
 
-          <p class="text-body leading-relaxed text-[var(--text-secondary)] mb-lg">
-            Revisa {{ COSTO }} fuentes a la vez ({{ listaFuentesTexto }}), haya datos o no en
-            cada una. Si solo te interesa una, puedes consultarla por separado y gastar una sola.
+          <p class="text-body leading-relaxed text-[var(--text-secondary)] mb-md">
+            Revisa {{ COSTO }} fuentes a la vez, haya datos o no. Si solo te interesa una,
+            consúltala por separado y gasta una sola.
           </p>
+          <details class="text-caption text-[var(--text-muted)] mb-lg">
+            <summary class="cursor-pointer font-medium hover:underline">Ver fuentes</summary>
+            <p class="mt-xs">{{ listaFuentesTexto }}.</p>
+          </details>
 
           <p
             class="rounded-base border px-md py-md text-caption leading-relaxed mb-lg"
