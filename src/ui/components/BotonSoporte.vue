@@ -15,7 +15,7 @@
   -->
   <div
     v-if="!cerrado"
-    class="fixed bottom-[6.5rem] right-lg z-[999] transition-all duration-base"
+    class="fixed bottom-[6.5rem] right-lg z-[999] transition-[transform,opacity] duration-base"
     :class="visible ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'"
   >
     <div class="relative group">
@@ -75,9 +75,17 @@ let temporizadorQuieto: ReturnType<typeof setTimeout> | undefined;
  * detiene, sin haber subido nunca).
  */
 const alHacerScroll = () => {
-  const actual = window.scrollY;
-  const bajando = actual > ultimoScrollY;
-  visible.value = !bajando || actual < 80;
+  /*
+   * macOS (Safari y Chrome con trackpad) rebota al llegar al tope o al fondo
+   * y reporta scrollY fuera de rango, yendo y viniendo: sin acotarlo, cada
+   * rebote contaba como "subir" y "bajar" y el boton entraba y salia a
+   * golpes. Se acota al rango real y se ignoran movimientos de pocos px.
+   */
+  const maximo = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+  const actual = Math.min(Math.max(window.scrollY, 0), maximo);
+  if (Math.abs(actual - ultimoScrollY) < 6) return;
+
+  visible.value = actual < ultimoScrollY || actual < 80;
   ultimoScrollY = actual;
 
   clearTimeout(temporizadorQuieto);
