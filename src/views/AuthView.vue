@@ -805,10 +805,9 @@ const handleSubmit = async () => {
 
 /* Smoked Glass Action Button */
 .hover-smoke-glass { 
-  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
+  transition: background-color 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
 }
 .hover-smoke-glass:hover { 
-  backdrop-filter: brightness(1.3) blur(10px); 
   background-color: rgba(255, 255, 255, 0.05);
   box-shadow: 0 0 30px rgba(177, 193, 211, 0.05); /* Glow sutil */
 }
