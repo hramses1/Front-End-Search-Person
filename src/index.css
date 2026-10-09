@@ -415,6 +415,10 @@ label {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
+    /* Sin esto, las animaciones infinite (ping, pulse, bounce, el saludo
+       del boton de soporte) repetian cada 0.01ms y parpadeaban sin parar
+       en equipos con "Reducir movimiento" activo (macOS). */
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }

@@ -127,4 +127,10 @@ onUnmounted(() => {
 .anillo-soporte {
   animation: anillo-soporte 6s ease-out infinite;
 }
+
+/* Con "Reducir movimiento" el boton queda quieto, sin saludo ni anillo. */
+@media (prefers-reduced-motion: reduce) {
+  .ola-soporte, .anillo-soporte { animation: none; }
+  .anillo-soporte { display: none; }
+}
 </style>
