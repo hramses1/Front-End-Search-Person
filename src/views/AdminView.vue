@@ -21,7 +21,7 @@
     
     <!-- Overlay Móvil -->
     <transition enter-active-class="duration-base ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100" leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0">
-        <div v-if="isSidebarOpen" @click="isSidebarOpen = false" class="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-30"></div>
+        <div v-if="isSidebarOpen" @click="isSidebarOpen = false" class="lg:hidden fixed inset-0 bg-black/60 z-30"></div>
     </transition>
     
     <!-- Sidebar -->
@@ -563,7 +563,7 @@
         enter-active-class="duration-base ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100"
         leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
       >
-        <div v-if="planEditando !== null" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md" @click.self="cerrarPlan">
+        <div v-if="planEditando !== null" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60" @click.self="cerrarPlan">
           <div role="dialog" aria-modal="true" :aria-label="planEditando?.id ? 'Editar plan' : 'Nuevo plan'" class="w-full max-w-md hoja-card p-lg sm:p-xl animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
             <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-xs">
               {{ planEditando?.id ? 'Editar plan' : 'Nuevo plan' }}
@@ -676,7 +676,7 @@
         enter-active-class="duration-base ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100"
         leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
       >
-        <div v-if="bloqueoEditando !== null" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md" @click.self="cerrarBloqueo">
+        <div v-if="bloqueoEditando !== null" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60" @click.self="cerrarBloqueo">
           <div role="dialog" aria-modal="true" :aria-label="bloqueoEditando?.id ? 'Editar bloqueo' : 'Nuevo bloqueo'" class="w-full max-w-md hoja-card p-lg sm:p-xl animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
             <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-xs">
               {{ bloqueoEditando?.id ? 'Editar bloqueo' : 'Bloquear identificador' }}
@@ -798,7 +798,7 @@
         enter-active-class="duration-base ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100"
         leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0"
       >
-        <div v-if="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md">
+        <div v-if="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60">
           <div role="dialog" aria-modal="true" aria-label="Editar usuario" class="w-full max-w-md hoja-card p-lg sm:p-xl relative animate-fade-in shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar">
             <h3 class="text-lead font-bold tracking-tight mb-xl flex items-center gap-md">
                 <span class="w-2 h-8 bg-[var(--accent-color)] rounded-full"></span>

@@ -65,7 +65,7 @@
 
           <!-- RESULTS STATE -->
           <div v-else-if="results" key="resultados" class="hoja-card overflow-hidden flex flex-col">
-            <div class="px-lg sm:px-2xl py-md sm:py-lg border-b border-[var(--border-color)] flex flex-wrap gap-sm justify-between items-center bg-[var(--surface-color)]/80 backdrop-blur-sm flex-shrink-0 sticky top-0 z-10">
+            <div class="px-lg sm:px-2xl py-md sm:py-lg border-b border-[var(--border-color)] flex flex-wrap gap-sm justify-between items-center bg-[var(--surface-color)]/95 flex-shrink-0 sticky top-0 z-10">
               <div class="flex items-center gap-md">
                 <span class="flex h-2 w-2 relative">
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>

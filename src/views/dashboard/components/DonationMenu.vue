@@ -15,7 +15,7 @@
     <Teleport to="body">
       <!-- Overlay para móvil -->
       <transition name="fade">
-        <div v-if="isOpen" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998]" @click="close"></div>
+        <div v-if="isOpen" class="fixed inset-0 bg-black/60 z-[9998]" @click="close"></div>
       </transition>
 
       <transition 

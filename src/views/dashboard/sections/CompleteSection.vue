@@ -137,7 +137,7 @@
     >
       <div
         v-if="mostrarConfirmacion"
-        class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60 backdrop-blur-md"
+        class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60"
         @click.self="cancelarConsulta"
       >
         <div role="dialog" aria-modal="true" aria-label="Confirmar consulta completa" class="w-full max-w-md hoja-card p-lg sm:p-xl animate-fade-in shadow-2xl">

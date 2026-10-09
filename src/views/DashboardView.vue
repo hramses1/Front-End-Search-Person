@@ -163,11 +163,11 @@
         <transition 
           mode="out-in"
           enter-active-class="transition duration-base ease-out"
-          enter-from-class="opacity-0 translate-y-4 blur-sm"
+          enter-from-class="opacity-0 translate-y-4"
           enter-to-class="opacity-100 translate-y-0 blur-0"
           leave-active-class="transition duration-base ease-in"
           leave-from-class="opacity-100 translate-y-0 blur-0"
-          leave-to-class="opacity-0 -translate-y-4 blur-sm"
+          leave-to-class="opacity-0 -translate-y-4"
         >
           <component :is="activeComponent" :key="currentSection" @refresh-stats="refreshUserData" />
         </transition>
@@ -178,7 +178,7 @@
 
     <!-- Overlay Móvil -->
     <transition enter-active-class="duration-base ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100" leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0">
-        <div v-if="isSidebarOpen" @click="isSidebarOpen = false" class="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-30"></div>
+        <div v-if="isSidebarOpen" @click="isSidebarOpen = false" class="lg:hidden fixed inset-0 bg-black/60 z-30"></div>
     </transition>
   </div>
 </template>

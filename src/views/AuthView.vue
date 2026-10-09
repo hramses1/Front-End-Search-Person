@@ -8,7 +8,7 @@
     <button
       type="button"
       @click="router.push('/')"
-      class="absolute top-6 left-6 z-50 p-md backdrop-blur-md border rounded-base shadow-lg transition-all duration-base hover:scale-105"
+      class="absolute top-6 left-6 z-50 p-md border rounded-base shadow-lg transition-all duration-base hover:scale-105"
       style="background-color: var(--hoja-bg); border-color: var(--border-color); color: var(--accent-color);"
       aria-label="Volver a la portada"
       title="Volver a la portada"
@@ -22,7 +22,7 @@
     <button 
       type="button"
       @click="toggleTheme" 
-      class="absolute top-6 right-6 z-50 p-md backdrop-blur-md border rounded-base shadow-lg transition-all duration-base group hover:scale-105"
+      class="absolute top-6 right-6 z-50 p-md border rounded-base shadow-lg transition-all duration-base group hover:scale-105"
       style="background-color: var(--hoja-bg); border-color: var(--border-color); color: var(--accent-color);"
       title="Cambiar Tema"
     >
@@ -334,7 +334,7 @@
     <!-- Modal de Términos -->
     <transition name="fade-slide">
       <div v-if="showTerms" class="fixed inset-0 z-50 flex items-center justify-center p-md">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="showTerms = false"></div>
+        <div class="absolute inset-0 bg-black/60" @click="showTerms = false"></div>
         <div role="dialog" aria-modal="true" aria-label="Aviso importante" class="relative w-full max-w-lg p-lg sm:p-xl rounded-base shadow-2xl overflow-y-auto custom-scrollbar border max-h-[85vh] flex flex-col" style="background-color: var(--card-bg); border-color: var(--border-color);">
           <div class="mb-lg flex justify-between items-center">
             <h2 class="text-body tracking-[0.14em] font-medium" style="color: var(--text-primary);">⚠️ AVISO IMPORTANTE</h2>
@@ -785,7 +785,6 @@ const handleSubmit = async () => {
 
 .bg-obsidian-soft { 
   background-color: var(--surface-color); 
-  backdrop-filter: blur(16px); 
 }
 
 .gradient-mesh {
@@ -821,9 +820,7 @@ const handleSubmit = async () => {
 }
 
 .mask-reveal {
-  opacity: 0;
-  will-change: transform, opacity;
-  animation: maskReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: maskReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
 .delay-100 { animation-delay: 50ms; }
