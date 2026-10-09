@@ -35,9 +35,9 @@
     <!-- Fondo Atmosférico con Múltiples Capas (Soft Obsidian & Deep Petrol + Grain) -->
     <div class="absolute inset-0 pointer-events-none noise-overlay z-0"></div>
     
-    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0" style="will-change: transform; transform: translateZ(0);">
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
       <div 
-        class="absolute -inset-[50%] text-[var(--text-muted)] blur-[130px] gradient-mesh transition-transform duration-[1000ms] ease-out delay-75"
+        class="absolute -inset-[20%] gradient-mesh transition-transform duration-[1000ms] ease-out delay-75"
         :style="{ transform: `translate3d(${mouseX * -0.04}px, ${mouseY * -0.04}px, 0)` }"
       ></div>
     </div>
@@ -781,12 +781,6 @@ const handleSubmit = async () => {
 .auth-wrapper { 
   min-height: 100vh;
   background-color: var(--bg-color); 
-}
-
-/* Base Obsidian & Grain */
-.noise-overlay {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
-  mix-blend-mode: overlay;
 }
 
 .bg-obsidian-soft { 

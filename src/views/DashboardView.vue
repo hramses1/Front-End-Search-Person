@@ -6,8 +6,8 @@
     <!-- Capas Atmosféricas -->
     <div class="absolute inset-0 pointer-events-none noise-overlay z-0 text-[var(--text-muted)]"></div>
     <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
-      <div class="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-[var(--accent-color)]/5 blur-[120px] rounded-full"></div>
-      <div class="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] bg-[var(--accent-color)]/3 blur-[100px] rounded-full"></div>
+      <div class="absolute top-[-20%] right-[-10%] w-[70%] h-[70%] resplandor-acento"></div>
+      <div class="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] resplandor-acento" style="--resplandor: 4%"></div>
     </div>
 
     <!-- Botón Hamburguesa Móvil -->
@@ -440,8 +440,3 @@ const handleLogout = () => {
 };
 </script>
 
-<style scoped>
-.noise-overlay {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
-}
-</style>

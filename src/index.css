@@ -438,3 +438,22 @@ label {
   .space-y-2xl > * + * { margin-top: 28px; }
   .space-y-3xl > * + * { margin-top: 40px; }
 }
+
+/* ─── Grano de fondo ──────────────────────────────────────
+   Definicion unica. Antes vivia duplicada en Auth (global, con
+   mix-blend-mode), Dashboard y Admin (scoped) y faltaba en Legal,
+   asi que el aspecto dependia de que vista se hubiera cargado antes.
+   Sin mix-blend-mode: a opacidad 0.04 no aporta y en Safari/Retina
+   fuerza un repintado costoso de toda la capa.
+   ───────────────────────────────────────────────────────── */
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* ─── Resplandor de fondo ─────────────────────────────────
+   Degradado radial en lugar de blur(): el filtro se recorta por
+   capa en Safari y en pantallas Retina, dejando bordes duros.
+   ───────────────────────────────────────────────────────── */
+.resplandor-acento {
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent-color) var(--resplandor, 6%), transparent), transparent);
+}
