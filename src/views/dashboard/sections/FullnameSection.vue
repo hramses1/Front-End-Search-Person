@@ -435,11 +435,9 @@ const executeSearch = async () => {
   // No limpiamos los filtros aquí para permitir que se apliquen al cargar
   // rawResults.value = null; 
 
-  const apiName     = cleanName     || ' ';
-  const apiLastname = cleanLastname || ' ';
 
   try {
-    const data = await apiService.getFullname(apiName, apiLastname);
+    const data = await apiService.getFullname(cleanName, cleanLastname);
     // Aseguramos que sea un array y forzamos la reactividad
     rawResults.value = Array.isArray(data) ? [...data] : data ? [{...data}] : [];
     emit('refresh-stats');

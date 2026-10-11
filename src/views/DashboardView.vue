@@ -160,6 +160,26 @@
 
       <!-- Content -->
       <div class="flex-1 pb-2xl">
+        <!--
+          Estado de las fuentes de la seccion actual. Solo avisa: el sondeo
+          mide alcanzabilidad, y si la fuente falla de verdad la consulta
+          responde 503 y se reintegra la cuota.
+        -->
+        <div
+          v-if="estadoSeccion.estado !== 'up'"
+          role="status"
+          class="mb-lg rounded-base border p-md text-caption leading-relaxed"
+          :class="estadoSeccion.estado === 'down'
+            ? 'border-red-500/20 bg-red-500/5 text-[var(--estado-error)]'
+            : 'border-amber-500/20 bg-amber-500/5 text-[var(--estado-aviso)]'"
+        >
+          <strong>{{ estadoSeccion.estado === 'down' ? 'Fuente caída.' : 'Fuente con problemas.' }}</strong>
+          {{ estadoSeccion.estado === 'down'
+            ? 'No se puede consultar ahora; si lo intentas, no se descuenta tu consulta.'
+            : 'La respuesta puede venir incompleta o más lenta.' }}
+          <span v-if="estadoSeccion.fuentesCaidas.length">({{ estadoSeccion.fuentesCaidas.join(', ') }})</span>
+        </div>
+
         <transition 
           mode="out-in"
           enter-active-class="transition duration-base ease-out"
@@ -184,6 +204,7 @@
 </template>
 
 <script setup lang="ts">
+import { useEstadoFuentes } from '../composables/useEstadoFuentes';
 import { ref, computed, markRaw, onMounted, onUnmounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import BrandMark from '../ui/components/BrandMark.vue';
@@ -355,6 +376,27 @@ const activeComponent = computed(() => {
   return markRaw(components[currentSection.value] || IdentitySection);
 });
 
+/** Rutas del backend de las que depende cada seccion (para el aviso de estado). */
+const RUTAS_SECCION: Record<string, string[]> = {
+  complete: ['/api/main/complete/'],
+  identity: ['/api/main/id_card/'],
+  fullname: ['/api/main/fullname/'],
+  medical: ['/api/main/medical_appointments/'],
+  father: ['/api/main/father-name/'],
+  mother: ['/api/main/mother-name/'],
+  civilstatus: ['/api/main/civil-status/'],
+  complaint: ['/api/main/complaint/', '/api/main/complaints_information/'],
+  judgement: ['/api/main/judgement/'],
+  alimony: ['/api/main/alimony/'],
+  license: ['/api/main/license/'],
+  citation: ['/api/main/citation/'],
+  vehicles: ['/api/main/vehicles/by-plate/', '/api/main/citations/by-plate/'],
+  ruc: ['/api/main/ruc/']
+};
+
+const { iniciar: iniciarEstado, detener: detenerEstado, estadoDe } = useEstadoFuentes();
+const estadoSeccion = computed(() => estadoDe(RUTAS_SECCION[currentSection.value] ?? []));
+
 const refreshUserData = async () => {
     if (!userId.value) return;
 
@@ -424,12 +466,14 @@ const alVolver = () => {
 };
 
 onMounted(() => {
+    iniciarEstado();
     refreshUserData();
     relojCuota = setInterval(() => { ahora.value = Date.now(); }, 60000);
     document.addEventListener('visibilitychange', alVolver);
 });
 
 onUnmounted(() => {
+    detenerEstado();
     if (relojCuota) clearInterval(relojCuota);
     document.removeEventListener('visibilitychange', alVolver);
 });
