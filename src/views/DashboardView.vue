@@ -44,8 +44,12 @@
             <nav class="space-y-xs">
               <button
                 v-for="item in grupo.items" :key="item.key"
-                @click="currentSection = item.key; isSidebarOpen = false"
-                :class="['w-full flex items-center gap-sm text-left px-md min-h-[2.75rem] rounded-base text-caption font-bold tracking-wide transition-all duration-base border', currentSection === item.key ? 'bg-[var(--accent-color)] text-[var(--accent-inverse)] border-[var(--border-color)] shadow-sm' : 'text-[var(--text-secondary)] border-transparent hover:bg-[var(--accent-color)]/5 hover:text-[var(--text-primary)]']"
+                @click="irASeccion(item)"
+                :aria-disabled="fuenteCaida(item.key) || undefined"
+                :class="['w-full flex items-center gap-sm text-left px-md min-h-[2.75rem] rounded-base text-caption font-bold tracking-wide transition-all duration-base border',
+                  fuenteCaida(item.key)
+                    ? 'opacity-50 grayscale cursor-not-allowed text-[var(--text-muted)] border-transparent'
+                    : currentSection === item.key ? 'bg-[var(--accent-color)] text-[var(--accent-inverse)] border-[var(--border-color)] shadow-sm' : 'text-[var(--text-secondary)] border-transparent hover:bg-[var(--accent-color)]/5 hover:text-[var(--text-primary)]']"
               >
                 <svg
                   class="w-3.5 h-3.5 shrink-0"
@@ -55,6 +59,7 @@
                   <path v-for="d in item.icon" :key="d" :d="d" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
                 </svg>
                 <span class="truncate">{{ item.label }}</span>
+                <span v-if="fuenteCaida(item.key)" class="sr-only">(no disponible por ahora)</span>
               </button>
             </nav>
           </div>
@@ -180,21 +185,47 @@
           <span v-if="estadoSeccion.fuentesCaidas.length">({{ estadoSeccion.fuentesCaidas.join(', ') }})</span>
         </div>
 
-        <transition 
-          mode="out-in"
-          enter-active-class="transition duration-base ease-out"
-          enter-from-class="opacity-0 translate-y-4"
-          enter-to-class="opacity-100 translate-y-0 blur-0"
-          leave-active-class="transition duration-base ease-in"
-          leave-from-class="opacity-100 translate-y-0 blur-0"
-          leave-to-class="opacity-0 -translate-y-4"
-        >
-          <component :is="activeComponent" :key="currentSection" @refresh-stats="refreshUserData" />
-        </transition>
+        <!-- inert: con la fuente caida la consulta se ve en gris y no se puede usar. -->
+        <div :inert="estadoSeccion.estado === 'down'" :class="{ 'opacity-50 grayscale': estadoSeccion.estado === 'down' }">
+          <transition
+            mode="out-in"
+            enter-active-class="transition duration-base ease-out"
+            enter-from-class="opacity-0 translate-y-4"
+            enter-to-class="opacity-100 translate-y-0 blur-0"
+            leave-active-class="transition duration-base ease-in"
+            leave-from-class="opacity-100 translate-y-0 blur-0"
+            leave-to-class="opacity-0 -translate-y-4"
+          >
+            <component :is="activeComponent" :key="currentSection" @refresh-stats="refreshUserData" />
+          </transition>
+        </div>
       </div>
 
       <MainFooter />
     </main>
+
+    <!-- Aviso: consulta no disponible por fuente caida -->
+    <Teleport to="body">
+      <div
+        v-if="consultaCaida"
+        class="fixed inset-0 z-[100] flex items-center justify-center p-lg bg-black/60"
+        @click.self="cerrarAviso"
+        @keydown.esc="cerrarAviso"
+      >
+        <div role="dialog" aria-modal="true" aria-labelledby="aviso-fuente-titulo" class="w-full max-w-md hoja-card p-lg sm:p-xl animate-fade-in shadow-2xl">
+          <p class="text-overline font-black tracking-[0.14em] uppercase text-[var(--text-muted)] mb-xs">Servicio no disponible</p>
+          <h3 id="aviso-fuente-titulo" class="text-h4 font-light tracking-tight mb-lg">
+            {{ consultaCaida.label }} no está en funcionamiento por ahora
+          </h3>
+          <p class="text-body leading-relaxed text-[var(--text-secondary)] mb-lg">
+            La fuente oficial no responde temporalmente
+            <template v-if="consultaCaida.fuentes.length">({{ consultaCaida.fuentes.join(', ') }})</template>.
+            No puedes hacer esta consulta hasta que vuelva; no se descuenta de tu cupo. Inténtalo más tarde.
+          </p>
+          <button ref="botonAviso" type="button" class="w-full btn-primary" @click="cerrarAviso">Entendido</button>
+        </div>
+      </div>
+    </Teleport>
 
     <!-- Overlay Móvil -->
     <transition enter-active-class="duration-base ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100" leave-active-class="duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0">
@@ -205,7 +236,7 @@
 
 <script setup lang="ts">
 import { useEstadoFuentes } from '../composables/useEstadoFuentes';
-import { ref, computed, markRaw, onMounted, onUnmounted } from 'vue';
+import { ref, computed, markRaw, nextTick, onMounted, onUnmounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import BrandMark from '../ui/components/BrandMark.vue';
 import SecuritySeals from '../ui/components/SecuritySeals.vue';
@@ -396,6 +427,30 @@ const RUTAS_SECCION: Record<string, string[]> = {
 
 const { iniciar: iniciarEstado, detener: detenerEstado, estadoDe } = useEstadoFuentes();
 const estadoSeccion = computed(() => estadoDe(RUTAS_SECCION[currentSection.value] ?? []));
+
+const fuenteCaida = (clave: string) => estadoDe(RUTAS_SECCION[clave] ?? []).estado === 'down';
+
+// Consulta bloqueada que el usuario intento abrir; null = modal cerrado.
+const consultaCaida = ref<{ label: string; fuentes: string[] } | null>(null);
+const botonAviso = ref<HTMLButtonElement | null>(null);
+let origenAviso: HTMLElement | null = null;
+
+const irASeccion = async (item: { key: string; label: string }) => {
+  if (fuenteCaida(item.key)) {
+    origenAviso = document.activeElement as HTMLElement | null;
+    consultaCaida.value = { label: item.label, fuentes: estadoDe(RUTAS_SECCION[item.key]).fuentesCaidas };
+    await nextTick();
+    botonAviso.value?.focus();
+    return;
+  }
+  currentSection.value = item.key;
+  isSidebarOpen.value = false;
+};
+
+const cerrarAviso = () => {
+  consultaCaida.value = null;
+  origenAviso?.focus();
+};
 
 const refreshUserData = async () => {
     if (!userId.value) return;
