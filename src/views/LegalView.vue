@@ -346,7 +346,7 @@ const documentos: Record<string, any> = {
 
   privacidad: {
     titulo: 'Política de privacidad',
-    actualizado: ACTUALIZADO,
+    actualizado: '20 de noviembre de 2026',
     intro: 'Este documento explica qué datos tratamos, con qué finalidad y durante cuánto tiempo. Está escrito sobre lo que el sistema hace realmente, no sobre una plantilla.',
     secciones: [
       {
@@ -368,8 +368,16 @@ const documentos: Record<string, any> = {
       {
         h: 'Qué guardamos en tu navegador',
         p: [
-          'No usamos cookies. No hay analítica, ni píxeles de seguimiento, ni herramientas de terceros que registren tu comportamiento. No compartimos datos con redes publicitarias porque no las usamos.',
+          'El portal no crea cookies propias ni usa analítica. La única excepción es la publicidad de Google descrita más abajo, que puede usar sus propias cookies.',
           'Lo único que se almacena es la sesión en la memoria del navegador (sessionStorage): tu identificador, tu nombre, tu plan, el contador de cuota y tu preferencia de tema claro u oscuro. Todo eso desaparece al cerrar sesión o al cerrar la pestaña.'
+        ]
+      },
+      {
+        h: 'Publicidad',
+        p: [
+          'Mostramos anuncios de Google AdSense. Google y sus socios, como proveedores externos, usan cookies para publicar anuncios basados en tus visitas anteriores a este sitio o a otros sitios web.',
+          'Puedes desactivar los anuncios personalizados en la Configuración de anuncios de Google (adssettings.google.com) o en www.aboutads.info. Si visitas desde el Espacio Económico Europeo, el Reino Unido o Suiza, te pediremos tu consentimiento antes de usar estas cookies.',
+          'Los anuncios nunca reciben los datos que consultas ni los datos de tu cuenta.'
         ]
       },
       {
@@ -400,7 +408,7 @@ const documentos: Record<string, any> = {
         h: 'Con quién compartimos',
         p: [
           'No vendemos ni cedemos tus datos personales a terceros.',
-          'Los proveedores que intervienen técnicamente son los estrictamente necesarios para que el servicio funcione: el alojamiento de la aplicación y las propias instituciones públicas a las que se dirige cada consulta.',
+          'Los proveedores que intervienen técnicamente son los estrictamente necesarios para que el servicio funcione: el alojamiento de la aplicación, las propias instituciones públicas a las que se dirige cada consulta y Google AdSense para mostrar publicidad.',
           'Cuando consultas un dato, la petición viaja a la institución correspondiente. Esa consulta se rige además por las condiciones de la fuente.'
         ]
       },
