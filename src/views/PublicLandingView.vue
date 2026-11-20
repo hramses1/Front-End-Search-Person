@@ -132,6 +132,22 @@
         <RouterLink to="/guias" class="btn-secondary mt-lg">Ver las {{ GUIAS.length }} guías</RouterLink>
       </section>
 
+      <!-- Herramientas gratis (sitios aparte en subdominios, sin cuenta) -->
+      <section id="herramientas" class="pb-3xl scroll-mt-xl">
+        <h2 class="text-h4 font-extrabold tracking-tight mb-xl">Herramientas gratis</h2>
+
+        <div class="grid gap-sm sm:grid-cols-2 lg:grid-cols-3">
+          <a
+            v-for="h in HERRAMIENTAS" :key="h.url"
+            :href="h.url"
+            class="hoja-card p-lg block hover:border-[var(--accent-color)]/40 transition-all duration-base"
+          >
+            <h3 class="text-body font-bold tracking-wide mb-xs">{{ h.titulo }}</h3>
+            <p class="text-caption leading-relaxed text-[var(--text-secondary)]">{{ h.resumen }}</p>
+          </a>
+        </div>
+      </section>
+
       <!-- Precio -->
       <section id="precio" class="pb-3xl scroll-mt-xl">
         <h2 class="text-h4 font-extrabold tracking-tight mb-xl">Gratis, con cuota diaria</h2>
@@ -220,6 +236,20 @@ import { GUIAS } from '../datos/guias';
 import DemoCedula from '../ui/components/DemoCedula.vue';
 import NotificacionNovedades from '../ui/components/NotificacionNovedades.vue';
 import { useDatosEstructurados, preguntas } from '../composables/useDatosEstructurados';
+
+// Calculadoras y utilidades gratuitas publicadas como subdominios de devzio.site
+const HERRAMIENTAS = [
+  { url: 'https://decimos.devzio.site/', titulo: 'Décimo tercer y cuarto sueldo', resumen: 'Calcula tus décimos 2026 con el SBU de USD 482.' },
+  { url: 'https://liquidacion.devzio.site/', titulo: 'Liquidación laboral', resumen: 'Estima tu finiquito: décimos, vacaciones, desahucio y despido.' },
+  { url: 'https://renta.devzio.site/', titulo: 'Impuesto a la renta 2026', resumen: 'Tabla del SRI, aporte IESS y rebaja por gastos personales.' },
+  { url: 'https://iva.devzio.site/', titulo: 'Calculadora de IVA 15%', resumen: 'Agrega o quita el IVA de cualquier valor.' },
+  { url: 'https://numeros-a-letras.devzio.site/', titulo: 'Números a letras', resumen: 'Montos en letras para cheques, facturas y contratos.' },
+  { url: 'https://letras-bonitas.devzio.site/', titulo: 'Letras bonitas', resumen: 'Texto con estilos para copiar en Instagram y WhatsApp.' },
+  { url: 'https://qr.devzio.site/', titulo: 'Generador de QR', resumen: 'Códigos QR para enlaces, WiFi y WhatsApp, en PNG o SVG.' },
+  { url: 'https://comprimir.devzio.site/', titulo: 'Comprimir imágenes', resumen: 'Reduce el peso de tus fotos sin subirlas a internet.' },
+  { url: 'https://prestamos.devzio.site/', titulo: 'Simulador de préstamos', resumen: 'Cuota y tabla de amortización francesa o alemana.' },
+  { url: 'https://edad.devzio.site/', titulo: 'Calculadora de edad', resumen: 'Tu edad exacta en años, meses y días.' },
+];
 
 const router = useRouter();
 const { isAuthenticated, isDark, toggleTheme } = useAuth();
